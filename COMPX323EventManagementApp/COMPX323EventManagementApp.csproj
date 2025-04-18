@@ -46,17 +46,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="CreateEventControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateEventControl.Designer.cs">
+      <DependentUpon>CreateEventControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateReviewControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateReviewControl.Designer.cs">
+      <DependentUpon>CreateReviewControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EventsManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="EventsManagerForm.Designer.cs">
+      <DependentUpon>EventsManagerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManageEventControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ManageEventControl.Designer.cs">
+      <DependentUpon>ManageEventControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProfileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProfileControl.Designer.cs">
+      <DependentUpon>ProfileControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,8 +90,29 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SearchEventControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SearchEventControl.Designer.cs">
+      <DependentUpon>SearchEventControl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CreateEventControl.resx">
+      <DependentUpon>CreateEventControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateReviewControl.resx">
+      <DependentUpon>CreateReviewControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EventsManagerForm.resx">
+      <DependentUpon>EventsManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManageEventControl.resx">
+      <DependentUpon>ManageEventControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProfileControl.resx">
+      <DependentUpon>ProfileControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -80,6 +125,9 @@
     </Compile>
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchEventControl.resx">
+      <DependentUpon>SearchEventControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

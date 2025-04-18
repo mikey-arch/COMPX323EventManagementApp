@@ -19,7 +19,13 @@ namespace COMPX323EventManagementApp
 
         private void buttonLogin_Click(object sender, EventArgs e)
         {
+            //first if the login is validated 
 
+            //then create the instance of the events manager form
+            EventsManagerForm eventsManagerForm = new EventsManagerForm();
+            this.Hide();
+            eventsManagerForm.ShowDialog();
+            this.Close();
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
