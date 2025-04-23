@@ -13,6 +13,9 @@ using static COMPX323EventManagementApp.LoginForm;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// This class represents the registration form for new users to create an account.
+    /// </summary>
     public partial class RegisterForm : Form
     {
         public RegisterForm()
@@ -20,6 +23,8 @@ namespace COMPX323EventManagementApp
             InitializeComponent();
             
         }
+
+        // Registers a new user by inserting their details into the database once the Register button is clicked.
         private void buttonRegister_Click(object sender, EventArgs e)
         {
             string username = textBoxUsername.Text;
@@ -57,7 +62,7 @@ namespace COMPX323EventManagementApp
             const string sql = @"INSERT INTO Attendee (password, mob_num, fname, lname, email, DOB, payment_status) 
                                 VALUES(:pwd, :mob, :fname, :lname, :email, :dob, :status)";
 
-            using (var conn = new OracleConnection(DbConfig.oradb))
+            using (var conn = DbConfig.GetConnection())
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = sql;
@@ -82,6 +87,7 @@ namespace COMPX323EventManagementApp
         }
 
 
+        // Clears all the text boxes when the Clear button is clicked then focuses on the username text box.
         private void buttonClear_Click(object sender, EventArgs e)
         {
             textBoxUsername.Clear();
@@ -93,10 +99,17 @@ namespace COMPX323EventManagementApp
             textBoxUsername.Focus();
         }
 
+        // Opens the LoginForm when the Login label is clicked and hides the RegisterForm.
         private void labelLogin_Click(object sender, EventArgs e)
         {
             new LoginForm().Show();
             this.Hide();
+        }
+
+        // Handles the exit label click event. It closes the application. 
+        private void labelExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -10,9 +10,12 @@ using System.Windows.Forms;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// This class represent the main dashboard form that manages navigation between different user controls.
+    /// </summary>
     public partial class EventsManagerForm : Form
     {
-
+        // User controls for different sections
         private SearchEventControl searchControl;
         private ProfileControl profileControl;
         private CreateEventControl createEventControl;
@@ -22,7 +25,7 @@ namespace COMPX323EventManagementApp
         public EventsManagerForm()
         {
             InitializeComponent();
-            //initialise all the user control isntances
+            //Initialises all the user control isntances
             searchControl = new SearchEventControl();
             profileControl = new ProfileControl();
             createEventControl = new CreateEventControl();
@@ -30,6 +33,7 @@ namespace COMPX323EventManagementApp
             reviewControl = new CreateReviewControl();
         }
 
+        //Displays the search event user control 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
             labelTitle.Text = "SEARCH FOR EVENT";
@@ -39,6 +43,7 @@ namespace COMPX323EventManagementApp
 
         }
 
+        //Displays the profile user control
         private void buttonProfile_Click(object sender, EventArgs e)
         {
             labelTitle.Text = "PROFILE";
@@ -48,6 +53,7 @@ namespace COMPX323EventManagementApp
 
         }
 
+        //Displays the create event user control
         private void buttonCreateEvent_Click(object sender, EventArgs e)
         {
             labelTitle.Text = "EVENT DETAILS";
@@ -57,6 +63,7 @@ namespace COMPX323EventManagementApp
 
         }
 
+        //Displays the manage event user control
         private void buttonManageEvent_Click(object sender, EventArgs e)
         {
             labelTitle.Text = "MANAGE DETAILS";
@@ -66,6 +73,7 @@ namespace COMPX323EventManagementApp
 
         }
 
+        //Displays the create review user control
         private void buttonCreateReview_Click(object sender, EventArgs e)
         {
             labelTitle.Text = "RATING AND REVIEWS";
@@ -75,13 +83,19 @@ namespace COMPX323EventManagementApp
 
         }
 
+        // Handles the logout button click event navigating back to the login form.
         private void buttonLogout_Click(object sender, EventArgs e)
         {
-            //prob decide whether exit or back to login
             LoginForm loginForm = new LoginForm();
             this.Hide();
             loginForm.ShowDialog();
             this.Close();
+        }
+
+        // Handles the exit button click event to close the application.
+        private void labelExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

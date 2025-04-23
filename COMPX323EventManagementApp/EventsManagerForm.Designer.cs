@@ -36,10 +36,12 @@
             this.buttonSearch = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.panelContent = new System.Windows.Forms.Panel();
+            this.labelExit = new System.Windows.Forms.Label();
+            this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.SuspendLayout();
@@ -131,6 +133,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.panel2.Controls.Add(this.labelExit);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
@@ -153,6 +156,15 @@
             this.panel1.Size = new System.Drawing.Size(200, 541);
             this.panel1.TabIndex = 8;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(61, 44);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(75, 17);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "User Name";
+            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
@@ -174,15 +186,6 @@
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "SEARCH FOR EVENT";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(61, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 17);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "User Name";
-            // 
             // panelContent
             // 
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -190,6 +193,16 @@
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(866, 499);
             this.panelContent.TabIndex = 10;
+            // 
+            // labelExit
+            // 
+            this.labelExit.AutoSize = true;
+            this.labelExit.Location = new System.Drawing.Point(1037, 9);
+            this.labelExit.Name = "labelExit";
+            this.labelExit.Size = new System.Drawing.Size(17, 17);
+            this.labelExit.TabIndex = 10;
+            this.labelExit.Text = "X";
+            this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
             // 
             // EventsManagerForm
             // 
@@ -208,6 +221,8 @@
             this.Name = "EventsManagerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventsManagerForm";
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -229,5 +244,6 @@
         private System.Windows.Forms.Label labelTitle;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panelContent;
+        private System.Windows.Forms.Label labelExit;
     }
 }

@@ -38,6 +38,7 @@
             this.buttonClear = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.labelSignUp = new System.Windows.Forms.Label();
+            this.labelExit = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -149,12 +150,23 @@
             this.labelSignUp.Text = "SIGN UP";
             this.labelSignUp.Click += new System.EventHandler(this.label5_Click);
             // 
+            // labelExit
+            // 
+            this.labelExit.AutoSize = true;
+            this.labelExit.Location = new System.Drawing.Point(256, 9);
+            this.labelExit.Name = "labelExit";
+            this.labelExit.Size = new System.Drawing.Size(17, 17);
+            this.labelExit.TabIndex = 9;
+            this.labelExit.Text = "X";
+            this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(285, 544);
+            this.Controls.Add(this.labelExit);
             this.Controls.Add(this.labelSignUp);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonClear);
@@ -189,5 +201,6 @@
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label labelSignUp;
+        private System.Windows.Forms.Label labelExit;
     }
 }

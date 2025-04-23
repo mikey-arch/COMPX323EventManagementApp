@@ -13,6 +13,9 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// This class represents the login form for the event management application handling authenticantion and navigation to main dashboard.
+    /// </summary>
     public partial class LoginForm : Form
     {
 
@@ -22,18 +25,12 @@ namespace COMPX323EventManagementApp
 
         }
 
-        public static class DbConfig
-        {
-            // a single place to update if/when your string changes
-            public static string oradb = "Data Source=localhost:1521/xe;User Id=SYSTEM;Password=lucaszin13;";
-        }
-
+        // Handles the login button click event. It validates the user credentials and opens the EventsManagerForm if successful.
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                
-                using (var conn = new OracleConnection(DbConfig.oradb))
+                using (OracleConnection conn = DbConfig.GetConnection())
                 {
                     conn.Open();
                     // If want to test the connection is working
@@ -74,18 +71,25 @@ namespace COMPX323EventManagementApp
             this.Close();
         }
 
+        // Handles the clear button click event. It clears the username and password fields then focuses on username textbox.
         private void buttonClear_Click(object sender, EventArgs e)
         {
             textBoxUsername.Clear();
             textBoxPassword.Clear();
             textBoxUsername.Focus();
-
         }
 
+        // Handles the register label click event. It opens the RegisterForm and hides the current form.
         private void label5_Click(object sender, EventArgs e)
         {
             new RegisterForm().Show();
             this.Hide();
+        }
+
+        // Exit label, exits application once clicked.
+        private void labelExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

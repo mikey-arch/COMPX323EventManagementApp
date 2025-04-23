@@ -16,7 +16,16 @@ namespace COMPX323EventManagementApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+
+            // Test the database connection before starting the application
+            if (DbConfig.TestConnection())
+            {
+                Application.Run(new LoginForm());
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
     }
 }

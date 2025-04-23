@@ -46,6 +46,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxBirthday = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.labelExit = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelLogin
@@ -233,12 +234,23 @@
             this.label2.TabIndex = 36;
             this.label2.Text = "Birthday";
             // 
+            // labelExit
+            // 
+            this.labelExit.AutoSize = true;
+            this.labelExit.Location = new System.Drawing.Point(335, 9);
+            this.labelExit.Name = "labelExit";
+            this.labelExit.Size = new System.Drawing.Size(17, 17);
+            this.labelExit.TabIndex = 37;
+            this.labelExit.Text = "X";
+            this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
+            // 
             // RegisterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(368, 708);
+            this.Controls.Add(this.labelExit);
             this.Controls.Add(this.textBoxBirthday);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxPhoneNumber);
@@ -288,5 +300,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxBirthday;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelExit;
     }
 }
