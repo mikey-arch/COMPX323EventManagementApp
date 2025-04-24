@@ -111,5 +111,12 @@ namespace COMPX323EventManagementApp
         {
             Application.Exit();
         }
+
+        //toggles showing password and confirms password
+        private void checkBoxShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxPassword.UseSystemPasswordChar = !checkBoxShowPassword.Checked;
+            textBoxConfirmPassword.UseSystemPasswordChar= !checkBoxShowPassword.Checked;
+        }
     }
 }

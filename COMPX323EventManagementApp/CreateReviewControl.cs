@@ -16,5 +16,25 @@ namespace COMPX323EventManagementApp
         {
             InitializeComponent();
         }
+
+        private void textBoxReview_Enter(object sender, EventArgs e)
+        {
+            if(textBoxReview.Text == "Enter text here...")
+            {
+                textBoxReview.Text = "";
+                textBoxReview.ForeColor = Color.Black;
+            }
+
+        }
+
+        private void textBoxReview_Leave(object sender, EventArgs e)
+        {
+            if(textBoxReview.Text == "")
+            {
+                textBoxReview.Text = "Enter text here...";
+                textBoxReview.ForeColor = Color.Gray;
+            }
+
+        }
     }
 }

@@ -31,7 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonSubmit = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxReview = new System.Windows.Forms.TextBox();
+            this.buttonLogin = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -61,18 +62,37 @@
             this.buttonSubmit.Text = "Submit";
             this.buttonSubmit.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // textBoxReview
             // 
-            this.textBox1.Location = new System.Drawing.Point(92, 203);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(321, 20);
-            this.textBox1.TabIndex = 3;
+            this.textBoxReview.ForeColor = System.Drawing.Color.LightGray;
+            this.textBoxReview.Location = new System.Drawing.Point(92, 184);
+            this.textBoxReview.Multiline = true;
+            this.textBoxReview.Name = "textBoxReview";
+            this.textBoxReview.Size = new System.Drawing.Size(362, 133);
+            this.textBoxReview.TabIndex = 3;
+            this.textBoxReview.Text = "Enter text here...";
+            this.textBoxReview.Enter += new System.EventHandler(this.textBoxReview_Enter);
+            this.textBoxReview.Leave += new System.EventHandler(this.textBoxReview_Leave);
+            // 
+            // buttonLogin
+            // 
+            this.buttonLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.buttonLogin.FlatAppearance.BorderSize = 0;
+            this.buttonLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonLogin.ForeColor = System.Drawing.Color.White;
+            this.buttonLogin.Location = new System.Drawing.Point(309, 334);
+            this.buttonLogin.Name = "buttonLogin";
+            this.buttonLogin.Size = new System.Drawing.Size(145, 35);
+            this.buttonLogin.TabIndex = 4;
+            this.buttonLogin.Text = "SUBMIT";
+            this.buttonLogin.UseVisualStyleBackColor = false;
             // 
             // CreateReviewControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.buttonLogin);
+            this.Controls.Add(this.textBoxReview);
             this.Controls.Add(this.buttonSubmit);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -88,6 +108,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonSubmit;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxReview;
+        private System.Windows.Forms.Button buttonLogin;
     }
 }

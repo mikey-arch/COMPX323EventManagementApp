@@ -16,5 +16,6 @@ namespace COMPX323EventManagementApp
         {
             InitializeComponent();
         }
+
     }
 }
