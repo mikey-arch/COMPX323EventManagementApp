@@ -28,55 +28,92 @@ namespace COMPX323EventManagementApp
         // Handles the login button click event. It validates the user credentials and opens the EventsManagerForm if successful.
         private void buttonLogin_Click(object sender, EventArgs e)
         {
+            string email = textBoxEmail.Text.Trim();
+            string password = textBoxPassword.Text.Trim();
+
+            // if no email or password is entered, prompt user
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Please enter your username and password.");
+                return;
+            }
+
             try
             {
-                using (OracleConnection conn = DbConfig.GetConnection())
+                bool authenticated = false;
+
+                using (var conn = DbConfig.GetConnection())
                 {
                     conn.Open();
-                    // If want to test the connection is working
-                    /*
+
+                    // log in check using Attendee table first 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "SELECT password FROM attendee WHERE acc_num = 1";
+                        cmd.CommandText = "Select acc_num, fname from Attendee where email = :email and password = :password";
+                        cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+                        cmd.Parameters.Add("password", OracleDbType.Varchar2).Value = password;
 
-                        using (var dr = cmd.ExecuteReader())
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            if (dr.Read())
+                            if (reader.Read())
                             {
-                                // only now do we assign the textbox
-                                textBoxUsername.Text = dr.GetString(0);
-                            }
-                            else
-                            {
-                                MessageBox.Show("No attendee found with acc_num = 1");
+                                authenticated = true;
+                                int userId = reader.GetInt32(0);
+                                string firstName = reader.GetString(1);
                             }
                         }
                     }
-                    */
-                    conn.Close();
+
+                    // check organiser table
+                    if(!authenticated)
+                    {
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = "Select acc_num, fname from Organiser where email = :email and password = :password";
+                            cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+                            cmd.Parameters.Add("password", OracleDbType.Varchar2).Value = password;
+
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    authenticated = true;
+                                    int userId = reader.GetInt32(0);
+                                    string firstName = reader.GetString(1);
+                                }
+                            }
+                        }
+                    }
+
+                    // if wrong username and password
+                    if(!authenticated)
+                    {
+                        MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                 }
-            } 
+
+                if(authenticated)
+                {
+                    //then create the instance of the events manager form
+                    EventsManagerForm eventsManagerForm = new EventsManagerForm();
+                    this.Hide();
+                    eventsManagerForm.ShowDialog();
+                    this.Close();
+                }
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                 MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            
-            //first if the login is validated 
-
-            //then create the instance of the events manager form
-            EventsManagerForm eventsManagerForm = new EventsManagerForm();
-            this.Hide();
-            eventsManagerForm.ShowDialog();
-            this.Close();
         }
 
         // Handles the clear button click event. It clears the username and password fields then focuses on username textbox.
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            textBoxUsername.Clear();
+            textBoxEmail.Clear();
             textBoxPassword.Clear();
-            textBoxUsername.Focus();
+            textBoxEmail.Focus();
         }
 
         // Handles the register label click event. It opens the RegisterForm and hides the current form.
@@ -90,6 +127,12 @@ namespace COMPX323EventManagementApp
         private void labelExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        // Toggles showing and hiding the password
+        private void checkBoxShowPass_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxPassword.UseSystemPasswordChar = !checkBoxShowPass.Checked;
         }
     }
 }
