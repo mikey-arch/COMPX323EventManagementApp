@@ -27,6 +27,7 @@ namespace COMPX323EventManagementApp
         // Registers a new user by inserting their details into the database once the Register button is clicked.
         private void buttonRegister_Click(object sender, EventArgs e)
         {
+            /*
             string username = textBoxUsername.Text;
             string email = textBoxEmail.Text;
             string phoneNum = textBoxPhoneNumber.Text;
@@ -84,19 +85,19 @@ namespace COMPX323EventManagementApp
                       ? "Registration successful!"
                       : "Oops—no rows inserted.");
             }
+            */
         }
 
 
         // Clears all the text boxes when the Clear button is clicked then focuses on the username text box.
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            textBoxUsername.Clear();
             textBoxEmail.Clear();
             textBoxPhoneNumber.Clear();
-            textBoxBirthday.Clear();
+            dateTimePickerBirthday.Value = DateTime.Now;
             textBoxPassword.Clear();
             textBoxConfirmPassword.Clear();
-            textBoxUsername.Focus();
+            textBoxEmail.Focus();
         }
 
         // Opens the LoginForm when the Login label is clicked and hides the RegisterForm.
