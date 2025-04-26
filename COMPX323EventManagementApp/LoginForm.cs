@@ -67,9 +67,7 @@ namespace COMPX323EventManagementApp
                                 DateTime dob = reader.GetDateTime(5);
                                 string paymentStatus = reader.GetString(6);
 
-
-                                // 2) Map your DB record to your domain model
-                                var me = new User
+                                var currUser = new Attendee
                                 {
                                     Id = userId,
                                     Fname = firstName,
@@ -81,8 +79,7 @@ namespace COMPX323EventManagementApp
 
                                 };
 
-                                // 3) Store it in the Session
-                                Session.CurrentUser = me;
+                                Session.CurrentUser = currUser;
 
                             }
                         }
@@ -93,7 +90,7 @@ namespace COMPX323EventManagementApp
                     {
                         using (var cmd = conn.CreateCommand())
                         {
-                            cmd.CommandText = "Select acc_num, fname from Organiser where email = :email and password = :password";
+                            cmd.CommandText = "Select acc_num, fname, lname, mob_num, email from Organiser where email = :email and password = :password";
                             cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
                             cmd.Parameters.Add("password", OracleDbType.Varchar2).Value = password;
 
@@ -104,6 +101,21 @@ namespace COMPX323EventManagementApp
                                     authenticated = true;
                                     int userId = reader.GetInt32(0);
                                     string firstName = reader.GetString(1);
+                                    string lastName = reader.GetString(2);
+                                    string phoneNum = reader.GetString(3);
+                                    email = reader.GetString(4);
+
+
+                                    var currUser = new Organiser
+                                    {
+                                        Id = userId,
+                                        Fname = firstName,
+                                        Lname = lastName,
+                                        Email = email,
+                                        PhoneNum = phoneNum
+                                    };
+
+                                    Session.CurrentUser = currUser;
                                 }
                             }
                         }
