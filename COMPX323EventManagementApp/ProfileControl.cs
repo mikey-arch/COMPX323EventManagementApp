@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using COMPX323EventManagementApp.Models;
 
 namespace COMPX323EventManagementApp
 {
@@ -15,6 +16,13 @@ namespace COMPX323EventManagementApp
         public ProfileControl()
         {
             InitializeComponent();
+
+            User user = Session.CurrentUser;
+
+            labelAccountNum.Text = user.Id.ToString();
+            labelName.Text = user.Fname + " " + user.Lname;
+            labelEmail.Text = user.Email;
+            
         }
 
     }

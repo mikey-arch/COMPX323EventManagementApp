@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using COMPX323EventManagementApp.Models;
 using Oracle.ManagedDataAccess.Client;
 
 
@@ -49,7 +50,7 @@ namespace COMPX323EventManagementApp
                     // log in check using Attendee table first 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "Select acc_num, fname from Attendee where email = :email and password = :password";
+                        cmd.CommandText = "Select acc_num, fname, lname, mob_num, email, dob, payment_status from Attendee where email = :email and password = :password";
                         cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
                         cmd.Parameters.Add("password", OracleDbType.Varchar2).Value = password;
 
@@ -60,6 +61,29 @@ namespace COMPX323EventManagementApp
                                 authenticated = true;
                                 int userId = reader.GetInt32(0);
                                 string firstName = reader.GetString(1);
+                                string lastName = reader.GetString(2);
+                                string phoneNum = reader.GetString(3);
+                                email = reader.GetString(4);
+                                DateTime dob = reader.GetDateTime(5);
+                                string paymentStatus = reader.GetString(6);
+
+
+                                // 2) Map your DB record to your domain model
+                                var me = new User
+                                {
+                                    Id = userId,
+                                    Fname = firstName,
+                                    Lname = lastName,
+                                    Email = email,
+                                    PhoneNum = phoneNum,
+                                    Dob = dob,
+                                    PaymentStatus = paymentStatus
+
+                                };
+
+                                // 3) Store it in the Session
+                                Session.CurrentUser = me;
+
                             }
                         }
                     }

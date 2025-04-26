@@ -116,6 +116,8 @@
     <Compile Include="ManageEventControl.Designer.cs">
       <DependentUpon>ManageEventControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="ProfileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -170,6 +172,7 @@
     <EmbeddedResource Include="SearchEventControl.resx">
       <DependentUpon>SearchEventControl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -186,9 +189,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

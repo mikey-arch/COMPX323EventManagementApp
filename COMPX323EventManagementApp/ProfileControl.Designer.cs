@@ -30,12 +30,12 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelEmail = new System.Windows.Forms.Label();
+            this.labelName = new System.Windows.Forms.Label();
+            this.labelAccountNum = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.labelAccountNum = new System.Windows.Forms.Label();
-            this.labelUsername = new System.Windows.Forms.Label();
-            this.labelEmail = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.buttonRsvps = new System.Windows.Forms.Button();
             this.buttonEvents = new System.Windows.Forms.Button();
             this.buttonReviews = new System.Windows.Forms.Button();
@@ -59,7 +59,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Controls.Add(this.labelEmail);
-            this.panel1.Controls.Add(this.labelUsername);
+            this.panel1.Controls.Add(this.labelName);
             this.panel1.Controls.Add(this.labelAccountNum);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label4);
@@ -70,14 +70,32 @@
             this.panel1.Size = new System.Drawing.Size(333, 129);
             this.panel1.TabIndex = 1;
             // 
-            // label2
+            // labelEmail
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 42);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 17);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Account#:";
+            this.labelEmail.AutoSize = true;
+            this.labelEmail.Location = new System.Drawing.Point(108, 98);
+            this.labelEmail.Name = "labelEmail";
+            this.labelEmail.Size = new System.Drawing.Size(175, 17);
+            this.labelEmail.TabIndex = 6;
+            this.labelEmail.Text = "Lucas.swag123@gmail.com";
+            // 
+            // labelName
+            // 
+            this.labelName.AutoSize = true;
+            this.labelName.Location = new System.Drawing.Point(108, 70);
+            this.labelName.Name = "labelName";
+            this.labelName.Size = new System.Drawing.Size(75, 17);
+            this.labelName.TabIndex = 5;
+            this.labelName.Text = "lucas_swag";
+            // 
+            // labelAccountNum
+            // 
+            this.labelAccountNum.AutoSize = true;
+            this.labelAccountNum.Location = new System.Drawing.Point(108, 42);
+            this.labelAccountNum.Name = "labelAccountNum";
+            this.labelAccountNum.Size = new System.Drawing.Size(36, 17);
+            this.labelAccountNum.TabIndex = 4;
+            this.labelAccountNum.Text = "1234";
             // 
             // label3
             // 
@@ -97,32 +115,14 @@
             this.label4.TabIndex = 3;
             this.label4.Text = "Username:";
             // 
-            // labelAccountNum
+            // label2
             // 
-            this.labelAccountNum.AutoSize = true;
-            this.labelAccountNum.Location = new System.Drawing.Point(108, 42);
-            this.labelAccountNum.Name = "labelAccountNum";
-            this.labelAccountNum.Size = new System.Drawing.Size(36, 17);
-            this.labelAccountNum.TabIndex = 4;
-            this.labelAccountNum.Text = "1234";
-            // 
-            // labelUsername
-            // 
-            this.labelUsername.AutoSize = true;
-            this.labelUsername.Location = new System.Drawing.Point(108, 70);
-            this.labelUsername.Name = "labelUsername";
-            this.labelUsername.Size = new System.Drawing.Size(75, 17);
-            this.labelUsername.TabIndex = 5;
-            this.labelUsername.Text = "lucas_swag";
-            // 
-            // labelEmail
-            // 
-            this.labelEmail.AutoSize = true;
-            this.labelEmail.Location = new System.Drawing.Point(108, 98);
-            this.labelEmail.Name = "labelEmail";
-            this.labelEmail.Size = new System.Drawing.Size(175, 17);
-            this.labelEmail.TabIndex = 6;
-            this.labelEmail.Text = "Lucas.swag123@gmail.com";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(21, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 17);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Account#:";
             // 
             // buttonRsvps
             // 
@@ -189,7 +189,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelEmail;
-        private System.Windows.Forms.Label labelUsername;
+        private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelAccountNum;
         private System.Windows.Forms.Button buttonRsvps;
         private System.Windows.Forms.Button buttonEvents;
