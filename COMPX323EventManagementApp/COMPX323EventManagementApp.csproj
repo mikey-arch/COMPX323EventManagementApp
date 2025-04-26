@@ -192,8 +192,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <Content Include="ProfilePic.png" />
+    <None Include="Resources\star-64-white.png" />
+    <None Include="Resources\star-64-gold.png" />
+    <None Include="Resources\blank-profile-picture.png" />
+    <None Include="Resources\ProfilePic.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

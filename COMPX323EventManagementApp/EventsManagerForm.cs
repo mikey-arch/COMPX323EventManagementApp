@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using COMPX323EventManagementApp.Models;
 
 namespace COMPX323EventManagementApp
 {
@@ -31,6 +32,9 @@ namespace COMPX323EventManagementApp
             createEventControl = new CreateEventControl();
             manageEventControl = new ManageEventControl();
             reviewControl = new CreateReviewControl();
+
+            User user = Session.CurrentUser;
+            labelProfilePicName.Text = user.Fname + " " + user.Lname;
         }
 
         //Displays the search event user control 

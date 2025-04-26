@@ -35,15 +35,17 @@
             this.buttonCreateEvent = new System.Windows.Forms.Button();
             this.buttonSearch = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.labelExit = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelProfilePicName = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
             this.panelContent = new System.Windows.Forms.Panel();
-            this.labelExit = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonLogout
@@ -140,10 +142,21 @@
             this.panel2.Size = new System.Drawing.Size(1066, 47);
             this.panel2.TabIndex = 3;
             // 
+            // labelExit
+            // 
+            this.labelExit.AutoSize = true;
+            this.labelExit.Location = new System.Drawing.Point(1037, 9);
+            this.labelExit.Name = "labelExit";
+            this.labelExit.Size = new System.Drawing.Size(17, 17);
+            this.labelExit.TabIndex = 10;
+            this.labelExit.Text = "X";
+            this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.labelProfilePicName);
             this.panel1.Controls.Add(this.buttonSearch);
             this.panel1.Controls.Add(this.buttonLogout);
             this.panel1.Controls.Add(this.buttonProfile);
@@ -156,14 +169,15 @@
             this.panel1.Size = new System.Drawing.Size(200, 541);
             this.panel1.TabIndex = 8;
             // 
-            // label2
+            // labelProfilePicName
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(61, 44);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 17);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "User Name";
+            this.labelProfilePicName.AutoSize = true;
+            this.labelProfilePicName.Location = new System.Drawing.Point(60, 114);
+            this.labelProfilePicName.Name = "labelProfilePicName";
+            this.labelProfilePicName.Size = new System.Drawing.Size(75, 17);
+            this.labelProfilePicName.TabIndex = 8;
+            this.labelProfilePicName.Text = "User Name";
+            this.labelProfilePicName.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panel3
             // 
@@ -194,15 +208,15 @@
             this.panelContent.Size = new System.Drawing.Size(866, 499);
             this.panelContent.TabIndex = 10;
             // 
-            // labelExit
+            // pictureBox1
             // 
-            this.labelExit.AutoSize = true;
-            this.labelExit.Location = new System.Drawing.Point(1037, 9);
-            this.labelExit.Name = "labelExit";
-            this.labelExit.Size = new System.Drawing.Size(17, 17);
-            this.labelExit.TabIndex = 10;
-            this.labelExit.Text = "X";
-            this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
+            this.pictureBox1.Image = global::COMPX323EventManagementApp.Properties.Resources.blank_profile_picture;
+            this.pictureBox1.Location = new System.Drawing.Point(35, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(136, 111);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
             // 
             // EventsManagerForm
             // 
@@ -227,6 +241,7 @@
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -242,8 +257,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelProfilePicName;
         private System.Windows.Forms.Panel panelContent;
         private System.Windows.Forms.Label labelExit;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

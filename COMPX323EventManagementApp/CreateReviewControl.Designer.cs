@@ -32,13 +32,26 @@
             this.label2 = new System.Windows.Forms.Label();
             this.buttonSubmit = new System.Windows.Forms.Button();
             this.textBoxReview = new System.Windows.Forms.TextBox();
-            this.buttonLogin = new System.Windows.Forms.Button();
+            this.buttonSubmitReview = new System.Windows.Forms.Button();
+            this.pictureBoxStar1 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxStar2 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxStar3 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxStar4 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxStar5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(89, 73);
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.label1.Location = new System.Drawing.Point(94, 72);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 0;
@@ -74,30 +87,112 @@
             this.textBoxReview.Enter += new System.EventHandler(this.textBoxReview_Enter);
             this.textBoxReview.Leave += new System.EventHandler(this.textBoxReview_Leave);
             // 
-            // buttonLogin
+            // buttonSubmitReview
             // 
-            this.buttonLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.buttonLogin.FlatAppearance.BorderSize = 0;
-            this.buttonLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonLogin.ForeColor = System.Drawing.Color.White;
-            this.buttonLogin.Location = new System.Drawing.Point(309, 334);
-            this.buttonLogin.Name = "buttonLogin";
-            this.buttonLogin.Size = new System.Drawing.Size(145, 35);
-            this.buttonLogin.TabIndex = 4;
-            this.buttonLogin.Text = "SUBMIT";
-            this.buttonLogin.UseVisualStyleBackColor = false;
+            this.buttonSubmitReview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.buttonSubmitReview.FlatAppearance.BorderSize = 0;
+            this.buttonSubmitReview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSubmitReview.ForeColor = System.Drawing.Color.White;
+            this.buttonSubmitReview.Location = new System.Drawing.Point(309, 334);
+            this.buttonSubmitReview.Name = "buttonSubmitReview";
+            this.buttonSubmitReview.Size = new System.Drawing.Size(145, 35);
+            this.buttonSubmitReview.TabIndex = 4;
+            this.buttonSubmitReview.Text = "SUBMIT";
+            this.buttonSubmitReview.UseVisualStyleBackColor = false;
+            this.buttonSubmitReview.Click += new System.EventHandler(this.buttonSubmitReview_Click);
+            // 
+            // pictureBoxStar1
+            // 
+            this.pictureBoxStar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.pictureBoxStar1.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
+            this.pictureBoxStar1.Location = new System.Drawing.Point(117, 88);
+            this.pictureBoxStar1.Name = "pictureBoxStar1";
+            this.pictureBoxStar1.Size = new System.Drawing.Size(50, 39);
+            this.pictureBoxStar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxStar1.TabIndex = 5;
+            this.pictureBoxStar1.TabStop = false;
+            this.pictureBoxStar1.Click += new System.EventHandler(this.pictureBoxStar1_Click);
+            // 
+            // pictureBoxStar2
+            // 
+            this.pictureBoxStar2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.pictureBoxStar2.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
+            this.pictureBoxStar2.Location = new System.Drawing.Point(183, 88);
+            this.pictureBoxStar2.Name = "pictureBoxStar2";
+            this.pictureBoxStar2.Size = new System.Drawing.Size(50, 39);
+            this.pictureBoxStar2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxStar2.TabIndex = 6;
+            this.pictureBoxStar2.TabStop = false;
+            this.pictureBoxStar2.Click += new System.EventHandler(this.pictureBoxStar2_Click);
+            // 
+            // pictureBoxStar3
+            // 
+            this.pictureBoxStar3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.pictureBoxStar3.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
+            this.pictureBoxStar3.Location = new System.Drawing.Point(248, 88);
+            this.pictureBoxStar3.Name = "pictureBoxStar3";
+            this.pictureBoxStar3.Size = new System.Drawing.Size(50, 39);
+            this.pictureBoxStar3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxStar3.TabIndex = 7;
+            this.pictureBoxStar3.TabStop = false;
+            this.pictureBoxStar3.Click += new System.EventHandler(this.pictureBoxStar3_Click);
+            // 
+            // pictureBoxStar4
+            // 
+            this.pictureBoxStar4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.pictureBoxStar4.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
+            this.pictureBoxStar4.Location = new System.Drawing.Point(314, 88);
+            this.pictureBoxStar4.Name = "pictureBoxStar4";
+            this.pictureBoxStar4.Size = new System.Drawing.Size(50, 39);
+            this.pictureBoxStar4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxStar4.TabIndex = 8;
+            this.pictureBoxStar4.TabStop = false;
+            this.pictureBoxStar4.Click += new System.EventHandler(this.pictureBoxStar4_Click);
+            // 
+            // pictureBoxStar5
+            // 
+            this.pictureBoxStar5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.pictureBoxStar5.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
+            this.pictureBoxStar5.Location = new System.Drawing.Point(382, 88);
+            this.pictureBoxStar5.Name = "pictureBoxStar5";
+            this.pictureBoxStar5.Size = new System.Drawing.Size(50, 39);
+            this.pictureBoxStar5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxStar5.TabIndex = 9;
+            this.pictureBoxStar5.TabStop = false;
+            this.pictureBoxStar5.Click += new System.EventHandler(this.pictureBoxStar5_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.pictureBox1.Location = new System.Drawing.Point(92, 55);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(362, 101);
+            this.pictureBox1.TabIndex = 10;
+            this.pictureBox1.TabStop = false;
             // 
             // CreateReviewControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.buttonLogin);
+            this.Controls.Add(this.pictureBoxStar5);
+            this.Controls.Add(this.pictureBoxStar4);
+            this.Controls.Add(this.pictureBoxStar3);
+            this.Controls.Add(this.pictureBoxStar2);
+            this.Controls.Add(this.pictureBoxStar1);
+            this.Controls.Add(this.buttonSubmitReview);
             this.Controls.Add(this.textBoxReview);
             this.Controls.Add(this.buttonSubmit);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.pictureBox1);
             this.Name = "CreateReviewControl";
             this.Size = new System.Drawing.Size(538, 384);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -109,6 +204,12 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonSubmit;
         private System.Windows.Forms.TextBox textBoxReview;
-        private System.Windows.Forms.Button buttonLogin;
+        private System.Windows.Forms.Button buttonSubmitReview;
+        private System.Windows.Forms.PictureBox pictureBoxStar1;
+        private System.Windows.Forms.PictureBox pictureBoxStar2;
+        private System.Windows.Forms.PictureBox pictureBoxStar3;
+        private System.Windows.Forms.PictureBox pictureBoxStar4;
+        private System.Windows.Forms.PictureBox pictureBoxStar5;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
