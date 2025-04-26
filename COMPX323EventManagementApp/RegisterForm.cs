@@ -27,77 +27,153 @@ namespace COMPX323EventManagementApp
         // Registers a new user by inserting their details into the database once the Register button is clicked.
         private void buttonRegister_Click(object sender, EventArgs e)
         {
-            /*
-            string username = textBoxUsername.Text;
-            string email = textBoxEmail.Text;
-            string phoneNum = textBoxPhoneNumber.Text;
-            string dateOfBirth = textBoxBirthday.Text;
+            string firstName = textBoxFirstName.Text.Trim();
+            string lastName = textBoxLastName.Text.Trim();
+            string email = textBoxEmail.Text.Trim();
+            string phoneNum = maskedTextBoxPhoneNumber.Text.Replace("-", "");
+            DateTime dob = dateTimePickerBirthday.Value;
             string password = textBoxPassword.Text;
             string confirmPassword = textBoxConfirmPassword.Text;
+            bool wantToAttend = checkBoxAttend.Checked;
+            bool wantToOrganise = checkBoxOrganise.Checked;
 
-  
-            // 1) Read & validate your inputs
-            var pwd = textBoxPassword.Text;
-            var confirm = textBoxConfirmPassword.Text;
-            if (pwd != confirm)
+            //validation checks and error messages
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Passwords don’t match.");
+                MessageBox.Show("Please fill in all fields.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!DateTime.TryParseExact(
-                textBoxBirthday.Text,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime dob))
+            if (password != confirmPassword)
             {
-                MessageBox.Show(
-                  "Please enter your birthday in the format YYYY-MM-DD, e.g. 2004-10-01.");
+                MessageBox.Show("Passwords don’t match.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-
-
-            // 2) Build & execute a parameterized INSERT
-            const string sql = @"INSERT INTO Attendee (password, mob_num, fname, lname, email, DOB, payment_status) 
-                                VALUES(:pwd, :mob, :fname, :lname, :email, :dob, :status)";
-
-            using (var conn = DbConfig.GetConnection())
-            using (var cmd = conn.CreateCommand())
+            if (!wantToAttend && !wantToOrganise)
             {
-                cmd.CommandText = sql;
+                MessageBox.Show("Please select at least one option: 'I want to attend' or 'I want to organise'.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
 
-                // bind parameters
-                cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = pwd;
-                cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = textBoxPhoneNumber.Text.Trim();
-                cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = textBoxUsername.Text.Trim();
-                cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = textBoxUsername.Text.Trim();
-                cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = textBoxEmail.Text.Trim();
-                cmd.Parameters.Add("dob", OracleDbType.Date).Value = dob;
-                cmd.Parameters.Add("status", OracleDbType.Varchar2).Value = "up_to_date";
-
-                conn.Open();
-                int inserted = cmd.ExecuteNonQuery();  // returns #rows affected
-
-                MessageBox.Show(
-                    inserted == 1
-                      ? "Registration successful!"
-                      : "Oops—no rows inserted.");
             }
-            */
+
+            if (!email.Contains("@"))
+            {
+                MessageBox.Show("Please enter a valid email address e.g customer@email.com", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!phoneNum.StartsWith("02") || phoneNum.Length < 9)
+            {
+                MessageBox.Show("Please enter a valid NZ phone number starting with 02 and at least 9 digits", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DateTime minDate = DateTime.Today.AddYears(-13);
+            if (dob > minDate)
+            {
+                MessageBox.Show("You must be at least 13 years old to register.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (var conn = DbConfig.GetConnection())
+                {
+                    conn.Open();
+                    // Check if the email already exists in the database
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "select count(*) from Attendee where email = :email" + " union all " + "select count(*) from Organiser where email = :email";
+                        cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            int totalCount = 0;
+                            while (reader.Read())
+                            {
+                                totalCount += Convert.ToInt32(reader.GetValue(0));
+                            }
+
+                            if (totalCount > 0)
+                            {
+                                MessageBox.Show("Email already exists. Please use a different email.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                return;
+                            }
+                        }
+                    }
+
+                    //register the user into attendee table
+                    if (wantToAttend)
+                    {
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = @"insert into Attendee (password, mob_num, fname, lname, email, DOB, payment_status) values (:pwd, :mob, :fname, :lname, :email, :dob, :status)";
+                            cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = password;
+                            cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = phoneNum;
+                            cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = firstName;
+                            cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = lastName;
+                            cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+                            cmd.Parameters.Add("dob", OracleDbType.Date).Value = dob;
+                            cmd.Parameters.Add("status", OracleDbType.Varchar2).Value = "up_to_date";
+
+                            int attendeeInserted = cmd.ExecuteNonQuery();
+
+                            if (attendeeInserted != 1)
+                            {
+                                MessageBox.Show("Failed to register as an attendee.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                    }
+
+                    //register the user into organiser table
+                    if (wantToOrganise)
+                    {
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = @"insert into Organiser (password, mob_num, fname, lname, email, DOB) values (:pwd, :mob, :fname, :lname, :email)";
+                            cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = password;
+                            cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = phoneNum;
+                            cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = firstName;
+                            cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = lastName;
+                            cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+
+                            int organiserInserted = cmd.ExecuteNonQuery();
+                            if (organiserInserted != 1)
+                            {
+                                MessageBox.Show("Failed to register as an organiser.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+                    }
+
+                    MessageBox.Show("Registration successful! You can now login with your email and password.", "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                    // Return to login form
+                    new LoginForm().Show();
+                    this.Hide();
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Database Error: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
 
         // Clears all the text boxes when the Clear button is clicked then focuses on the username text box.
         private void buttonClear_Click(object sender, EventArgs e)
         {
+            textBoxFirstName.Clear();
+            textBoxLastName.Clear();
             textBoxEmail.Clear();
-            textBoxPhoneNumber.Clear();
+            maskedTextBoxPhoneNumber.Clear();
             dateTimePickerBirthday.Value = DateTime.Now;
             textBoxPassword.Clear();
             textBoxConfirmPassword.Clear();
-            textBoxEmail.Focus();
+            textBoxFirstName.Focus();
         }
 
         // Opens the LoginForm when the Login label is clicked and hides the RegisterForm.
