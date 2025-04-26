@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxFilter = new System.Windows.Forms.ComboBox();
-            this.listBoxEvents = new System.Windows.Forms.ListBox();
+            this.listViewEvents = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // comboBoxSort
@@ -77,19 +77,20 @@
             this.comboBoxFilter.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFilter.TabIndex = 4;
             // 
-            // listBoxEvents
+            // listViewEvents
             // 
-            this.listBoxEvents.FormattingEnabled = true;
-            this.listBoxEvents.Location = new System.Drawing.Point(44, 111);
-            this.listBoxEvents.Name = "listBoxEvents";
-            this.listBoxEvents.Size = new System.Drawing.Size(587, 264);
-            this.listBoxEvents.TabIndex = 5;
+            this.listViewEvents.HideSelection = false;
+            this.listViewEvents.Location = new System.Drawing.Point(47, 137);
+            this.listViewEvents.Name = "listViewEvents";
+            this.listViewEvents.Size = new System.Drawing.Size(734, 321);
+            this.listViewEvents.TabIndex = 5;
+            this.listViewEvents.UseCompatibleStateImageBehavior = false;
             // 
             // SearchEventControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.listBoxEvents);
+            this.Controls.Add(this.listViewEvents);
             this.Controls.Add(this.comboBoxFilter);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -106,6 +107,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxFilter;
-        private System.Windows.Forms.ListBox listBoxEvents;
+        private System.Windows.Forms.ListView listViewEvents;
     }
 }
