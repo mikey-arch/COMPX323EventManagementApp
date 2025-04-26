@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxLocation = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,17 +49,8 @@
             this.comboBoxCategory = new System.Windows.Forms.ComboBox();
             this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.comboBoxRestrictions = new System.Windows.Forms.ComboBox();
+            this.comboBoxLocation = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
-            // 
-            // textBoxLocation
-            // 
-            this.textBoxLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
-            this.textBoxLocation.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxLocation.Font = new System.Drawing.Font("MS UI Gothic", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxLocation.Location = new System.Drawing.Point(129, 214);
-            this.textBoxLocation.Name = "textBoxLocation";
-            this.textBoxLocation.Size = new System.Drawing.Size(242, 21);
-            this.textBoxLocation.TabIndex = 40;
             // 
             // label2
             // 
@@ -85,11 +75,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(45, 159);
+            this.label1.Location = new System.Drawing.Point(32, 159);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.Size = new System.Drawing.Size(91, 13);
             this.label1.TabIndex = 48;
-            this.label1.Text = "Description";
+            this.label1.Text = "Event Description";
             // 
             // label12
             // 
@@ -159,6 +149,7 @@
             this.buttonCreateEvent.TabIndex = 43;
             this.buttonCreateEvent.Text = "CREATE EVENT";
             this.buttonCreateEvent.UseVisualStyleBackColor = false;
+            this.buttonCreateEvent.Click += new System.EventHandler(this.buttonCreateEvent_Click);
             // 
             // textBoxPrice
             // 
@@ -254,10 +245,20 @@
             this.comboBoxRestrictions.Size = new System.Drawing.Size(242, 21);
             this.comboBoxRestrictions.TabIndex = 60;
             // 
+            // comboBoxLocation
+            // 
+            this.comboBoxLocation.FormattingEnabled = true;
+            this.comboBoxLocation.Location = new System.Drawing.Point(129, 222);
+            this.comboBoxLocation.Name = "comboBoxLocation";
+            this.comboBoxLocation.Size = new System.Drawing.Size(242, 21);
+            this.comboBoxLocation.TabIndex = 61;
+            this.comboBoxLocation.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocation_SelectedIndexChanged);
+            // 
             // CreateEventControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBoxLocation);
             this.Controls.Add(this.comboBoxRestrictions);
             this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.comboBoxCategory);
@@ -268,7 +269,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxPrice);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBoxLocation);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxDescription);
             this.Controls.Add(this.label1);
@@ -287,8 +287,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox textBoxLocation;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Label label1;
@@ -310,5 +308,6 @@
         private System.Windows.Forms.ComboBox comboBoxCategory;
         private System.Windows.Forms.DateTimePicker dateTimePicker;
         private System.Windows.Forms.ComboBox comboBoxRestrictions;
+        private System.Windows.Forms.ComboBox comboBoxLocation;
     }
 }
