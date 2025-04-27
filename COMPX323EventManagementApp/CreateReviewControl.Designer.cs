@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonSubmit = new System.Windows.Forms.Button();
             this.textBoxReview = new System.Windows.Forms.TextBox();
@@ -39,6 +38,9 @@
             this.pictureBoxStar4 = new System.Windows.Forms.PictureBox();
             this.pictureBoxStar5 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.comboBoxEvents = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar3)).BeginInit();
@@ -46,16 +48,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.Location = new System.Drawing.Point(94, 63);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Your Rating:";
             // 
             // label2
             // 
@@ -170,10 +162,39 @@
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(92, 63);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Your Rating:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(92, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(68, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Your Events:";
+            // 
+            // comboBoxEvents
+            // 
+            this.comboBoxEvents.FormattingEnabled = true;
+            this.comboBoxEvents.Location = new System.Drawing.Point(92, 38);
+            this.comboBoxEvents.Name = "comboBoxEvents";
+            this.comboBoxEvents.Size = new System.Drawing.Size(362, 21);
+            this.comboBoxEvents.TabIndex = 13;
+            // 
             // CreateReviewControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBoxEvents);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBoxStar5);
             this.Controls.Add(this.pictureBoxStar4);
             this.Controls.Add(this.pictureBoxStar3);
@@ -183,7 +204,6 @@
             this.Controls.Add(this.textBoxReview);
             this.Controls.Add(this.buttonSubmit);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Name = "CreateReviewControl";
             this.Size = new System.Drawing.Size(538, 384);
@@ -199,8 +219,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonSubmit;
         private System.Windows.Forms.TextBox textBoxReview;
@@ -211,5 +229,8 @@
         private System.Windows.Forms.PictureBox pictureBoxStar4;
         private System.Windows.Forms.PictureBox pictureBoxStar5;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox comboBoxEvents;
     }
 }
