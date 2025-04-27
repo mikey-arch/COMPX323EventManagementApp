@@ -166,7 +166,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 47);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 541);
+            this.panel1.Size = new System.Drawing.Size(197, 541);
             this.panel1.TabIndex = 8;
             // 
             // labelProfilePicName
@@ -184,9 +184,9 @@
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.panel3.Controls.Add(this.labelTitle);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(200, 47);
+            this.panel3.Location = new System.Drawing.Point(197, 47);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(866, 42);
+            this.panel3.Size = new System.Drawing.Size(869, 42);
             this.panel3.TabIndex = 9;
             // 
             // labelTitle
@@ -203,9 +203,9 @@
             // panelContent
             // 
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(200, 89);
+            this.panelContent.Location = new System.Drawing.Point(197, 89);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(866, 499);
+            this.panelContent.Size = new System.Drawing.Size(869, 499);
             this.panelContent.TabIndex = 10;
             // 
             // pictureBox1
@@ -235,6 +235,7 @@
             this.Name = "EventsManagerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EventsManagerForm";
+            this.Load += new System.EventHandler(this.EventsManagerForm_Load);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);

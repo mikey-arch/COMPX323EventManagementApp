@@ -35,6 +35,7 @@ namespace COMPX323EventManagementApp
 
             User user = Session.CurrentUser;
             labelProfilePicName.Text = user.Fname + " " + user.Lname;
+            this.Load += new EventHandler(EventsManagerForm_Load);
         }
 
         //Displays the search event user control 
@@ -100,6 +101,15 @@ namespace COMPX323EventManagementApp
         private void labelExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        //Handles showing the profile control by default/on load
+        private void EventsManagerForm_Load(object sender, EventArgs e)
+        {
+            labelTitle.Text = "PROFILE";
+            panelContent.Controls.Clear();
+            profileControl.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(profileControl);
         }
     }
 }

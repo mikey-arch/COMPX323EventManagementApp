@@ -50,8 +50,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.label1.Location = new System.Drawing.Point(94, 72);
+            this.label1.BackColor = System.Drawing.SystemColors.Control;
+            this.label1.Location = new System.Drawing.Point(94, 63);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 0;
@@ -105,7 +105,7 @@
             // 
             this.pictureBoxStar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.pictureBoxStar1.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
-            this.pictureBoxStar1.Location = new System.Drawing.Point(117, 88);
+            this.pictureBoxStar1.Location = new System.Drawing.Point(117, 96);
             this.pictureBoxStar1.Name = "pictureBoxStar1";
             this.pictureBoxStar1.Size = new System.Drawing.Size(50, 39);
             this.pictureBoxStar1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -117,7 +117,7 @@
             // 
             this.pictureBoxStar2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.pictureBoxStar2.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
-            this.pictureBoxStar2.Location = new System.Drawing.Point(183, 88);
+            this.pictureBoxStar2.Location = new System.Drawing.Point(183, 96);
             this.pictureBoxStar2.Name = "pictureBoxStar2";
             this.pictureBoxStar2.Size = new System.Drawing.Size(50, 39);
             this.pictureBoxStar2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -129,7 +129,7 @@
             // 
             this.pictureBoxStar3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.pictureBoxStar3.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
-            this.pictureBoxStar3.Location = new System.Drawing.Point(248, 88);
+            this.pictureBoxStar3.Location = new System.Drawing.Point(248, 96);
             this.pictureBoxStar3.Name = "pictureBoxStar3";
             this.pictureBoxStar3.Size = new System.Drawing.Size(50, 39);
             this.pictureBoxStar3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -141,7 +141,7 @@
             // 
             this.pictureBoxStar4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.pictureBoxStar4.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
-            this.pictureBoxStar4.Location = new System.Drawing.Point(314, 88);
+            this.pictureBoxStar4.Location = new System.Drawing.Point(314, 96);
             this.pictureBoxStar4.Name = "pictureBoxStar4";
             this.pictureBoxStar4.Size = new System.Drawing.Size(50, 39);
             this.pictureBoxStar4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -153,7 +153,7 @@
             // 
             this.pictureBoxStar5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.pictureBoxStar5.Image = global::COMPX323EventManagementApp.Properties.Resources.star_64_white;
-            this.pictureBoxStar5.Location = new System.Drawing.Point(382, 88);
+            this.pictureBoxStar5.Location = new System.Drawing.Point(382, 96);
             this.pictureBoxStar5.Name = "pictureBoxStar5";
             this.pictureBoxStar5.Size = new System.Drawing.Size(50, 39);
             this.pictureBoxStar5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -164,9 +164,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.pictureBox1.Location = new System.Drawing.Point(92, 55);
+            this.pictureBox1.Location = new System.Drawing.Point(92, 79);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(362, 101);
+            this.pictureBox1.Size = new System.Drawing.Size(362, 77);
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 

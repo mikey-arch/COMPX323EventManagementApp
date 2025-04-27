@@ -39,7 +39,7 @@
             this.buttonRsvps = new System.Windows.Forms.Button();
             this.buttonEvents = new System.Windows.Forms.Button();
             this.buttonReviews = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listViewDisplay = new System.Windows.Forms.ListView();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -111,9 +111,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(21, 70);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 17);
+            this.label4.Size = new System.Drawing.Size(48, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Username:";
+            this.label4.Text = "Name:";
             // 
             // label2
             // 
@@ -126,46 +126,55 @@
             // 
             // buttonRsvps
             // 
+            this.buttonRsvps.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRsvps.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.buttonRsvps.Location = new System.Drawing.Point(61, 192);
             this.buttonRsvps.Name = "buttonRsvps";
             this.buttonRsvps.Size = new System.Drawing.Size(223, 49);
             this.buttonRsvps.TabIndex = 2;
             this.buttonRsvps.Text = "RSVPS";
             this.buttonRsvps.UseVisualStyleBackColor = true;
+            this.buttonRsvps.Click += new System.EventHandler(this.buttonRsvps_Click);
             // 
             // buttonEvents
             // 
+            this.buttonEvents.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonEvents.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.buttonEvents.Location = new System.Drawing.Point(539, 192);
             this.buttonEvents.Name = "buttonEvents";
             this.buttonEvents.Size = new System.Drawing.Size(225, 49);
             this.buttonEvents.TabIndex = 3;
             this.buttonEvents.Text = "EVENTS";
             this.buttonEvents.UseVisualStyleBackColor = true;
+            this.buttonEvents.Click += new System.EventHandler(this.buttonEvents_Click);
             // 
             // buttonReviews
             // 
+            this.buttonReviews.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonReviews.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.buttonReviews.Location = new System.Drawing.Point(288, 192);
             this.buttonReviews.Name = "buttonReviews";
             this.buttonReviews.Size = new System.Drawing.Size(245, 49);
             this.buttonReviews.TabIndex = 4;
             this.buttonReviews.Text = "REVIEWS";
             this.buttonReviews.UseVisualStyleBackColor = true;
+            this.buttonReviews.Click += new System.EventHandler(this.buttonReviews_Click);
             // 
-            // listView1
+            // listViewDisplay
             // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(61, 247);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(701, 169);
-            this.listView1.TabIndex = 5;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listViewDisplay.HideSelection = false;
+            this.listViewDisplay.Location = new System.Drawing.Point(61, 247);
+            this.listViewDisplay.Name = "listViewDisplay";
+            this.listViewDisplay.Size = new System.Drawing.Size(701, 169);
+            this.listViewDisplay.TabIndex = 5;
+            this.listViewDisplay.UseCompatibleStateImageBehavior = false;
             // 
             // ProfileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.listViewDisplay);
             this.Controls.Add(this.buttonReviews);
             this.Controls.Add(this.buttonEvents);
             this.Controls.Add(this.buttonRsvps);
@@ -194,6 +203,6 @@
         private System.Windows.Forms.Button buttonRsvps;
         private System.Windows.Forms.Button buttonEvents;
         private System.Windows.Forms.Button buttonReviews;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewDisplay;
     }
 }
