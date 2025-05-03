@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using COMPX323EventManagementApp.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace COMPX323EventManagementApp
 {
@@ -309,8 +310,5 @@ namespace COMPX323EventManagementApp
                 MessageBox.Show($"Error deleting RSVP: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
-
     }
 }
