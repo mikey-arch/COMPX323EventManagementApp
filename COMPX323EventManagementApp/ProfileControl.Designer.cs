@@ -51,7 +51,7 @@
             this.label1.Location = new System.Drawing.Point(21, 10);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 17);
+            this.label1.Size = new System.Drawing.Size(82, 23);
             this.label1.TabIndex = 0;
             this.label1.Text = "DETAILS:";
             // 
@@ -75,7 +75,7 @@
             this.labelEmail.AutoSize = true;
             this.labelEmail.Location = new System.Drawing.Point(108, 98);
             this.labelEmail.Name = "labelEmail";
-            this.labelEmail.Size = new System.Drawing.Size(175, 17);
+            this.labelEmail.Size = new System.Drawing.Size(230, 23);
             this.labelEmail.TabIndex = 6;
             this.labelEmail.Text = "Lucas.swag123@gmail.com";
             // 
@@ -84,7 +84,7 @@
             this.labelName.AutoSize = true;
             this.labelName.Location = new System.Drawing.Point(108, 70);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(75, 17);
+            this.labelName.Size = new System.Drawing.Size(97, 23);
             this.labelName.TabIndex = 5;
             this.labelName.Text = "lucas_swag";
             // 
@@ -93,7 +93,7 @@
             this.labelAccountNum.AutoSize = true;
             this.labelAccountNum.Location = new System.Drawing.Point(108, 42);
             this.labelAccountNum.Name = "labelAccountNum";
-            this.labelAccountNum.Size = new System.Drawing.Size(36, 17);
+            this.labelAccountNum.Size = new System.Drawing.Size(50, 23);
             this.labelAccountNum.TabIndex = 4;
             this.labelAccountNum.Text = "1234";
             // 
@@ -102,7 +102,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(21, 98);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 17);
+            this.label3.Size = new System.Drawing.Size(59, 23);
             this.label3.TabIndex = 2;
             this.label3.Text = "Email:";
             // 
@@ -111,7 +111,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(21, 70);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(48, 17);
+            this.label4.Size = new System.Drawing.Size(62, 23);
             this.label4.TabIndex = 3;
             this.label4.Text = "Name:";
             // 
@@ -120,7 +120,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(21, 42);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 17);
+            this.label2.Size = new System.Drawing.Size(90, 23);
             this.label2.TabIndex = 1;
             this.label2.Text = "Account#:";
             // 
@@ -168,10 +168,11 @@
             this.listViewDisplay.Size = new System.Drawing.Size(701, 169);
             this.listViewDisplay.TabIndex = 5;
             this.listViewDisplay.UseCompatibleStateImageBehavior = false;
+            this.listViewDisplay.DoubleClick += new System.EventHandler(this.listViewDisplay_DoubleClick);
             // 
             // ProfileControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.Controls.Add(this.listViewDisplay);

@@ -13,6 +13,7 @@ namespace COMPX323EventManagementApp
 {
     public partial class ProfileControl : UserControl
     {
+        String currentlySelected;
         public ProfileControl()
         {
             InitializeComponent();
@@ -22,12 +23,14 @@ namespace COMPX323EventManagementApp
             labelAccountNum.Text = user.Id.ToString();
             labelName.Text = user.Fname + " " + user.Lname;
             labelEmail.Text = user.Email;
+            currentlySelected = "";
             
         }
 
         //displays users rsvps / upcoming events
         private void buttonRsvps_Click(object sender, EventArgs e)
         {
+            currentlySelected = "RSVP";
             try
             {
                 //clear and set up list view columns for RSVPS
@@ -90,6 +93,7 @@ namespace COMPX323EventManagementApp
         //displays users reviews
         private void buttonReviews_Click(object sender, EventArgs e)
         {
+            currentlySelected = "Reviews";
             try
             {
                 // clear listbox and setup list view columns for reviews
@@ -154,6 +158,7 @@ namespace COMPX323EventManagementApp
         //displays users organised events
         private void buttonEvents_Click(object sender, EventArgs e)
         {
+            currentlySelected = "Events";
             try
             {
                 // clear listview and setup columns
@@ -218,6 +223,30 @@ namespace COMPX323EventManagementApp
                 MessageBox.Show($"Database Error: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void listViewDisplay_DoubleClick(object sender, EventArgs e)
+        {
+            
+            if (currentlySelected == "RSVP" && listViewDisplay.SelectedItems.Count > 0)
+            {
+                // Get the selected item. Assuming it contains event data (event name, date, and venue)
+                var selectedEvent = listViewDisplay.SelectedItems[0];
+
+                // Extract event name, event date, and venue name from the ListView columns
+                string eventName = selectedEvent.Text; // First column is event name
+                DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text); // Second column is event date
+                string venueName = selectedEvent.SubItems[2].Text; // third column is venue name
+
+                // Open the EventDetails form and pass the event name, event date, and venue name
+                EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
+
+                // After the EventDetails form is closed, refresh the RSVP data
+                eventDetailsForm.FormClosed += (s, args) => buttonRsvps_Click(s, args);  // Refresh the RSVP data
+
+
+                eventDetailsForm.Show();
+            }
         }
     }
 }

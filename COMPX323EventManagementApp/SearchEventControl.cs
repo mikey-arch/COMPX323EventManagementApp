@@ -259,8 +259,20 @@ namespace COMPX323EventManagementApp
         {
             if (listViewEvents.SelectedItems.Count > 0)
             {
-                MessageBox.Show("opens this event page");
+                // Get the selected item. Assuming it contains event data (event name, date, and venue)
+                var selectedEvent = listViewEvents.SelectedItems[0];
+
+                // Extract event name, event date, and venue name from the ListView columns
+                string eventName = selectedEvent.Text; // First column is event name
+                DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text); // Second column is event date
+                string venueName = selectedEvent.SubItems[3].Text; // Fourth column is venue name
+
+                // Open the EventDetails form and pass the event name, event date, and venue name
+                EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
+                eventDetailsForm.Show();
             }
+
+
         }
     }
 }
