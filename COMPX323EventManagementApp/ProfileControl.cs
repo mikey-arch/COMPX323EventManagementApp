@@ -230,23 +230,87 @@ namespace COMPX323EventManagementApp
             
             if (currentlySelected == "RSVP" && listViewDisplay.SelectedItems.Count > 0)
             {
+                // Create and show the custom message box
+                CustomMessageBox customMsgBox = new CustomMessageBox();
+                customMsgBox.ShowDialog();
+
                 // Get the selected item. Assuming it contains event data (event name, date, and venue)
                 var selectedEvent = listViewDisplay.SelectedItems[0];
 
                 // Extract event name, event date, and venue name from the ListView columns
-                string eventName = selectedEvent.Text; // First column is event name
-                DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text); // Second column is event date
-                string venueName = selectedEvent.SubItems[2].Text; // third column is venue name
-
-                // Open the EventDetails form and pass the event name, event date, and venue name
-                EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
-
-                // After the EventDetails form is closed, refresh the RSVP data
-                eventDetailsForm.FormClosed += (s, args) => buttonRsvps_Click(s, args);  // Refresh the RSVP data
+                string eventName = selectedEvent.Text;
+                DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text);
+                string venueName = selectedEvent.SubItems[2].Text;
 
 
-                eventDetailsForm.Show();
+                // Handle the result of the custom message box
+                if (customMsgBox.SelectedOption == "Delete RSVP")
+                {
+                    // Handle Delete RSVP 
+                    DeleteRsvp(eventName, eventDate, venueName);
+                    buttonRsvps_Click(sender, e);
+
+                }
+                else if (customMsgBox.SelectedOption == "View Event Details")
+                {
+                    // Open the EventDetails form and pass the event name, event date, and venue name
+                    EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
+
+                    // After the EventDetails form is closed, refresh the RSVP data
+                    eventDetailsForm.FormClosed += (s, args) => buttonRsvps_Click(s, args);  
+
+                    eventDetailsForm.Show();
+                }
             }
         }
+
+        private void DeleteRsvp(string eventName, DateTime eventDate, string venueName)
+        {
+            try
+            {
+                // Get the attendee ID from the current user session
+                User user = Session.CurrentUser;
+                int attendeeId = user.Id;
+
+                // SQL query to delete the RSVP record from the database
+                string deleteQuery = @"
+                    DELETE FROM RSVP
+                    WHERE acc_num = :attendeeId
+                    AND ename = :eventName
+                    AND vname = :venueName
+                    AND event_date = :eventDate";
+
+                // Execute the delete query
+                using (var conn = DbConfig.GetConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = deleteQuery;
+
+                        // Add parameters for deletion
+                        cmd.Parameters.Add("attendeeId", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = attendeeId;
+                        cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+                        cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
+                        cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
+
+                        // Execute the delete command
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected < 0)
+                        {
+                            MessageBox.Show("No matching RSVP found to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error deleting RSVP: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
     }
 }
