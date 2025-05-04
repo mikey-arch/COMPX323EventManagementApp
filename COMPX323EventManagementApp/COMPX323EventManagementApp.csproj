@@ -97,6 +97,7 @@
     <Compile Include="CreateReviewControl.Designer.cs">
       <DependentUpon>CreateReviewControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess.cs" />
     <Compile Include="DbConfig.cs" />
     <Compile Include="EventDetails.cs">
       <SubType>Form</SubType>
