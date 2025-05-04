@@ -103,6 +103,7 @@
     <Compile Include="CustomMessageBox.Designer.cs">
       <DependentUpon>CustomMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess.cs" />
     <Compile Include="DbConfig.cs" />
     <Compile Include="EventDetails.cs">
       <SubType>Form</SubType>
@@ -129,11 +130,16 @@
       <DependentUpon>ManageEventControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attendee.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\EventInstance.cs" />
     <Compile Include="Models\Organiser.cs" />
+    <Compile Include="Models\Restrictions.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\RSVP.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Venue.cs" />
     <Compile Include="ProfileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
