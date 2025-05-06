@@ -11,7 +11,7 @@ namespace COMPX323EventManagementApp
     public static class DbConfig
     {
         // Gets Oracle connection string from app.config
-        public static string ConnectionString = ConfigurationManager.ConnectionStrings["Project323"].ConnectionString;
+        public static string ConnectionString = ConfigurationManager.ConnectionStrings["OracleConnection"].ConnectionString;
 
         /// <summary>
         /// Helper function to get a fresh connection
