@@ -10,7 +10,7 @@ namespace COMPX323EventManagementApp
         {
             InitializeComponent();
             LoadComboBoxes();
-            DisplayEvents();
+            DisplayEvents(textBoxSearch.Text.Trim());
         }
 
         //loads all comboboxes with appropriate filters names
@@ -85,7 +85,7 @@ namespace COMPX323EventManagementApp
         }
 
         //displays updated filtered events in the listview
-        private void DisplayEvents()
+        private void DisplayEvents(string searchWord = "")
         {
             try
             {
@@ -123,6 +123,13 @@ namespace COMPX323EventManagementApp
                     left join has h on e.ename = h.ename
                     left join restrictions r on h.rname = r.rname
                     where 1=1";
+
+                    //search filter
+                    if (!string.IsNullOrEmpty(searchWord))
+                    {
+                        query += " and (lower(e.ename) like lower(:searchWord) or lower(e.description) like lower(:searchWord))";
+                    }
+
 
                     // handles the price combo box filtering selection
                     string priceFilter = comboBoxPrice.SelectedItem?.ToString();
@@ -173,11 +180,12 @@ namespace COMPX323EventManagementApp
                         query += " order by ei.event_date asc, ei.time asc";
                     }
 
+
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = query;
+                        cmd.BindByName = true;
 
-                        // add location, category, restriction and date parameters
                         if (!string.IsNullOrEmpty(locationFilter) && locationFilter != "All Locations")
                         {
                             cmd.Parameters.Add("location", OracleDbType.Varchar2).Value = locationFilter;
@@ -191,6 +199,12 @@ namespace COMPX323EventManagementApp
                         if (!string.IsNullOrEmpty(restrictionFilter) && restrictionFilter != "All Restrictions")
                         {
                             cmd.Parameters.Add("restriction", OracleDbType.Varchar2).Value = restrictionFilter;
+                        }
+
+                        // add location, category, restriction, searching and date parameters
+                        if (!string.IsNullOrWhiteSpace(searchWord))
+                        {
+                            cmd.Parameters.Add("searchWord", OracleDbType.Varchar2).Value = "%" + searchWord + "%";
                         }
 
                         cmd.Parameters.Add("month", OracleDbType.Int32).Value = selectedDate.Month;
@@ -233,25 +247,32 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        //updates listbox when filters are changed
         private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DisplayEvents();
+            DisplayEvents(textBoxSearch.Text.Trim());
         }
         private void comboBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DisplayEvents();
+            DisplayEvents(textBoxSearch.Text.Trim());
         }
         private void comboBoxRestriction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DisplayEvents();
+            DisplayEvents(textBoxSearch.Text.Trim());
         }
         private void comboBoxPrice_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DisplayEvents();
+            DisplayEvents(textBoxSearch.Text.Trim());
         }
         private void dateTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            DisplayEvents();
+            DisplayEvents(textBoxSearch.Text.Trim());
+        }
+
+        //updates list box while search is updated
+        private void textBoxSearch_TextChanged(object sender, EventArgs e)
+        {
+            DisplayEvents(textBoxSearch.Text.Trim());
         }
 
         //should handle if selected then showeventdetails and go to that events details
@@ -271,8 +292,6 @@ namespace COMPX323EventManagementApp
                 EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
                 eventDetailsForm.Show();
             }
-
-
         }
     }
 }
