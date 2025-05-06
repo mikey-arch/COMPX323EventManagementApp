@@ -39,7 +39,7 @@
             this.labelExit.AutoSize = true;
             this.labelExit.Font = new System.Drawing.Font("Nirmala UI", 9.75F, System.Drawing.FontStyle.Bold);
             this.labelExit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
-            this.labelExit.Location = new System.Drawing.Point(239, 9);
+            this.labelExit.Location = new System.Drawing.Point(381, 9);
             this.labelExit.Name = "labelExit";
             this.labelExit.Size = new System.Drawing.Size(21, 23);
             this.labelExit.TabIndex = 38;
@@ -58,7 +58,7 @@
             // 
             // buttonDelRSVP
             // 
-            this.buttonDelRSVP.Location = new System.Drawing.Point(13, 71);
+            this.buttonDelRSVP.Location = new System.Drawing.Point(35, 107);
             this.buttonDelRSVP.Name = "buttonDelRSVP";
             this.buttonDelRSVP.Size = new System.Drawing.Size(109, 51);
             this.buttonDelRSVP.TabIndex = 40;
@@ -68,7 +68,7 @@
             // 
             // buttonEventDetails
             // 
-            this.buttonEventDetails.Location = new System.Drawing.Point(151, 71);
+            this.buttonEventDetails.Location = new System.Drawing.Point(259, 107);
             this.buttonEventDetails.Name = "buttonEventDetails";
             this.buttonEventDetails.Size = new System.Drawing.Size(109, 51);
             this.buttonEventDetails.TabIndex = 41;
@@ -80,7 +80,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(272, 141);
+            this.ClientSize = new System.Drawing.Size(414, 190);
             this.Controls.Add(this.buttonEventDetails);
             this.Controls.Add(this.buttonDelRSVP);
             this.Controls.Add(this.labelMsg);

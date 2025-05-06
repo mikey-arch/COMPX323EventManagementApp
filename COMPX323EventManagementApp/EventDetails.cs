@@ -20,6 +20,7 @@ namespace COMPX323EventManagementApp
         private string venueName;
         private int attendeeId; 
 
+
         // Constructor accepting event details (composite primary key)
         public EventDetails(string eventName, DateTime eventDate, string venueName)
         {
@@ -31,8 +32,6 @@ namespace COMPX323EventManagementApp
 
             User user = Session.CurrentUser;
             attendeeId = user.Id;
-            labelAccNum.Text = attendeeId.ToString();
-            labelName.Text = user.Fname + " " + user.Lname; 
             LoadEventDetails();
         }
 
@@ -143,42 +142,8 @@ namespace COMPX323EventManagementApp
                     }
                     textBoxRestrictions.Text = restrictions.ToString().TrimEnd(new char[] { ',', ' ' });
 
-                    // Query to get the current RSVP status for the attendee
-                    string rsvpQuery = @"
-                        SELECT status
-                        FROM rsvp
-                        WHERE acc_num = :attendeeId
-                        AND ename = :eventName
-                        AND vname = :venueName
-                        AND event_date = :eventDate";
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = rsvpQuery;
-                        cmd.Parameters.Add("attendeeId", OracleDbType.Int32).Value = attendeeId;
-                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-                        cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
-                        cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                string status = reader.GetString(reader.GetOrdinal("status"));
-                                if (status == "attending")
-                                {
-                                    radioButtonAttending.Checked = true;
-                                }
-                                else if (status == "on hold")
-                                {
-                                    radioButtonInterested.Checked = true;
-                                }
-                                labelStatus.Text = status;
-
-
-                            }
-                        }
-                    }
+                    DisplayRSVPStatus(eventName, eventDate ,venueName);
+                    
                 }
             }
             catch (Exception ex)
@@ -285,6 +250,55 @@ namespace COMPX323EventManagementApp
             
 
         }
+
+        private void DisplayRSVPStatus(string eventName, DateTime eventDate, string venueName)
+        {
+            try
+            {
+                // Query to check if the user has an RSVP for the selected event instance
+                string rsvpQuery = @"
+                    SELECT status
+                    FROM RSVP
+                    WHERE acc_num = :attendeeId
+                    AND ename = :eventName
+                    AND vname = :venueName
+                    AND event_date = :eventDate";
+
+                using (var conn = DbConfig.GetConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = rsvpQuery;
+                        cmd.Parameters.Add("attendeeId", OracleDbType.Int32).Value = attendeeId;
+                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
+                        cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
+                        cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
+
+                        // Execute the query and check if the user has an RSVP
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // If an RSVP exists, set the status
+                                string status = reader.GetString(reader.GetOrdinal("status"));
+                                labelStatus.Text = status;
+                            }
+                            else
+                            {
+                                // If no RSVP found, set status to "None selected"
+                                labelStatus.Text = "None selected";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading RSVP status: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
 
         private void labelExitButton_Click(object sender, EventArgs e)
         {

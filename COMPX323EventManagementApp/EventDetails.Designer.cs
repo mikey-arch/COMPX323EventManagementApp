@@ -30,9 +30,12 @@
         {
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.labelExitButton = new System.Windows.Forms.Label();
             this.labelEventName = new System.Windows.Forms.Label();
             this.labelExit = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelStatus = new System.Windows.Forms.Label();
+            this.labelCurrStatus = new System.Windows.Forms.Label();
             this.radioButtonInterested = new System.Windows.Forms.RadioButton();
             this.radioButtonAttending = new System.Windows.Forms.RadioButton();
             this.labelRSVP = new System.Windows.Forms.Label();
@@ -53,11 +56,6 @@
             this.labelPrice = new System.Windows.Forms.Label();
             this.textBoxTime = new System.Windows.Forms.TextBox();
             this.labelTime = new System.Windows.Forms.Label();
-            this.labelCurrStatus = new System.Windows.Forms.Label();
-            this.labelStatus = new System.Windows.Forms.Label();
-            this.labelAccNum = new System.Windows.Forms.Label();
-            this.labelName = new System.Windows.Forms.Label();
-            this.labelExitButton = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -80,14 +78,24 @@
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.panel3.Controls.Add(this.labelExitButton);
-            this.panel3.Controls.Add(this.labelName);
-            this.panel3.Controls.Add(this.labelAccNum);
             this.panel3.Controls.Add(this.labelEventName);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(800, 74);
             this.panel3.TabIndex = 11;
+            // 
+            // labelExitButton
+            // 
+            this.labelExitButton.AutoSize = true;
+            this.labelExitButton.Font = new System.Drawing.Font("Nirmala UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.labelExitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
+            this.labelExitButton.Location = new System.Drawing.Point(778, 5);
+            this.labelExitButton.Name = "labelExitButton";
+            this.labelExitButton.Size = new System.Drawing.Size(21, 23);
+            this.labelExitButton.TabIndex = 38;
+            this.labelExitButton.Text = "X";
+            this.labelExitButton.Click += new System.EventHandler(this.labelExitButton_Click);
             // 
             // labelEventName
             // 
@@ -122,6 +130,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(247, 343);
             this.panel1.TabIndex = 6;
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatus.Location = new System.Drawing.Point(86, 121);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(61, 22);
+            this.labelStatus.TabIndex = 20;
+            this.labelStatus.Text = "Status";
+            // 
+            // labelCurrStatus
+            // 
+            this.labelCurrStatus.AutoSize = true;
+            this.labelCurrStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F);
+            this.labelCurrStatus.Location = new System.Drawing.Point(54, 86);
+            this.labelCurrStatus.Name = "labelCurrStatus";
+            this.labelCurrStatus.Size = new System.Drawing.Size(136, 22);
+            this.labelCurrStatus.TabIndex = 19;
+            this.labelCurrStatus.Text = "Current Status: ";
             // 
             // radioButtonInterested
             // 
@@ -326,56 +354,6 @@
             this.labelTime.TabIndex = 14;
             this.labelTime.Text = "Time:";
             // 
-            // labelCurrStatus
-            // 
-            this.labelCurrStatus.AutoSize = true;
-            this.labelCurrStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F);
-            this.labelCurrStatus.Location = new System.Drawing.Point(54, 86);
-            this.labelCurrStatus.Name = "labelCurrStatus";
-            this.labelCurrStatus.Size = new System.Drawing.Size(136, 22);
-            this.labelCurrStatus.TabIndex = 19;
-            this.labelCurrStatus.Text = "Current Status: ";
-            // 
-            // labelStatus
-            // 
-            this.labelStatus.AutoSize = true;
-            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatus.Location = new System.Drawing.Point(86, 121);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(61, 22);
-            this.labelStatus.TabIndex = 20;
-            this.labelStatus.Text = "Status";
-            // 
-            // labelAccNum
-            // 
-            this.labelAccNum.AutoSize = true;
-            this.labelAccNum.Location = new System.Drawing.Point(550, 14);
-            this.labelAccNum.Name = "labelAccNum";
-            this.labelAccNum.Size = new System.Drawing.Size(89, 16);
-            this.labelAccNum.TabIndex = 19;
-            this.labelAccNum.Text = "Account Num:";
-            // 
-            // labelName
-            // 
-            this.labelName.AutoSize = true;
-            this.labelName.Location = new System.Drawing.Point(550, 42);
-            this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(47, 16);
-            this.labelName.TabIndex = 20;
-            this.labelName.Text = "Name:";
-            // 
-            // labelExitButton
-            // 
-            this.labelExitButton.AutoSize = true;
-            this.labelExitButton.Font = new System.Drawing.Font("Nirmala UI", 9.75F, System.Drawing.FontStyle.Bold);
-            this.labelExitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(165)))), ((int)(((byte)(169)))));
-            this.labelExitButton.Location = new System.Drawing.Point(778, 5);
-            this.labelExitButton.Name = "labelExitButton";
-            this.labelExitButton.Size = new System.Drawing.Size(21, 23);
-            this.labelExitButton.TabIndex = 38;
-            this.labelExitButton.Text = "X";
-            this.labelExitButton.Click += new System.EventHandler(this.labelExitButton_Click);
-            // 
             // EventDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -432,8 +410,6 @@
         private System.Windows.Forms.RadioButton radioButtonAttending;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelCurrStatus;
-        private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.Label labelAccNum;
         private System.Windows.Forms.Label labelExitButton;
     }
 }
