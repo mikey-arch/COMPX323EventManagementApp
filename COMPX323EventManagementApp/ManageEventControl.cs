@@ -1,6 +1,7 @@
 ﻿using COMPX323EventManagementApp.Models;
 using Oracle.ManagedDataAccess.Client;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -13,7 +14,8 @@ namespace COMPX323EventManagementApp
             InitializeComponent();
             InitialiseComboBox();
             InitialiseListView();
-        
+            InitialiseRSVPListView();
+
             // Refresh the data when control is brought up
             this.VisibleChanged += ManageEventControl_VisibleChanged;
         }
@@ -23,6 +25,19 @@ namespace COMPX323EventManagementApp
         {
             comboBoxEventList.Items.Clear();
             comboBoxEventList.SelectedIndex = -1;  // Ensuring ComboBox is empty initially
+        }
+        private void InitialiseRSVPListView()
+        {
+            if (listViewRSVP.Columns.Count == 0)
+            {
+                listViewRSVP.View = View.Details;
+                listViewRSVP.FullRowSelect = true;
+                listViewRSVP.GridLines = true;
+
+                listViewRSVP.Columns.Add("Name", 200);         
+                listViewRSVP.Columns.Add("Email", 220);        
+                listViewRSVP.Columns.Add("Status", 100);       
+            }
         }
 
         private void InitialiseListView()
@@ -70,17 +85,14 @@ namespace COMPX323EventManagementApp
 
                         using (var reader = cmd.ExecuteReader())
                         {
-                            List<string> eventsList = new List<string>();
-
+                            List<string> eventsList = new List<string> { "-- Select an event --" }; // Placeholder
                             while (reader.Read())
                             {
                                 string eventName = reader.GetString(reader.GetOrdinal("ename"));
                                 eventsList.Add(eventName);
                             }
-
-                            // Fill the ComboBox with the event names
                             comboBoxEventList.DataSource = eventsList;
-                            comboBoxEventList.SelectedIndex = -1;  // Reset to unselected
+                            comboBoxEventList.SelectedIndex = 0; // Set to placeholder
                         }
                     }
                 }
@@ -95,15 +107,20 @@ namespace COMPX323EventManagementApp
         {
             try
             {
-                // Check if the user selected an actual event (not the placeholder)
-                if (comboBoxEventList.SelectedIndex >= 0)
+                if (comboBoxEventList.SelectedIndex == 0) // Placeholder selected
+                {
+                    // Clear all related UI elements
+                    listViewEvents.Items.Clear();
+                    listViewRSVP.Items.Clear();
+                    return;
+                }
+                if (comboBoxEventList.SelectedIndex > 0) // ignore placeholder at index 0
                 {
                     string selectedEventName = comboBoxEventList.SelectedItem.ToString();
-                    listViewEvents.Items.Clear(); 
-
-                    // Call the DisplayEvents method to show event instances for the selected event
+                    listViewEvents.Items.Clear();
                     DisplayEvents(selectedEventName);
                 }
+
             }
             catch (Exception ex)
             {
@@ -202,13 +219,13 @@ namespace COMPX323EventManagementApp
             {
                 // SQL query to fetch RSVPs for the selected event instance
                 string query = @"
-            SELECT a.fname, a.lname, a.email, r.status
-            FROM RSVP r
-            JOIN Attendee a ON r.acc_num = a.acc_num
-            JOIN Event e ON r.ename = e.ename
-            WHERE e.ename = :eventName
-            AND r.event_date = :eventDate
-            AND r.vname = :venueName";
+                    SELECT a.fname, a.lname, a.email, r.status
+                    FROM RSVP r
+                    JOIN Attendee a ON r.acc_num = a.acc_num
+                    JOIN Event e ON r.ename = e.ename
+                    WHERE e.ename = :eventName
+                    AND r.event_date = :eventDate
+                    AND r.vname = :venueName";
 
                 using (var conn = DbConfig.GetConnection())
                 {
@@ -222,26 +239,33 @@ namespace COMPX323EventManagementApp
 
                         using (var reader = cmd.ExecuteReader())
                         {
-                            listBoxRSVPDisplay.Items.Clear(); // Clear previous data in ListBox
+                            listViewRSVP.Items.Clear(); // Clear previous data in ListBox
 
                             bool foundRSVPs = false;
                             while (reader.Read())
                             {
                                 foundRSVPs = true;
 
-                                // Format the attendee details and add to ListBox
-                                string attendeeInfo = $"{reader.GetString(reader.GetOrdinal("fname"))} " +
-                                                      $"{reader.GetString(reader.GetOrdinal("lname"))} " +
-                                                      $"({reader.GetString(reader.GetOrdinal("email"))}) - " +
-                                                      $"{reader.GetString(reader.GetOrdinal("status"))}";
+                                string fullName = $"{reader.GetString(reader.GetOrdinal("fname"))} {reader.GetString(reader.GetOrdinal("lname"))}";
+                                string email = reader.GetString(reader.GetOrdinal("email"));
+                                string status = reader.GetString(reader.GetOrdinal("status"));
 
-                                listBoxRSVPDisplay.Items.Add(attendeeInfo);
+                                ListViewItem item = new ListViewItem(fullName);
+                                item.SubItems.Add(email);
+                                item.SubItems.Add(status);
+
+                                // Store event info as an object (anonymous or custom class)
+                                item.Tag = new { EventName = eventName, EventDate = eventDate, VenueName = venueName };
+
+                                listViewRSVP.Items.Add(item);
+
                             }
 
                             // If no RSVPs found, show a message in the ListBox
                             if (!foundRSVPs)
                             {
-                                listBoxRSVPDisplay.Items.Add("No RSVPs for this event instance.");
+                                listViewRSVP.Items.Add("No RSVPs for this event instance.");
+
                             }
                         }
                     }
@@ -261,14 +285,17 @@ namespace COMPX323EventManagementApp
             {
                 // Refresh data
                 listViewEvents.Items.Clear();
-                listBoxRSVPDisplay.Items.Clear();
+                listViewRSVP.Items.Clear();
 
                 // Refresh the ComboBox events list
                 comboBoxEventList.SelectedIndex = -1; // Clear the selection
 
                 // Refresh event data and RSVPs if needed
-                // You can either call comboBoxEventList_SelectedIndexChanged or DisplayEvents
-                DisplayEvents(comboBoxEventList.SelectedItem?.ToString());
+                if (comboBoxEventList.SelectedIndex > 0)
+                {
+                    DisplayEvents(comboBoxEventList.SelectedItem.ToString());
+                }
+
             }
         }
 
@@ -276,71 +303,259 @@ namespace COMPX323EventManagementApp
         {
             try
             {
-                // Ensure an item is selected in the ListView
-                if (listViewEvents.SelectedItems.Count > 0)
-                {
-                    var selectedItem = listViewEvents.SelectedItems[0];
-
-                    // Extract event details from the selected ListView item
-                    string eventName = selectedItem.Text; // The first column: Event Name
-                    DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); // Second column: Event Date
-                    string venueName = selectedItem.SubItems[3].Text; // Fourth column: Venue Name
-
-                    // Confirm deletion
-                    DialogResult result = MessageBox.Show(
-                        $"Are you sure you want to delete the event instance '{eventName}' on {eventDate.ToString("yyyy-MM-dd")} at {venueName}?",
-                        "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                    if (result == DialogResult.Yes)
-                    {
-                        // SQL query to delete the selected event instance
-                        string query = @"
-                            DELETE FROM event_instance
-                            WHERE ename = :eventName
-                            AND event_date = :eventDate
-                            AND vname = :venueName";
-
-                        using (var conn = DbConfig.GetConnection())
-                        {
-                            conn.Open();
-                            using (var cmd = conn.CreateCommand())
-                            {
-                                cmd.CommandText = query;
-                                cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-                                cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
-                                cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
-
-                                // Execute the delete query
-                                int rowsAffected = cmd.ExecuteNonQuery();
-
-                                // If no rows are affected, the deletion failed
-                                if (rowsAffected > 0)
-                                {
-                                    MessageBox.Show("Event instance deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                                    // Refresh the ListView and ListBox
-                                    listViewEvents.Items.Clear();
-                                    listBoxRSVPDisplay.Items.Clear();
-                                    comboBoxEventList.SelectedIndex = -1; // Clear ComboBox selection
-                                    DisplayEvents(comboBoxEventList.SelectedItem?.ToString()); // Refresh the event instances
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Error: The event instance could not be deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Please select an event instance to delete.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                Delete(2);
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"An error occurred while deleting the event instance: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+
+        private void listViewRSVP_Click(object sender, EventArgs e)
+        {
+            if (listViewRSVP.SelectedItems.Count > 0)
+            {
+                CustomMessageBox customMsgBox = new CustomMessageBox();
+                customMsgBox.Configure("Do you want to delete this RSVP?", showDelete: true, showDetails: false);
+                customMsgBox.ShowDialog();
+
+                var selectedItem = listViewRSVP.SelectedItems[0];
+                var tag = (dynamic)selectedItem.Tag;
+
+                if (customMsgBox.SelectedOption == "Delete RSVP")
+                {
+                    //DeleteRsvp(tag.EventName, tag.EventDate, tag.VenueName);
+                    Delete(3);
+                }
+
+
+            }
+        }
+
+        private void Delete(int num)
+        {
+            string query = "";
+            string venueName = "";
+            DateTime eventDate = DateTime.MinValue;
+            string eventName = comboBoxEventList.SelectedItem.ToString();
+
+            if (num == 2 || num == 3)
+            {
+                var selectedItem = listViewEvents.SelectedItems[0];//////////////
+                //eventName = selectedItem.Text;
+
+                eventDate = DateTime.Parse(selectedItem.SubItems[1].Text);
+                venueName = selectedItem.SubItems[3].Text;
+            }
+            
+
+            // Determine the item to delete based on the parameter (1 for event, 2 for instance, 3 for RSVP)
+            switch (num)
+            {
+                case 3: // RSVP
+                    if (listViewRSVP.SelectedItems.Count > 0)
+                    {
+                        
+
+                        query = @"
+                            DELETE FROM RSVP
+                            WHERE acc_num = :attendeeId
+                            AND ename = :eventName
+                            AND vname = :venueName
+                            AND event_date = :eventDate";
+                    }
+                    break;
+
+                case 2: // Instance
+                    if (listViewEvents.SelectedItems.Count > 0)
+                    {
+                        
+
+                        // Delete all RSVPs for this event instance before deleting the instance
+                        DeleteRSVPs(eventName, eventDate, venueName);
+
+                        query = @"
+                            DELETE FROM event_instance
+                            WHERE ename = :eventName
+                            AND vname = :venueName
+                            AND event_date = :eventDate";
+                    }
+                    break;
+
+                case 1: // Event
+                    if (comboBoxEventList.SelectedItem != null)
+                    {
+                        // Delete all event instances and their RSVPs before deleting the event
+                        DeleteAllEventInstances(eventName);
+                        DeleteRelations(eventName);
+
+                        query = @"
+                            DELETE FROM event
+                            WHERE ename = :eventName";
+                    }
+                    break;
+            }
+
+            
+
+            // Get the attendee ID from the current user session
+            User user = Session.CurrentUser;
+            int attendeeId = user.Id;
+
+            // Execute the delete query only if query is not empty
+            if (!string.IsNullOrEmpty(query))
+            {
+                using (var conn = DbConfig.GetConnection())
+                {
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = query;
+
+                        // Add parameters for deletion
+                        if(num == 3)
+                        {
+                            cmd.Parameters.Add("attendeeId", OracleDbType.Int32).Value = attendeeId;
+
+                        }
+                        if(num == 2)
+                        {
+                            cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
+                            cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
+                        }
+                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
+                       
+
+                        // Execute the delete command
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Delete successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RefreshUI();  // You can implement a method to refresh your UI after deletion.
+                        }
+                        else
+                        {
+                            MessageBox.Show("No matching record found to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private void DeleteRelations(string eventName)
+        {
+            // Queries for deleting relations from 'has_a' and 'organises' tables
+            string[] queries = new string[]
+            {
+                @"DELETE FROM has_a WHERE ename = :eventName",
+                @"DELETE FROM organises WHERE ename = :eventName"
+            };
+
+            // Execute both queries in a single connection
+            using (var conn = DbConfig.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    foreach (var query in queries)
+                    {
+                        cmd.CommandText = query;
+                        cmd.Parameters.Clear();  // Clear previous parameters
+                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        private void DeleteRSVPs(string eventName, DateTime eventDate, string venueName)
+        {
+            string query;
+
+            // If eventDate or venueName is a placeholder, delete all RSVPs for the event
+            if (eventDate == DateTime.MinValue && string.IsNullOrEmpty(venueName))
+            {
+                query = @"
+                    DELETE FROM RSVP
+                    WHERE ename = :eventName";  // Only filter by event name to delete all RSVPs for the event
+            }
+            else
+            {
+                // Delete specific RSVPs based on event date and venue
+                query = @"
+                    DELETE FROM RSVP
+                    WHERE ename = :eventName
+                    AND vname = :venueName
+                    AND event_date = :eventDate";
+            }
+
+            using (var conn = DbConfig.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
+
+                    // Only add venue and event_date parameters if not deleting all RSVPs
+                    if (!string.IsNullOrEmpty(venueName))
+                        cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
+
+                    if (eventDate != DateTime.MinValue)
+                        cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
+
+                    // Execute the delete command for RSVPs
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void DeleteAllEventInstances(string eventName)
+        {
+
+            // After deleting all instances, delete all RSVPs related to the event
+            DeleteRSVPs(eventName, DateTime.MinValue, string.Empty);  // We pass placeholder values because we're deleting all instances
+
+            // Delete all instances of the event before deleting the event itself
+            string query = @"
+        DELETE FROM event_instance
+        WHERE ename = :eventName";
+
+            using (var conn = DbConfig.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = query;
+                    cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
+
+                    // Execute the delete command for all instances
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+        }
+
+        private void RefreshUI()
+        {
+            // Refresh your UI elements (ListView, ComboBox, etc.)
+            listViewEvents.Items.Clear();
+            listViewRSVP.Items.Clear();
+            comboBoxEventList.SelectedIndex = -1;  // Clear ComboBox selection
+                                                   // Refresh event data, e.g., call DisplayEvents(comboBoxEventList.SelectedItem?.ToString());
+        }
+
+        private void buttonDeleteEvent_Click(object sender, EventArgs e)
+        {
+            Delete(1);
+        }
+
+
     }
 }

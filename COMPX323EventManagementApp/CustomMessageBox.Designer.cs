@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.labelExit = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelMsg = new System.Windows.Forms.Label();
             this.buttonDelRSVP = new System.Windows.Forms.Button();
             this.buttonEventDetails = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -46,15 +46,15 @@
             this.labelExit.Text = "X";
             this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
             // 
-            // label1
+            // labelMsg
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F);
-            this.label1.Location = new System.Drawing.Point(12, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 22);
-            this.label1.TabIndex = 39;
-            this.label1.Text = "Choose Action:";
+            this.labelMsg.AutoSize = true;
+            this.labelMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F);
+            this.labelMsg.Location = new System.Drawing.Point(12, 33);
+            this.labelMsg.Name = "labelMsg";
+            this.labelMsg.Size = new System.Drawing.Size(132, 22);
+            this.labelMsg.TabIndex = 39;
+            this.labelMsg.Text = "Choose Action:";
             // 
             // buttonDelRSVP
             // 
@@ -83,7 +83,7 @@
             this.ClientSize = new System.Drawing.Size(272, 141);
             this.Controls.Add(this.buttonEventDetails);
             this.Controls.Add(this.buttonDelRSVP);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelMsg);
             this.Controls.Add(this.labelExit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "CustomMessageBox";
@@ -97,7 +97,7 @@
         #endregion
 
         private System.Windows.Forms.Label labelExit;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelMsg;
         private System.Windows.Forms.Button buttonDelRSVP;
         private System.Windows.Forms.Button buttonEventDetails;
     }

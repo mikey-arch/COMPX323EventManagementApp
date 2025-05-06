@@ -18,6 +18,14 @@ namespace COMPX323EventManagementApp
             InitializeComponent();
         }
 
+        public void Configure(string message, bool showDelete, bool showDetails)
+        {
+            labelMsg.Text = message;
+
+            buttonDelRSVP.Visible = showDelete;
+            buttonEventDetails.Visible = showDetails;
+        }
+
         private void buttonDelRSVP_Click(object sender, EventArgs e)
         {
             SelectedOption = "Delete RSVP";
@@ -36,5 +44,7 @@ namespace COMPX323EventManagementApp
         {
             this.Close();
         }
+
+       
     }
 }

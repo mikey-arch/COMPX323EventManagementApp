@@ -145,9 +145,9 @@
             // labelExit
             // 
             this.labelExit.AutoSize = true;
-            this.labelExit.Location = new System.Drawing.Point(1037, 9);
+            this.labelExit.Location = new System.Drawing.Point(1199, 9);
             this.labelExit.Name = "labelExit";
-            this.labelExit.Size = new System.Drawing.Size(17, 17);
+            this.labelExit.Size = new System.Drawing.Size(21, 23);
             this.labelExit.TabIndex = 10;
             this.labelExit.Text = "X";
             this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
@@ -184,7 +184,7 @@
             this.labelProfilePicName.AutoSize = true;
             this.labelProfilePicName.Location = new System.Drawing.Point(60, 114);
             this.labelProfilePicName.Name = "labelProfilePicName";
-            this.labelProfilePicName.Size = new System.Drawing.Size(75, 17);
+            this.labelProfilePicName.Size = new System.Drawing.Size(97, 23);
             this.labelProfilePicName.TabIndex = 8;
             this.labelProfilePicName.Text = "User Name";
             this.labelProfilePicName.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -206,7 +206,7 @@
             this.labelTitle.ForeColor = System.Drawing.Color.Black;
             this.labelTitle.Location = new System.Drawing.Point(3, 12);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(212, 30);
+            this.labelTitle.Size = new System.Drawing.Size(270, 37);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "SEARCH FOR EVENT";
             // 
@@ -220,7 +220,7 @@
             // 
             // EventsManagerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1232, 756);
