@@ -182,7 +182,8 @@ namespace COMPX323EventManagementApp
                 {
                     Ename = comboBoxEventName.Text.Trim(),
                     Description = textBoxDescription.Text.Trim(),
-                    CompanyClub = textBoxCompanyClub.Text.Trim()
+                    Restriction = comboBoxRestrictions.SelectedItem?.ToString(),
+                    CreatorNum = Session.CurrentUser.Id
                 };
 
                 //create venue
@@ -224,7 +225,7 @@ namespace COMPX323EventManagementApp
                 
                 //create event
                 bool success = DataAccess.CreateOrUpdateEvent(
-                    eventObj, instance, venue, categories, restriction, Session.CurrentUser.Id);
+                    eventObj, instance, venue, categories, Session.CurrentUser.Id);
                 
                 if (success)
                 {
@@ -259,7 +260,6 @@ namespace COMPX323EventManagementApp
                     if(eventObject != null)
                     {
                         textBoxDescription.Text = eventObject.Description;
-                        textBoxCompanyClub.Text = eventObject.CompanyClub;
 
                         //disable event fields
                         textBoxDescription.ReadOnly = true;
@@ -277,14 +277,16 @@ namespace COMPX323EventManagementApp
                         foreach (string c in categories)
                         {
                             int index = checkedListBoxCategories.Items.IndexOf(c);
-                            checkedListBoxCategories.SetItemChecked(index, true);
+                            if (index >= 0)
+                            {
+                                checkedListBoxCategories.SetItemChecked(index, true);
+                            }
                         }
 
                         //get and display event restriction 
-                        string restriction = DataAccess.GetEventRestriction(selectedEvent);
-                        if (!string.IsNullOrEmpty(restriction))
+                        if (!string.IsNullOrEmpty(eventObject.Restriction))
                         {
-                            comboBoxRestrictions.SelectedItem = restriction;
+                            comboBoxRestrictions.SelectedItem = eventObject.Restriction;
                         }
                     }
                 }
@@ -441,7 +443,6 @@ namespace COMPX323EventManagementApp
                     {
                         // Populate fields with event data
                         textBoxDescription.Text = eventObject.Description;
-                        textBoxCompanyClub.Text = eventObject.CompanyClub;
                         
                         // Make these fields read-only or change their appearance
                         textBoxDescription.ReadOnly = true;
@@ -472,10 +473,9 @@ namespace COMPX323EventManagementApp
                         checkedListBoxCategories.Enabled = false;
                         
                         // Get and display restriction
-                        string restriction = DataAccess.GetEventRestriction(eventName);
-                        if (!string.IsNullOrEmpty(restriction))
+                        if (!string.IsNullOrEmpty(eventObject.Restriction))
                         {
-                            comboBoxRestrictions.SelectedItem = restriction;
+                            comboBoxRestrictions.SelectedItem = eventObject.Restriction;
                         }
                         comboBoxRestrictions.Enabled = false;
                     }

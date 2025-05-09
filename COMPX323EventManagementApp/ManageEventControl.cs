@@ -65,7 +65,7 @@ namespace COMPX323EventManagementApp
             try
             {
                 // Get the current user's ID
-                User user = Session.CurrentUser;
+                Member user = Session.CurrentUser;
                 int attendeeId = user.Id;
 
                 // SQL query to get all events created by the current user
@@ -402,7 +402,7 @@ namespace COMPX323EventManagementApp
             
 
             // Get the attendee ID from the current user session
-            User user = Session.CurrentUser;
+            Member user = Session.CurrentUser;
             int attendeeId = user.Id;
 
             // Execute the delete query only if query is not empty

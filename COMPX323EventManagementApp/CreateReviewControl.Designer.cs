@@ -207,6 +207,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Name = "CreateReviewControl";
             this.Size = new System.Drawing.Size(538, 384);
+            this.VisibleChanged += new System.EventHandler(this.CreateReviewControl_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStar3)).EndInit();

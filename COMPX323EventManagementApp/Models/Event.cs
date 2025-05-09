@@ -11,7 +11,8 @@ namespace COMPX323EventManagementApp.Models
         public string Ename { get; set; }
         public string Description { get; set; }
         public DateTime CreationDate { get; set; }
-        public string CompanyClub { get; set; }
+        public string Restriction { get; set; }
+        public int CreatorNum { get; set; }
         
         public Event()
         {

@@ -22,8 +22,7 @@ namespace COMPX323EventManagementApp
                     conn.Open();
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = @"select e.ename from Event e 
-                                           join Organises o on o.ename = e.ename where o.acc_num = :userId";
+                        cmd.CommandText = @"select ename from Event where creator_num = :userId"; 
                         cmd.Parameters.Add("userId", OracleDbType.Int32).Value = userId;
 
                         using (var reader = cmd.ExecuteReader())
@@ -88,7 +87,7 @@ namespace COMPX323EventManagementApp
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "select description, company_club from event where ename = :eventName";
+                        cmd.CommandText = "select description, restriction, creator_num from event where ename = :eventName";
                         cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
 
                         using(var reader = cmd.ExecuteReader())
@@ -99,7 +98,8 @@ namespace COMPX323EventManagementApp
                                 {
                                     Ename = eventName,
                                     Description = reader["description"].ToString(),
-                                    CompanyClub = reader["company_club"].ToString()
+                                    Restriction = reader["restriction"].ToString(),
+                                    CreatorNum = Convert.ToInt32(reader["creator_num"])
                                 };
                             }
                         }
@@ -125,7 +125,7 @@ namespace COMPX323EventManagementApp
                     conn.Open();
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "select cname from Has_a where ename = :eventName";
+                        cmd.CommandText = "select cname from Event_Category where ename = :eventName";
                         cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
                         
                         using (var reader = cmd.ExecuteReader())
@@ -158,14 +158,14 @@ namespace COMPX323EventManagementApp
                     conn.Open();
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "select rname from Has where ename = :eventName";
+                        cmd.CommandText = "select restriction from event where ename = :eventName";
                         cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
                         
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                restriction = reader["rname"].ToString();
+                                restriction = reader["restriction"].ToString();
                             }
                         }
                     }
@@ -249,12 +249,13 @@ namespace COMPX323EventManagementApp
         {
             using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandText = @"insert into Event (ename, description, creation_date, company_club) 
-                                  values (:eventName, :description, DEFAULT, :companyClub)";
+                cmd.CommandText = @"insert into Event (ename, description, creation_date, restriction, creator_num) 
+                                  values (:eventName, :description, DEFAULT, :restriction, :creatorNum)";
                                   
                 cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventObj.Ename;
                 cmd.Parameters.Add("description", OracleDbType.Clob).Value = eventObj.Description;
-                cmd.Parameters.Add("companyClub", OracleDbType.Varchar2).Value = eventObj.CompanyClub;
+                cmd.Parameters.Add("restriction", OracleDbType.Clob).Value = eventObj.Restriction;
+                cmd.Parameters.Add("creatorNum", OracleDbType.Int32).Value = eventObj.CreatorNum;
                 
                 cmd.ExecuteNonQuery();
             }
@@ -293,9 +294,7 @@ namespace COMPX323EventManagementApp
                     conn.Open();
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = @"SELECT COUNT(*) FROM Event e 
-                                           JOIN Organises o ON e.ename = o.ename 
-                                           WHERE e.ename = :eventName AND o.acc_num = :organizerId";
+                        cmd.CommandText = @"SELECT COUNT(*) FROM Event WHERE ename = :eventName AND creator_num = :organizerId";
                         cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
                         cmd.Parameters.Add("organizerId", OracleDbType.Int32).Value = organizerId;
                         
@@ -357,43 +356,18 @@ namespace COMPX323EventManagementApp
                 throw new Exception($"Error checking if event instance exists: {ex.Message}", ex);
             }
         }
-
-        private static void AssignEventToOrganizer(OracleConnection conn, string eventName, int organizerId)
-        {
-            using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = "INSERT INTO Organises (acc_num, ename) VALUES (:organizerId, :eventName)";
-                cmd.Parameters.Add("organizerId", OracleDbType.Int32).Value = organizerId;
-                cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-                
-                cmd.ExecuteNonQuery();
-            }
-        }
         
         private static void AssignCategoryToEvent(OracleConnection conn, string category, string eventName)
         {
             using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandText = "INSERT INTO Has_a (cname, ename) VALUES (:categoryName, :eventName)";
+                cmd.CommandText = "INSERT INTO Event_Category (cname, ename) VALUES (:categoryName, :eventName)";
                 cmd.Parameters.Add("categoryName", OracleDbType.Varchar2).Value = category;
                 cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
                 
                 cmd.ExecuteNonQuery();
             }
         }
-        
-        private static void AssignRestrictionToEvent(OracleConnection conn, string restriction, string eventName)
-        {
-            using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = "INSERT INTO Has (rname, ename) VALUES (:restrictionName, :eventName)";
-                cmd.Parameters.Add("restrictionName", OracleDbType.Varchar2).Value = restriction;
-                cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-                
-                cmd.ExecuteNonQuery();
-            }
-        }
-        
         private static void CreateEventInstance(OracleConnection conn, EventInstance instance)
         {
             using (var cmd = conn.CreateCommand())
@@ -413,7 +387,7 @@ namespace COMPX323EventManagementApp
 
          // Create or update event with transaction handling
         public static bool CreateOrUpdateEvent(Event eventObj, EventInstance instance, Venue venue, 
-            List<string> categories, string restriction, int organizerId)
+            List<string> categories, int organizerId)
         {
             try
             {
@@ -443,36 +417,25 @@ namespace COMPX323EventManagementApp
                                 {
                                     return false; // Event name taken
                                 }
+
+                                eventObj.CreatorNum = organizerId;
                                 
-                                // Create event
                                 CreateEvent(conn, eventObj);
-                                
-                                // Assign event to organizer
-                                AssignEventToOrganizer(conn, eventObj.Ename, organizerId);
                                 
                                 // Assign categories to event
                                 foreach (string category in categories)
                                 {
                                     AssignCategoryToEvent(conn, category, eventObj.Ename);
                                 }
-                                
-                                // Assign restriction to event
-                                if (!string.IsNullOrEmpty(restriction))
-                                {
-                                    AssignRestrictionToEvent(conn, restriction, eventObj.Ename);
-                                }
                             }
                             
                             // Check if this event instance already exists
                             if (EventInstanceExists(eventObj.Ename, venue.Vname, instance.EventDate))
                             {
-                                return false; // Instance already exists
+                                return false; 
                             }
                             
-                            // Create event instance
                             CreateEventInstance(conn, instance);
-                            
-                            // Commit transaction
                             transaction.Commit();
                             
                             return true;

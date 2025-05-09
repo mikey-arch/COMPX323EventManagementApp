@@ -50,7 +50,7 @@ namespace COMPX323EventManagementApp
                     // log in check using Attendee table first 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "Select acc_num, fname, lname, mob_num, email, dob, payment_status from Attendee where email = :email and password = :password";
+                        cmd.CommandText = "Select acc_num, fname, lname, mob_num, email, dob from Member where email = :email and password = :password";
                         cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
                         cmd.Parameters.Add("password", OracleDbType.Varchar2).Value = password;
 
@@ -65,58 +65,19 @@ namespace COMPX323EventManagementApp
                                 string phoneNum = reader.GetString(3);
                                 email = reader.GetString(4);
                                 DateTime dob = reader.GetDateTime(5);
-                                string paymentStatus = reader.GetString(6);
 
-                                var currUser = new Attendee
+                                var currUser = new Member
                                 {
                                     Id = userId,
                                     Fname = firstName,
                                     Lname = lastName,
                                     Email = email,
                                     PhoneNum = phoneNum,
-                                    Dob = dob,
-                                    PaymentStatus = paymentStatus
+                                    DOB = dob,
 
                                 };
 
                                 Session.CurrentUser = currUser;
-
-                            }
-                        }
-                    }
-
-                    // check organiser table
-                    if(!authenticated)
-                    {
-                        using (var cmd = conn.CreateCommand())
-                        {
-                            cmd.CommandText = "Select acc_num, fname, lname, mob_num, email from Organiser where email = :email and password = :password";
-                            cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
-                            cmd.Parameters.Add("password", OracleDbType.Varchar2).Value = password;
-
-                            using (var reader = cmd.ExecuteReader())
-                            {
-                                if (reader.Read())
-                                {
-                                    authenticated = true;
-                                    int userId = reader.GetInt32(0);
-                                    string firstName = reader.GetString(1);
-                                    string lastName = reader.GetString(2);
-                                    string phoneNum = reader.GetString(3);
-                                    email = reader.GetString(4);
-
-
-                                    var currUser = new Organiser
-                                    {
-                                        Id = userId,
-                                        Fname = firstName,
-                                        Lname = lastName,
-                                        Email = email,
-                                        PhoneNum = phoneNum
-                                    };
-
-                                    Session.CurrentUser = currUser;
-                                }
                             }
                         }
                     }
@@ -134,8 +95,14 @@ namespace COMPX323EventManagementApp
                     //then create the instance of the events manager form
                     EventsManagerForm eventsManagerForm = new EventsManagerForm();
                     this.Hide();
-                    eventsManagerForm.ShowDialog();
-                    this.Close();
+                    if (eventsManagerForm.ShowDialog() == DialogResult.OK)
+                    {
+                        this.Show();
+                    }
+                    else
+                    {
+                        this.Close();
+                    }
                 }
             }
             catch (Exception ex)
@@ -155,8 +122,10 @@ namespace COMPX323EventManagementApp
         // Handles the register label click event. It opens the RegisterForm and hides the current form.
         private void label5_Click(object sender, EventArgs e)
         {
-            new RegisterForm().Show();
+            RegisterForm registerForm = new RegisterForm();
             this.Hide();
+            registerForm.ShowDialog();
+            this.Show();
         }
 
         // Exit label, exits application once clicked.

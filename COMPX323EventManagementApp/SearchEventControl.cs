@@ -48,7 +48,7 @@ namespace COMPX323EventManagementApp
                     //add in each category from category table
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "select cname from category_tag order by cname asc";
+                        cmd.CommandText = "select cname from category order by cname asc";
                         comboBoxCategory.Items.Add("All Categories");
 
                         using (var reader = cmd.ExecuteReader())
@@ -114,14 +114,12 @@ namespace COMPX323EventManagementApp
 
                     // Build the query with all the filters
                     string query = @"
-                    select distinct e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price, ct.cname, r.rname
+                    select distinct e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price, ct.cname, e.restriction
                     from event e
                     join event_instance ei on e.ename = ei.ename
                     join venue v on ei.vname = v.vname
-                    left join has_a ha on e.ename = ha.ename
-                    left join category_tag ct on ha.cname = ct.cname
-                    left join has h on e.ename = h.ename
-                    left join restrictions r on h.rname = r.rname
+                    left join event_category ec on e.ename = ec.ename
+                    left join category ct on ec.cname = ct.cname
                     where 1=1";
 
                     //search filter
@@ -159,7 +157,7 @@ namespace COMPX323EventManagementApp
                     string restrictionFilter = comboBoxRestriction.SelectedItem?.ToString();
                     if (!string.IsNullOrEmpty(restrictionFilter) && restrictionFilter != "All Restrictions")
                     {
-                        query += " and r.rname = :restriction";
+                        query += " and e.restriction = :restriction";
                     }
 
                     //add date filtering
@@ -218,22 +216,49 @@ namespace COMPX323EventManagementApp
                             {
                                 foundResults = true;
 
-                                // create list view item with event details, adding eventname, date, time, venue, price, category and restrictiosn
-                                ListViewItem item = new ListViewItem(reader.GetString(0)); 
+                                // Create list view item with event name
+                                ListViewItem item = new ListViewItem(reader.IsDBNull(0) ? "" : reader.GetString(0));
 
-                                DateTime eventDate = reader.GetDateTime(1);
-                                item.SubItems.Add(eventDate.ToString("dd-MM-yyyy"));
+                                // Add date
+                                if (!reader.IsDBNull(1))
+                                {
+                                    DateTime eventDate = reader.GetDateTime(1);
+                                    item.SubItems.Add(eventDate.ToString("dd-MM-yyyy"));
+                                }
+                                else
+                                {
+                                    item.SubItems.Add("");
+                                }
 
-                                DateTime eventTime = reader.GetDateTime(2);
-                                item.SubItems.Add(eventTime.ToString("HH:mm"));
+                                // Add time
+                                if (!reader.IsDBNull(2))
+                                {
+                                    DateTime eventTime = reader.GetDateTime(2);
+                                    item.SubItems.Add(eventTime.ToString("HH:mm"));
+                                }
+                                else
+                                {
+                                    item.SubItems.Add("");
+                                }
 
-                                item.SubItems.Add(reader.GetString(3));
+                                // Add venue
+                                item.SubItems.Add(reader.IsDBNull(3) ? "" : reader.GetString(3));
 
-                                decimal price = reader.GetDecimal(5);
-                                item.SubItems.Add(price.ToString("C"));
+                                // Add price
+                                if (!reader.IsDBNull(5))
+                                {
+                                    decimal price = reader.GetDecimal(5);
+                                    item.SubItems.Add(price.ToString("C"));
+                                }
+                                else
+                                {
+                                    item.SubItems.Add("");
+                                }
 
-                                item.SubItems.Add(reader.GetString(6));
-                                item.SubItems.Add(reader.GetString(7));
+                                item.SubItems.Add(reader.IsDBNull(6) ? "" : reader.GetString(6));
+
+                                item.SubItems.Add(reader.IsDBNull(7) ? "" : reader.GetString(7));
+
                                 listViewEvents.Items.Add(item);
                             }
                             labelEvents.Text = foundResults ? $"Found {listViewEvents.Items.Count} events" : "No events found matching your criteria";

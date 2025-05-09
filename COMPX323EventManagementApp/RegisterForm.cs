@@ -21,7 +21,6 @@ namespace COMPX323EventManagementApp
         public RegisterForm()
         {
             InitializeComponent();
-            
         }
 
         // Registers a new user by inserting their details into the database once the Register button is clicked.
@@ -108,14 +107,13 @@ namespace COMPX323EventManagementApp
                     {
                         using (var cmd = conn.CreateCommand())
                         {
-                            cmd.CommandText = @"insert into Attendee (password, mob_num, fname, lname, email, DOB, payment_status) values (:pwd, :mob, :fname, :lname, :email, :dob, :status)";
+                            cmd.CommandText = @"insert into Member (password, mob_num, fname, lname, email, DOB) values (:pwd, :mob, :fname, :lname, :email, :dob)";
                             cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = password;
                             cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = phoneNum;
                             cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = firstName;
                             cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = lastName;
                             cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
                             cmd.Parameters.Add("dob", OracleDbType.Date).Value = dob;
-                            cmd.Parameters.Add("status", OracleDbType.Varchar2).Value = "up_to_date";
 
                             int attendeeInserted = cmd.ExecuteNonQuery();
 

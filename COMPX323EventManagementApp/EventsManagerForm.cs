@@ -33,7 +33,7 @@ namespace COMPX323EventManagementApp
             manageEventControl = new ManageEventControl();
             reviewControl = new CreateReviewControl();
 
-            User user = Session.CurrentUser;
+            Member user = Session.CurrentUser;
             labelProfilePicName.Text = user.Fname + " " + user.Lname;
             this.Load += new EventHandler(EventsManagerForm_Load);
         }
@@ -91,9 +91,7 @@ namespace COMPX323EventManagementApp
         // Handles the logout button click event navigating back to the login form.
         private void buttonLogout_Click(object sender, EventArgs e)
         {
-            LoginForm loginForm = new LoginForm();
-            this.Hide();
-            loginForm.ShowDialog();
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

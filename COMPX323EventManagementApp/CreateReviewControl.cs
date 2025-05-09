@@ -16,6 +16,8 @@ namespace COMPX323EventManagementApp
         {
             InitializeComponent();
             LoadUsersRSVPS();
+
+            this.VisibleChanged += CreateReviewControl_VisibleChanged;
         }
 
         //populates combobox with rsvps to be reviewed
@@ -31,18 +33,18 @@ namespace COMPX323EventManagementApp
                     {
                         //shows rsvps that were already attended , and not already reviewed
                         cmd.CommandText = @"
-                        select r.ename , r.vname, r.event_date
+                        select r.ename, r.vname, r.event_date
                         from RSVP r
                         where r.acc_num = :acc_num
                         and r.status = 'attending'
                         and r.event_date < sysdate
                         and not exists (select 1 from Reviews rev 
-                        where rev.acc_num = r.acc_num 
-                        and rev.ename = r.ename 
-                        and rev.vname = r.vname 
-                        and rev.event_date = r.event_date)
-                        order by r.event_date desc";
-
+                            where rev.acc_num = r.acc_num 
+                            and rev.ename = r.ename 
+                            and rev.vname = r.vname 
+                            and rev.event_date = r.event_date)
+                            order by r.event_date desc";
+                        
                         cmd.Parameters.Add(":acc_num", OracleDbType.Int32).Value = Session.CurrentUser.Id;
 
                         using (var reader = cmd.ExecuteReader())
@@ -203,6 +205,16 @@ namespace COMPX323EventManagementApp
             {
                 MessageBox.Show($"Database Error: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+        }
+
+        //as is a usercontrol refresh when pops up everytime
+        private void CreateReviewControl_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                comboBoxEvents.Items.Clear();
+                LoadUsersRSVPS();
             }
         }
     }

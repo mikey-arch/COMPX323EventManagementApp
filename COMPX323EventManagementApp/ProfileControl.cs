@@ -19,7 +19,7 @@ namespace COMPX323EventManagementApp
         {
             InitializeComponent();
 
-            User user = Session.CurrentUser;
+            Member user = Session.CurrentUser;
 
             labelAccountNum.Text = user.Id.ToString();
             labelName.Text = user.Fname + " " + user.Lname;
@@ -67,7 +67,7 @@ namespace COMPX323EventManagementApp
                                 
                                 // Create list view item for each RSVP
                                 ListViewItem item = new ListViewItem(reader["ename"].ToString());
-                                item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("yyyy-MM-dd"));
+                                item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("dd-MM-yyyy"));
                                 item.SubItems.Add(reader["vname"].ToString());
                                 item.SubItems.Add(reader["status"].ToString());
                                 
@@ -132,7 +132,7 @@ namespace COMPX323EventManagementApp
                                 // Create list view item for each review
                                 ListViewItem item = new ListViewItem(reader["ename"].ToString());
                                 item.SubItems.Add(reader["vname"].ToString());
-                                item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("yyyy-MM-dd"));
+                                item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("dd-MM-yyyy"));
                                 item.SubItems.Add(reader["rating"].ToString());
                                 item.SubItems.Add(reader["text_review"].ToString());
                                 
@@ -170,7 +170,6 @@ namespace COMPX323EventManagementApp
                 
                 listViewDisplay.Columns.Add("Event Name", 180);
                 listViewDisplay.Columns.Add("Description", 250);
-                listViewDisplay.Columns.Add("Company/Club", 150);
                 listViewDisplay.Columns.Add("Creation Date", 100);
                 
                 using (var conn = DbConfig.GetConnection())
@@ -179,10 +178,9 @@ namespace COMPX323EventManagementApp
                     using (var cmd = conn.CreateCommand())
                     {
                         //query to get events organised by the user
-                        cmd.CommandText = @"select e.ename, e.description, e.company_club, e.creation_date from Event e
-                            join Organises o ON e.ename = o.ename
-                            where o.acc_num = :userId
-                            order by e.creation_date DESC";
+                        cmd.CommandText = @"select ename, description, creation_date from Event
+                                            where creator_num = :userId
+                                            order by creation_date desc";
                         
                         cmd.Parameters.Add("userId", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = Session.CurrentUser.Id;
                         
@@ -203,8 +201,7 @@ namespace COMPX323EventManagementApp
                                     description = description.Substring(0, 97) + "...";
                                 
                                 item.SubItems.Add(description);
-                                item.SubItems.Add(reader["company_club"].ToString());
-                                item.SubItems.Add(Convert.ToDateTime(reader["creation_date"]).ToString("yyyy-MM-dd"));
+                                item.SubItems.Add(Convert.ToDateTime(reader["creation_date"]).ToString("dd-MM-yyyy"));
                                 
                                 listViewDisplay.Items.Add(item);
                             }
@@ -270,7 +267,7 @@ namespace COMPX323EventManagementApp
             try
             {
                 // Get the attendee ID from the current user session
-                User user = Session.CurrentUser;
+                Member user = Session.CurrentUser;
                 int attendeeId = user.Id;
 
                 // SQL query to delete the RSVP record from the database
