@@ -54,9 +54,9 @@
             this.buttonLogout.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonLogout.FlatAppearance.BorderSize = 0;
             this.buttonLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonLogout.Location = new System.Drawing.Point(-14, 499);
+            this.buttonLogout.Location = new System.Drawing.Point(-14, 661);
             this.buttonLogout.Name = "buttonLogout";
-            this.buttonLogout.Size = new System.Drawing.Size(218, 42);
+            this.buttonLogout.Size = new System.Drawing.Size(218, 48);
             this.buttonLogout.TabIndex = 7;
             this.buttonLogout.Text = "LOG OUT";
             this.buttonLogout.UseVisualStyleBackColor = false;
@@ -68,9 +68,9 @@
             this.buttonCreateReview.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonCreateReview.FlatAppearance.BorderSize = 0;
             this.buttonCreateReview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCreateReview.Location = new System.Drawing.Point(-2, 427);
+            this.buttonCreateReview.Location = new System.Drawing.Point(-2, 534);
             this.buttonCreateReview.Name = "buttonCreateReview";
-            this.buttonCreateReview.Size = new System.Drawing.Size(204, 75);
+            this.buttonCreateReview.Size = new System.Drawing.Size(204, 86);
             this.buttonCreateReview.TabIndex = 6;
             this.buttonCreateReview.Text = "CREATE REVIEW";
             this.buttonCreateReview.UseVisualStyleBackColor = false;
@@ -82,9 +82,9 @@
             this.buttonManageEvent.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonManageEvent.FlatAppearance.BorderSize = 0;
             this.buttonManageEvent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonManageEvent.Location = new System.Drawing.Point(-14, 362);
+            this.buttonManageEvent.Location = new System.Drawing.Point(-12, 446);
             this.buttonManageEvent.Name = "buttonManageEvent";
-            this.buttonManageEvent.Size = new System.Drawing.Size(214, 75);
+            this.buttonManageEvent.Size = new System.Drawing.Size(214, 92);
             this.buttonManageEvent.TabIndex = 5;
             this.buttonManageEvent.Text = "MANAGE EVENT";
             this.buttonManageEvent.UseVisualStyleBackColor = false;
@@ -96,9 +96,9 @@
             this.buttonProfile.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonProfile.FlatAppearance.BorderSize = 0;
             this.buttonProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonProfile.Location = new System.Drawing.Point(-2, 150);
+            this.buttonProfile.Location = new System.Drawing.Point(-5, 159);
             this.buttonProfile.Name = "buttonProfile";
-            this.buttonProfile.Size = new System.Drawing.Size(204, 75);
+            this.buttonProfile.Size = new System.Drawing.Size(204, 103);
             this.buttonProfile.TabIndex = 4;
             this.buttonProfile.Text = "VIEW PROFILE";
             this.buttonProfile.UseVisualStyleBackColor = false;
@@ -110,9 +110,9 @@
             this.buttonCreateEvent.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonCreateEvent.FlatAppearance.BorderSize = 0;
             this.buttonCreateEvent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCreateEvent.Location = new System.Drawing.Point(-14, 290);
+            this.buttonCreateEvent.Location = new System.Drawing.Point(-12, 357);
             this.buttonCreateEvent.Name = "buttonCreateEvent";
-            this.buttonCreateEvent.Size = new System.Drawing.Size(216, 75);
+            this.buttonCreateEvent.Size = new System.Drawing.Size(216, 92);
             this.buttonCreateEvent.TabIndex = 4;
             this.buttonCreateEvent.Text = "CREATE EVENT";
             this.buttonCreateEvent.UseVisualStyleBackColor = false;
@@ -124,9 +124,9 @@
             this.buttonSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonSearch.FlatAppearance.BorderSize = 0;
             this.buttonSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSearch.Location = new System.Drawing.Point(-2, 220);
+            this.buttonSearch.Location = new System.Drawing.Point(-2, 259);
             this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(202, 75);
+            this.buttonSearch.Size = new System.Drawing.Size(202, 101);
             this.buttonSearch.TabIndex = 3;
             this.buttonSearch.Text = "SEARCH FOR EVENT";
             this.buttonSearch.UseVisualStyleBackColor = false;
@@ -147,7 +147,7 @@
             this.labelExit.AutoSize = true;
             this.labelExit.Location = new System.Drawing.Point(1199, 9);
             this.labelExit.Name = "labelExit";
-            this.labelExit.Size = new System.Drawing.Size(21, 23);
+            this.labelExit.Size = new System.Drawing.Size(17, 17);
             this.labelExit.TabIndex = 10;
             this.labelExit.Text = "X";
             this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
@@ -184,7 +184,7 @@
             this.labelProfilePicName.AutoSize = true;
             this.labelProfilePicName.Location = new System.Drawing.Point(60, 114);
             this.labelProfilePicName.Name = "labelProfilePicName";
-            this.labelProfilePicName.Size = new System.Drawing.Size(97, 23);
+            this.labelProfilePicName.Size = new System.Drawing.Size(75, 17);
             this.labelProfilePicName.TabIndex = 8;
             this.labelProfilePicName.Text = "User Name";
             this.labelProfilePicName.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -206,7 +206,7 @@
             this.labelTitle.ForeColor = System.Drawing.Color.Black;
             this.labelTitle.Location = new System.Drawing.Point(3, 12);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(270, 37);
+            this.labelTitle.Size = new System.Drawing.Size(212, 30);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "SEARCH FOR EVENT";
             // 
@@ -220,7 +220,7 @@
             // 
             // EventsManagerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1232, 756);

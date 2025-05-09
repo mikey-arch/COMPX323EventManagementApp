@@ -60,8 +60,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.comboBoxCountry = new System.Windows.Forms.ComboBox();
-            this.textBoxCompanyClub = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
             this.buttonClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrice)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCapacity)).BeginInit();
@@ -84,7 +82,7 @@
             this.textBoxDescription.Location = new System.Drawing.Point(129, 84);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(242, 49);
+            this.textBoxDescription.Size = new System.Drawing.Size(242, 74);
             this.textBoxDescription.TabIndex = 1;
             // 
             // label1
@@ -99,7 +97,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(57, 312);
+            this.label12.Location = new System.Drawing.Point(69, 279);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(49, 13);
             this.label12.TabIndex = 47;
@@ -108,7 +106,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(37, 242);
+            this.label11.Location = new System.Drawing.Point(37, 202);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(86, 13);
             this.label11.TabIndex = 46;
@@ -117,7 +115,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(57, 198);
+            this.label8.Location = new System.Drawing.Point(57, 164);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(61, 13);
             this.label8.TabIndex = 45;
@@ -167,7 +165,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(43, 276);
+            this.label6.Location = new System.Drawing.Point(56, 239);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 13);
             this.label6.TabIndex = 57;
@@ -180,7 +178,7 @@
             // 
             // dateTimePickerDate
             // 
-            this.dateTimePickerDate.Location = new System.Drawing.Point(129, 198);
+            this.dateTimePickerDate.Location = new System.Drawing.Point(129, 164);
             this.dateTimePickerDate.Name = "dateTimePickerDate";
             this.dateTimePickerDate.Size = new System.Drawing.Size(242, 20);
             this.dateTimePickerDate.TabIndex = 2;
@@ -188,7 +186,7 @@
             // comboBoxRestrictions
             // 
             this.comboBoxRestrictions.FormattingEnabled = true;
-            this.comboBoxRestrictions.Location = new System.Drawing.Point(129, 276);
+            this.comboBoxRestrictions.Location = new System.Drawing.Point(129, 231);
             this.comboBoxRestrictions.Name = "comboBoxRestrictions";
             this.comboBoxRestrictions.Size = new System.Drawing.Size(242, 21);
             this.comboBoxRestrictions.TabIndex = 4;
@@ -204,7 +202,7 @@
             // dateTimePickerTime
             // 
             this.dateTimePickerTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dateTimePickerTime.Location = new System.Drawing.Point(129, 236);
+            this.dateTimePickerTime.Location = new System.Drawing.Point(129, 196);
             this.dateTimePickerTime.Name = "dateTimePickerTime";
             this.dateTimePickerTime.ShowUpDown = true;
             this.dateTimePickerTime.Size = new System.Drawing.Size(242, 20);
@@ -213,7 +211,7 @@
             // numericUpDownPrice
             // 
             this.numericUpDownPrice.DecimalPlaces = 2;
-            this.numericUpDownPrice.Location = new System.Drawing.Point(251, 384);
+            this.numericUpDownPrice.Location = new System.Drawing.Point(251, 379);
             this.numericUpDownPrice.Name = "numericUpDownPrice";
             this.numericUpDownPrice.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownPrice.TabIndex = 6;
@@ -250,9 +248,9 @@
             // checkedListBoxCategories
             // 
             this.checkedListBoxCategories.FormattingEnabled = true;
-            this.checkedListBoxCategories.Location = new System.Drawing.Point(129, 313);
+            this.checkedListBoxCategories.Location = new System.Drawing.Point(129, 268);
             this.checkedListBoxCategories.Name = "checkedListBoxCategories";
-            this.checkedListBoxCategories.Size = new System.Drawing.Size(242, 49);
+            this.checkedListBoxCategories.Size = new System.Drawing.Size(242, 94);
             this.checkedListBoxCategories.TabIndex = 5;
             // 
             // numericUpDownCapacity
@@ -357,22 +355,6 @@
             this.comboBoxCountry.Size = new System.Drawing.Size(250, 21);
             this.comboBoxCountry.TabIndex = 15;
             // 
-            // textBoxCompanyClub
-            // 
-            this.textBoxCompanyClub.Location = new System.Drawing.Point(129, 146);
-            this.textBoxCompanyClub.Name = "textBoxCompanyClub";
-            this.textBoxCompanyClub.Size = new System.Drawing.Size(242, 20);
-            this.textBoxCompanyClub.TabIndex = 7;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(41, 152);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(77, 13);
-            this.label16.TabIndex = 80;
-            this.label16.Text = "Comapny/Club";
-            // 
             // buttonClear
             // 
             this.buttonClear.BackColor = System.Drawing.Color.White;
@@ -391,8 +373,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.buttonClear);
-            this.Controls.Add(this.label16);
-            this.Controls.Add(this.textBoxCompanyClub);
             this.Controls.Add(this.comboBoxCountry);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
@@ -467,8 +447,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox comboBoxCountry;
-        private System.Windows.Forms.TextBox textBoxCompanyClub;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button buttonClear;
     }
 }
