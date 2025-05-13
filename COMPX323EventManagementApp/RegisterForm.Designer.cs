@@ -48,8 +48,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxFirstName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBoxAttend = new System.Windows.Forms.CheckBox();
-            this.checkBoxOrganise = new System.Windows.Forms.CheckBox();
             this.maskedTextBoxPhoneNumber = new System.Windows.Forms.MaskedTextBox();
             this.SuspendLayout();
             // 
@@ -58,7 +56,7 @@
             this.labelLogin.AutoSize = true;
             this.labelLogin.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelLogin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.labelLogin.Location = new System.Drawing.Point(147, 709);
+            this.labelLogin.Location = new System.Drawing.Point(147, 659);
             this.labelLogin.Name = "labelLogin";
             this.labelLogin.Size = new System.Drawing.Size(48, 17);
             this.labelLogin.TabIndex = 9;
@@ -68,7 +66,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(101, 682);
+            this.label7.Location = new System.Drawing.Point(101, 632);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(165, 17);
             this.label7.TabIndex = 28;
@@ -79,7 +77,7 @@
             this.buttonClear.BackColor = System.Drawing.Color.White;
             this.buttonClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.buttonClear.Location = new System.Drawing.Point(69, 612);
+            this.buttonClear.Location = new System.Drawing.Point(69, 562);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(218, 52);
             this.buttonClear.TabIndex = 8;
@@ -126,7 +124,7 @@
             this.buttonRegister.FlatAppearance.BorderSize = 0;
             this.buttonRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonRegister.ForeColor = System.Drawing.Color.White;
-            this.buttonRegister.Location = new System.Drawing.Point(69, 556);
+            this.buttonRegister.Location = new System.Drawing.Point(69, 506);
             this.buttonRegister.Name = "buttonRegister";
             this.buttonRegister.Size = new System.Drawing.Size(218, 50);
             this.buttonRegister.TabIndex = 7;
@@ -259,30 +257,6 @@
             this.label4.TabIndex = 42;
             this.label4.Text = "First Name";
             // 
-            // checkBoxAttend
-            // 
-            this.checkBoxAttend.AutoSize = true;
-            this.checkBoxAttend.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkBoxAttend.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBoxAttend.Location = new System.Drawing.Point(69, 498);
-            this.checkBoxAttend.Name = "checkBoxAttend";
-            this.checkBoxAttend.Size = new System.Drawing.Size(167, 21);
-            this.checkBoxAttend.TabIndex = 9;
-            this.checkBoxAttend.Text = "I want to attend events";
-            this.checkBoxAttend.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxOrganise
-            // 
-            this.checkBoxOrganise.AutoSize = true;
-            this.checkBoxOrganise.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.checkBoxOrganise.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.checkBoxOrganise.Location = new System.Drawing.Point(69, 525);
-            this.checkBoxOrganise.Name = "checkBoxOrganise";
-            this.checkBoxOrganise.Size = new System.Drawing.Size(180, 21);
-            this.checkBoxOrganise.TabIndex = 10;
-            this.checkBoxOrganise.Text = "I want to organise events";
-            this.checkBoxOrganise.UseVisualStyleBackColor = true;
-            // 
             // maskedTextBoxPhoneNumber
             // 
             this.maskedTextBoxPhoneNumber.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(231)))), ((int)(((byte)(233)))));
@@ -298,10 +272,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(378, 749);
+            this.ClientSize = new System.Drawing.Size(378, 704);
             this.Controls.Add(this.maskedTextBoxPhoneNumber);
-            this.Controls.Add(this.checkBoxOrganise);
-            this.Controls.Add(this.checkBoxAttend);
             this.Controls.Add(this.textBoxFirstName);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxLastName);
@@ -355,8 +327,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxFirstName;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBoxAttend;
-        private System.Windows.Forms.CheckBox checkBoxOrganise;
         private System.Windows.Forms.MaskedTextBox maskedTextBoxPhoneNumber;
     }
 }

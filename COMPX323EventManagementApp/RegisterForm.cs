@@ -33,8 +33,6 @@ namespace COMPX323EventManagementApp
             DateTime dob = dateTimePickerBirthday.Value;
             string password = textBoxPassword.Text;
             string confirmPassword = textBoxConfirmPassword.Text;
-            bool wantToAttend = checkBoxAttend.Checked;
-            bool wantToOrganise = checkBoxOrganise.Checked;
 
             //validation checks and error messages
             if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -47,13 +45,6 @@ namespace COMPX323EventManagementApp
             {
                 MessageBox.Show("Passwords don’t match.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
-            }
-
-            if (!wantToAttend && !wantToOrganise)
-            {
-                MessageBox.Show("Please select at least one option: 'I want to attend' or 'I want to organise'.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-
             }
 
             if (!email.Contains("@"))
@@ -83,7 +74,7 @@ namespace COMPX323EventManagementApp
                     // Check if the email already exists in the database
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "select count(*) from Attendee where email = :email" + " union all " + "select count(*) from Organiser where email = :email";
+                        cmd.CommandText = "select count(*) from Member where email = :email";
                         cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
 
                         using (var reader = cmd.ExecuteReader())
@@ -102,55 +93,30 @@ namespace COMPX323EventManagementApp
                         }
                     }
 
-                    //register the user into attendee table
-                    if (wantToAttend)
+                    //register the user into member table
+                    using (var cmd = conn.CreateCommand())
                     {
-                        using (var cmd = conn.CreateCommand())
+                        cmd.CommandText = @"insert into Member (password, mob_num, fname, lname, email, DOB) values (:pwd, :mob, :fname, :lname, :email, :dob)";
+                        cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = password;
+                        cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = phoneNum;
+                        cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = firstName;
+                        cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = lastName;
+                        cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+                        cmd.Parameters.Add("dob", OracleDbType.Date).Value = dob;
+
+                        int memberInserted = cmd.ExecuteNonQuery();
+                        if (memberInserted != 1)
                         {
-                            cmd.CommandText = @"insert into Member (password, mob_num, fname, lname, email, DOB) values (:pwd, :mob, :fname, :lname, :email, :dob)";
-                            cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = password;
-                            cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = phoneNum;
-                            cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = firstName;
-                            cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = lastName;
-                            cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
-                            cmd.Parameters.Add("dob", OracleDbType.Date).Value = dob;
-
-                            int attendeeInserted = cmd.ExecuteNonQuery();
-
-                            if (attendeeInserted != 1)
-                            {
-                                MessageBox.Show("Failed to register as an attendee.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
-                        }
-                    }
-
-                    //register the user into organiser table
-                    if (wantToOrganise)
-                    {
-                        using (var cmd = conn.CreateCommand())
-                        {
-                            cmd.CommandText = @"insert into Organiser (password, mob_num, fname, lname, email, DOB) values (:pwd, :mob, :fname, :lname, :email)";
-                            cmd.Parameters.Add("pwd", OracleDbType.Varchar2).Value = password;
-                            cmd.Parameters.Add("mob", OracleDbType.Varchar2).Value = phoneNum;
-                            cmd.Parameters.Add("fname", OracleDbType.Varchar2).Value = firstName;
-                            cmd.Parameters.Add("lname", OracleDbType.Varchar2).Value = lastName;
-                            cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
-
-                            int organiserInserted = cmd.ExecuteNonQuery();
-                            if (organiserInserted != 1)
-                            {
-                                MessageBox.Show("Failed to register as an organiser.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
+                            MessageBox.Show("Failed to register as member.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
                     }
 
                     MessageBox.Show("Registration successful! You can now login with your email and password.", "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                     // Return to login form
-                    new LoginForm().Show();
-                    this.Hide();
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
             }
             catch(Exception ex)
@@ -177,8 +143,8 @@ namespace COMPX323EventManagementApp
         // Opens the LoginForm when the Login label is clicked and hides the RegisterForm.
         private void labelLogin_Click(object sender, EventArgs e)
         {
-            new LoginForm().Show();
-            this.Hide();
+            this.DialogResult= DialogResult.Cancel;
+            this.Close();
         }
 
         // Handles the exit label click event. It closes the application. 

@@ -124,8 +124,16 @@ namespace COMPX323EventManagementApp
         {
             RegisterForm registerForm = new RegisterForm();
             this.Hide();
-            registerForm.ShowDialog();
-            this.Show();
+
+            //handles if user registers successfully else user cancled the registration 
+            if (registerForm.ShowDialog() == DialogResult.OK)
+            {
+                this.Show();
+            }
+            else
+            {
+                this.Show();
+            }
         }
 
         // Exit label, exits application once clicked.
