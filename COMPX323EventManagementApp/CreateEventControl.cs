@@ -263,9 +263,7 @@ namespace COMPX323EventManagementApp
 
                         //disable event fields
                         textBoxDescription.ReadOnly = true;
-                        textBoxCompanyClub.ReadOnly = true;
                         textBoxDescription.BackColor = SystemColors.Control;
-                        textBoxCompanyClub.BackColor = SystemColors.Control;
 
                         //get and display event cvategories, uncheccking and checking the correct categories
                         List<string> categories = DataAccess.GetEventCategories(selectedEvent);
@@ -299,7 +297,6 @@ namespace COMPX323EventManagementApp
             {
                 //enable fields
                 textBoxDescription.ReadOnly = false;
-                textBoxCompanyClub.ReadOnly = false;
                 textBoxDescription.BackColor= SystemColors.Window;
                 textBoxDescription.BackColor = SystemColors.Window;
             }
@@ -373,7 +370,6 @@ namespace COMPX323EventManagementApp
         {
             comboBoxEventName.Text = "";
             textBoxDescription.Text = "";
-            textBoxCompanyClub.Text = "";
             comboBoxVenue.Text = "";
             textBoxStreetName.Text = "";
             textBoxSuburb.Text = "";
@@ -396,7 +392,6 @@ namespace COMPX323EventManagementApp
 
              // Enable all disabled controls if submitted with already before event and venue
             textBoxDescription.ReadOnly = false;
-            textBoxCompanyClub.ReadOnly = false;
             numericUpDownCapacity.Enabled = true;
             numericUpDownStreetNum.Enabled = true;
             textBoxStreetName.ReadOnly = false;
@@ -406,7 +401,6 @@ namespace COMPX323EventManagementApp
             checkedListBoxCategories.Enabled = true;
             comboBoxRestrictions.Enabled = true;
             textBoxDescription.BackColor = SystemColors.Window;
-            textBoxCompanyClub.BackColor = SystemColors.Window;
             textBoxStreetName.BackColor = SystemColors.Window;
             textBoxSuburb.BackColor = SystemColors.Window;
             textBoxPostCode.BackColor = SystemColors.Window;
@@ -446,9 +440,7 @@ namespace COMPX323EventManagementApp
                         
                         // Make these fields read-only or change their appearance
                         textBoxDescription.ReadOnly = true;
-                        textBoxCompanyClub.ReadOnly = true;
                         textBoxDescription.BackColor = SystemColors.Control;
-                        textBoxCompanyClub.BackColor = SystemColors.Control;
                         
                         // Load categories and restrictions
                         List<string> categories = DataAccess.GetEventCategories(eventName);
@@ -489,9 +481,7 @@ namespace COMPX323EventManagementApp
             {
                 // Reset and enable fields for a new event
                 textBoxDescription.ReadOnly = false;
-                textBoxCompanyClub.ReadOnly = false;
                 textBoxDescription.BackColor = SystemColors.Window;
-                textBoxCompanyClub.BackColor = SystemColors.Window;
                 checkedListBoxCategories.Enabled = true;
                 comboBoxRestrictions.Enabled = true;
                 
@@ -499,7 +489,6 @@ namespace COMPX323EventManagementApp
                 if (!string.IsNullOrEmpty(textBoxDescription.Text))
                 {
                     textBoxDescription.Text = "";
-                    textBoxCompanyClub.Text = "";
                     
                     // Clear category selections
                     for (int i = 0; i < checkedListBoxCategories.Items.Count; i++)
