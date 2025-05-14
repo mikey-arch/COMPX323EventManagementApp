@@ -254,9 +254,12 @@ namespace COMPX323EventManagementApp
                                   
                 cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventObj.Ename;
                 cmd.Parameters.Add("description", OracleDbType.Clob).Value = eventObj.Description;
-                cmd.Parameters.Add("restriction", OracleDbType.Clob).Value = eventObj.Restriction;
+                cmd.Parameters.Add("restriction", OracleDbType.Varchar2).Value = eventObj.Restriction;
                 cmd.Parameters.Add("creatorNum", OracleDbType.Int32).Value = eventObj.CreatorNum;
+
                 
+
+
                 cmd.ExecuteNonQuery();
             }
         }

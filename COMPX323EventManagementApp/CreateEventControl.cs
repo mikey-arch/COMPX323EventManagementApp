@@ -10,14 +10,10 @@ namespace COMPX323EventManagementApp
 {
     public partial class CreateEventControl : UserControl
     {
-        private List<string> validCategories = new List<string> 
-        { 
-            "Art", "Music", "Theatre", "Talk", "Science", "Culture", 
-            "Food", "Sports", "Education", "Tech", "Health", "Travel", 
-            "History", "Literature", "Fashion", "Business", "Finance", 
-            "Law", "Politics", "Dating", "Family", "Animals", "Gaming", "Environment" 
-        };
-        
+        //private List<string> validCategories = new List<string>();
+
+        //private List<string> validRestrictions = new List<string>();
+
         private List<string> validCities = new List<string> 
         { 
             "Auckland", "Wellington", "Christchurch", "Hamilton", "Tauranga", 
@@ -25,11 +21,8 @@ namespace COMPX323EventManagementApp
             "Rotorua", "New Plymouth", "Whangarei", "Invercargill", "Whanganui", 
             "Gisborne", "Timaru", "Blenheim", "Queenstown", "Taupo" 
         };
-        
-        private List<string> validRestrictions = new List<string> 
-        { 
-            "Adults(R18+)", "All Ages", "Teens(R13+)", "Seniors(65+)" 
-        };
+
+       
         
         public CreateEventControl()
         {
@@ -77,20 +70,62 @@ namespace COMPX323EventManagementApp
         //populate restrictions combobox with valid options
         private void LoadRestrictions()
         {
-            comboBoxRestrictions.Items.Clear();
-            foreach (string r in validRestrictions)
+            try
             {
-                comboBoxRestrictions.Items.Add(r);
+                using (var conn = DbConfig.GetConnection())
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "SELECT rname FROM restrictions ORDER BY rname ASC";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                comboBoxRestrictions.Items.Add(reader.GetString(0));
+                            }
+                        }
+                    }
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading restrictions: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         //populates listbox with only valid options
         private void LoadCategories()
         {
-            checkedListBoxCategories.Items.Clear();
-            foreach (string c in validCategories)
+            try
             {
-                checkedListBoxCategories.Items.Add(c);
+                using (var conn = DbConfig.GetConnection())
+                {
+                    conn.Open();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "SELECT cname FROM Category ORDER BY cname ASC";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                checkedListBoxCategories.Items.Add(reader.GetString(0));
+                            }
+                        }
+                    }
+                }
+
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading categories: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
