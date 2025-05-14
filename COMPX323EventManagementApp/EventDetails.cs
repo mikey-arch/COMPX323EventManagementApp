@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 
 namespace COMPX323EventManagementApp
@@ -27,7 +28,7 @@ namespace COMPX323EventManagementApp
             this.eventName = eventName;
             this.eventDate = eventDate;
             this.venueName = venueName;
-
+            Console.WriteLine($"eventDate1: {eventDate:dd-MM-YYYY}");
 
             Member user = Session.CurrentUser;
             attendeeId = user.Id;
@@ -44,20 +45,15 @@ namespace COMPX323EventManagementApp
                 using (var conn = DbConfig.GetConnection())
                 {
                     conn.Open();
-
+                    
                     // Query to get basic event details (description, time, price)
-                    string query = @"
-                        SELECT 
-                            e.description AS eventDescription, 
-                            ei.time AS eventTime, 
-                            ei.price AS eventPrice
-                        FROM 
-                            event e
-                            JOIN event_instance ei ON e.ename = ei.ename
-                        WHERE 
-                            e.ename = :eventName 
-                            AND ei.event_date = :eventDate 
-                            AND ei.vname = :venueName";
+                    string query = @"select description, time, price, restriction, cname from event e 
+                                join event_category ec on ec.ename = e.ename
+                                join event_instance ei on ei.ename = e.ename
+                                WHERE 
+                                e.ename = :eventName
+                                AND TRUNC(ei.time) = :eventDate 
+                                AND ei.vname = :venueName";
 
                     using (var cmd = conn.CreateCommand())
                     {
@@ -68,80 +64,23 @@ namespace COMPX323EventManagementApp
                         cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
                         cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
 
+
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                // Set the event details into the form controls
-                                textBoxDesc.Text = reader.GetString(reader.GetOrdinal("eventDescription"));
-                                textBoxTime.Text = reader.GetDateTime(reader.GetOrdinal("eventTime")).ToString("HH:mm");
-                                textBoxPrice.Text = reader.GetDecimal(reader.GetOrdinal("eventPrice")).ToString("C");
+                                textBoxDesc.Text = reader.GetString(0);
+                                textBoxTime.Text = reader.GetDateTime(1).ToString("HH:mm");
+                                textBoxPrice.Text = reader.GetDecimal(2).ToString("C");
+                                textBoxRestrictions.Text = reader.GetString(3);
+                                textBoxTags.Text = reader.GetString(4);
+
+
                             }
                         }
                     }
 
-                    // Retrieve categories for the event
-                    StringBuilder categories = new StringBuilder();
-                    string categoryQuery = @"
-                        SELECT ct.cname AS categoryName
-                        FROM 
-                            event e
-                            JOIN has_a ha ON e.ename = ha.ename
-                            JOIN category_tag ct ON ha.cname = ct.cname
-                        WHERE 
-                            e.ename = :eventName";
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = categoryQuery;
-                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                if (!reader.IsDBNull(reader.GetOrdinal("categoryName")))
-                                {
-                                    categories.Append(reader.GetString(reader.GetOrdinal("categoryName")) + ", ");
-                                }
-                            }
-                        }
-                    }
-                    textBoxTags.Text = categories.ToString().TrimEnd(new char[] { ',', ' ' });
-
-                    // Display eventName, venueName, and eventDate in the form
-                    labelEventName.Text = eventName;
-                    textBoxVenue.Text = venueName;
-                    textBoxDate.Text = eventDate.ToString("dd-MM-yyyy");
-
-                    // Retrieve restrictions for the event
-                    StringBuilder restrictions = new StringBuilder();
-                    string restrictionQuery = @"
-                        SELECT r.rname AS restrictionName
-                        FROM 
-                            event e
-                            JOIN has h ON e.ename = h.ename
-                            JOIN restrictions r ON h.rname = r.rname
-                        WHERE 
-                            e.ename = :eventName";
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = restrictionQuery;
-                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                if (!reader.IsDBNull(reader.GetOrdinal("restrictionName")))
-                                {
-                                    restrictions.Append(reader.GetString(reader.GetOrdinal("restrictionName")) + ", ");
-                                }
-                            }
-                        }
-                    }
-                    textBoxRestrictions.Text = restrictions.ToString().TrimEnd(new char[] { ',', ' ' });
+                    
 
                     // Query to get the current RSVP status for the attendee
                     string rsvpQuery = @"

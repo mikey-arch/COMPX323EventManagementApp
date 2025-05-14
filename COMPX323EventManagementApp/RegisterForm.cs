@@ -41,6 +41,18 @@ namespace COMPX323EventManagementApp
                 return;
             }
 
+            if (int.TryParse(firstName, out _))
+            {
+                MessageBox.Show("First name cannot be a number.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (int.TryParse(lastName, out _))
+            {
+                MessageBox.Show("Last name cannot be a number.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (password != confirmPassword)
             {
                 MessageBox.Show("Passwords don’t match.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using Oracle.ManagedDataAccess.Client;
 
@@ -145,8 +146,8 @@ namespace COMPX323EventManagementApp
                     {
                         query += " and v.city = :location";
                     }
-
-                    // hanldes category filter
+                    
+                    // handles category filter
                     string categoryFilter = comboBoxCategory.SelectedItem?.ToString();
                     if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter != "All Categories")
                     {
@@ -159,11 +160,11 @@ namespace COMPX323EventManagementApp
                     {
                         query += " and e.restriction = :restriction";
                     }
-
+                    
                     //add date filtering
                     DateTime selectedDate = dateTimePickerMonth.Value;
                     query += " and extract(month from ei.event_date) = :month and extract(year from ei.event_date) = :year";
-
+                    
                     //add sorting filter
                     if (priceFilter == "Asc")
                     {
@@ -178,7 +179,7 @@ namespace COMPX323EventManagementApp
                         query += " order by ei.event_date asc, ei.time asc";
                     }
 
-
+                    
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = query;
@@ -188,17 +189,17 @@ namespace COMPX323EventManagementApp
                         {
                             cmd.Parameters.Add("location", OracleDbType.Varchar2).Value = locationFilter;
                         }
-
+                        
                         if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter != "All Categories")
                         {
                             cmd.Parameters.Add("category", OracleDbType.Varchar2).Value = categoryFilter;
                         }
-
+                        
                         if (!string.IsNullOrEmpty(restrictionFilter) && restrictionFilter != "All Restrictions")
                         {
                             cmd.Parameters.Add("restriction", OracleDbType.Varchar2).Value = restrictionFilter;
                         }
-
+                        
                         // add location, category, restriction, searching and date parameters
                         if (!string.IsNullOrWhiteSpace(searchWord))
                         {
@@ -207,13 +208,14 @@ namespace COMPX323EventManagementApp
 
                         cmd.Parameters.Add("month", OracleDbType.Int32).Value = selectedDate.Month;
                         cmd.Parameters.Add("year", OracleDbType.Int32).Value = selectedDate.Year;
-
+                        
                         using (var reader = cmd.ExecuteReader())
                         {
                             bool foundResults = false;
-
+                            
                             while (reader.Read())
                             {
+                                Console.WriteLine("✅ Event found: " + reader.GetString(0)); // event name
                                 foundResults = true;
 
                                 // Create list view item with event name
@@ -310,7 +312,8 @@ namespace COMPX323EventManagementApp
 
                 // Extract event name, event date, and venue name from the ListView columns
                 string eventName = selectedEvent.Text; // First column is event name
-                DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text); // Second column is event date
+                DateTime eventDate = DateTime.ParseExact(selectedEvent.SubItems[1].Text, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
                 string venueName = selectedEvent.SubItems[3].Text; // Fourth column is venue name
 
                 // Open the EventDetails form and pass the event name, event date, and venue name
