@@ -66,14 +66,13 @@ namespace COMPX323EventManagementApp
             {
                 // Get the current user's ID
                 Member user = Session.CurrentUser;
-                int attendeeId = user.Id;
+                int memberId = user.Id;
 
                 // SQL query to get all events created by the current user
                 string query = @"
                     SELECT e.ename 
                     FROM Event e
-                    JOIN Organises o ON e.ename = o.ename
-                    WHERE o.acc_num = :attendeeId";
+                    WHERE e.creator_num = :memberId";
 
                 using (var conn = DbConfig.GetConnection())
                 {
@@ -81,7 +80,7 @@ namespace COMPX323EventManagementApp
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = query;
-                        cmd.Parameters.Add("attendeeId", OracleDbType.Int32).Value = attendeeId;
+                        cmd.Parameters.Add("memberId", OracleDbType.Int32).Value = memberId;
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -219,10 +218,10 @@ namespace COMPX323EventManagementApp
             {
                 // SQL query to fetch RSVPs for the selected event instance
                 string query = @"
-                    SELECT a.fname, a.lname, a.email, r.status
+                    select m.fname, m.lname, m.email, r.status
                     FROM RSVP r
-                    JOIN Attendee a ON r.acc_num = a.acc_num
-                    JOIN Event e ON r.ename = e.ename
+                    join event e on r.ename = e.ename
+                    join member m on m.acc_num = e.creator_num
                     WHERE e.ename = :eventName
                     AND r.event_date = :eventDate
                     AND r.vname = :venueName";
