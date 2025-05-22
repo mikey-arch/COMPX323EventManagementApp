@@ -18,6 +18,11 @@ namespace COMPX323EventManagementApp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            if (MongoDbConfig.TestConnection())
+            {
+                Console.WriteLine("MongoDB Connection Successful"); 
+            }
+
             // Test the database connection before starting the application
             if (DbConfig.TestConnection())
             {
