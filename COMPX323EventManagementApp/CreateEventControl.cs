@@ -36,6 +36,8 @@ namespace COMPX323EventManagementApp
 
             dateTimePickerDate.Value = DateTime.Today;
             dateTimePickerTime.Value = DateTime.Today.AddHours(17); 
+
+            this.VisibleChanged += CreateEventControl_VisibleChanged;   
         }
 
         //populate city box with valid cities
@@ -196,6 +198,20 @@ namespace COMPX323EventManagementApp
             if (dateTimePickerDate.Value.Date < DateTime.Today)
             {
                 MessageBox.Show("Event date cannot be in the past.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (numericUpDownCapacity.Value == 0)
+            {
+                MessageBox.Show("Venue capacity must be greater than 0. Please enter a valid capacity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                numericUpDownCapacity.Focus();
+                return false;
+            }
+    
+            if (numericUpDownStreetNum.Value == 0)
+            {
+                MessageBox.Show("Street number must be greater than 0. Please enter a valid street number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                numericUpDownStreetNum.Focus();
                 return false;
             }
             
@@ -603,6 +619,16 @@ namespace COMPX323EventManagementApp
                 textBoxSuburb.BackColor = SystemColors.Window;
                 textBoxPostCode.BackColor = SystemColors.Window;
             }
+        }
+
+        //refresh users events and available venues when control is shown
+        private void CreateEventControl_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                LoadEventName();
+                LoadVenues();
+            }    
         }
     }
 }

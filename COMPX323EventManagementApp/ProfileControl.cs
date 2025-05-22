@@ -25,7 +25,9 @@ namespace COMPX323EventManagementApp
             labelName.Text = user.Fname + " " + user.Lname;
             labelEmail.Text = user.Email;
             currentlySelected = "";
-            
+
+            this.VisibleChanged += ProfileControl_VisibleChanged;
+
         }
 
         //displays users rsvps / upcoming events
@@ -305,6 +307,26 @@ namespace COMPX323EventManagementApp
             catch (Exception ex)
             {
                 MessageBox.Show($"Error deleting RSVP: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // refreshes when specific view is currently selected
+        private void ProfileControl_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                if (currentlySelected == "RSVP")
+                {
+                    buttonRsvps_Click(null, null);
+                }
+                else if (currentlySelected == "Reviews")
+                {
+                    buttonReviews_Click(null, null);
+                }
+                else if (currentlySelected == "Events")
+                {
+                    buttonEvents_Click(null, null);
+                }
             }
         }
     }

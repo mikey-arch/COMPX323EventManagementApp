@@ -12,6 +12,8 @@ namespace COMPX323EventManagementApp
             InitializeComponent();
             LoadComboBoxes();
             DisplayEvents(textBoxSearch.Text.Trim());
+            this.VisibleChanged += SearchEventControl_VisibleChanged;
+
         }
 
         //loads all comboboxes with appropriate filters names
@@ -319,6 +321,15 @@ namespace COMPX323EventManagementApp
                 // Open the EventDetails form and pass the event name, event date, and venue name
                 EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
                 eventDetailsForm.Show();
+            }
+        }
+
+        // refreshes when search event control is shown
+        private void SearchEventControl_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                DisplayEvents(textBoxSearch.Text.Trim());
             }
         }
     }

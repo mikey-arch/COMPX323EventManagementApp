@@ -406,6 +406,7 @@
             this.Controls.Add(this.buttonCreateEvent);
             this.Name = "CreateEventControl";
             this.Size = new System.Drawing.Size(784, 629);
+            this.VisibleChanged += new System.EventHandler(this.CreateEventControl_VisibleChanged);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrice)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCapacity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStreetNum)).EndInit();

@@ -65,6 +65,13 @@ namespace COMPX323EventManagementApp
                 return;
             }
 
+            if (!System.Text.RegularExpressions.Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+            {
+                MessageBox.Show("Please enter a valid email address (e.g., user@example.com). Email must contain '@' symbol and a valid domain.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxEmail.Focus();
+                return;
+            }
+
             if (!phoneNum.StartsWith("02") || phoneNum.Length < 9)
             {
                 MessageBox.Show("Please enter a valid NZ phone number starting with 02 and at least 9 digits", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -170,6 +177,24 @@ namespace COMPX323EventManagementApp
         {
             textBoxPassword.UseSystemPasswordChar = !checkBoxShowPassword.Checked;
             textBoxConfirmPassword.UseSystemPasswordChar= !checkBoxShowPassword.Checked;
+        }
+
+        //handles only letter keypresses so can only enter valid firstname and second name
+        private void textBoxFirstName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        //handles only letter keypresses
+        private void textBoxLastName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

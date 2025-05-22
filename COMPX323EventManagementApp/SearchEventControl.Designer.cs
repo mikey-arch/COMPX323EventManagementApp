@@ -199,6 +199,7 @@
             this.Controls.Add(this.comboBoxPrice);
             this.Name = "SearchEventControl";
             this.Size = new System.Drawing.Size(782, 531);
+            this.VisibleChanged += new System.EventHandler(this.SearchEventControl_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
 
