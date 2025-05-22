@@ -138,6 +138,12 @@
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\Member.cs" />
     <Compile Include="Models\Venue.cs" />
+    <Compile Include="MongoCreateEventControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MongoCreateEventControl.Designer.cs">
+      <DependentUpon>MongoCreateEventControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProfileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -178,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ManageEventControl.resx">
       <DependentUpon>ManageEventControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MongoCreateEventControl.resx">
+      <DependentUpon>MongoCreateEventControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProfileControl.resx">
       <DependentUpon>ProfileControl.cs</DependentUpon>
