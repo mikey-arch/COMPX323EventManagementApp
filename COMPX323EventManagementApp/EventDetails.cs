@@ -43,7 +43,8 @@ namespace COMPX323EventManagementApp
                 using (var conn = DbConfig.GetConnection())
                 {
                     conn.Open();
-                    
+                    labelEName.Text = eventName;
+
                     // Query to get basic event details (description, time, price)
                     string query = @"select description, time, price, restriction, cname, vname from event e 
                                 join event_category ec on ec.ename = e.ename
