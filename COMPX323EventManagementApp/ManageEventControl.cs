@@ -372,10 +372,11 @@ namespace COMPX323EventManagementApp
             string venueName = "";
             DateTime eventDate = DateTime.MinValue;
             string eventName = comboBoxEventList.SelectedItem.ToString();
-            var selectedItem = listViewEvents.SelectedItems[0];//////////////
+            //var selectedItem = listViewEvents.SelectedItems[0];//////////////
 
             if (num == 2 || num == 3)
             {
+                var selectedItem = listViewEvents.SelectedItems[0];
                 //eventName = selectedItem.Text;
 
                 var tag = (dynamic)selectedItem.Tag;
@@ -408,7 +409,7 @@ namespace COMPX323EventManagementApp
                     {
 
                         // Delete all RSVPs for this event instance before deleting the instance
-                        //DeleteRSVPs(eventName, eventDate, venueName);
+                        DeleteRSVPs(eventName, eventDate, venueName);
 
                         query = @"
                             DELETE FROM event_instance
@@ -441,7 +442,6 @@ namespace COMPX323EventManagementApp
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = query;
-                        string formattedDate = "";
                         // Add parameters for deletion
                         if(num == 3)
                         {
@@ -451,12 +451,17 @@ namespace COMPX323EventManagementApp
                             cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
 
                         }
-                        if(num == 2)
+                        else if (num == 2)
                         {
+                            cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
                             cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
                             cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
                         }
-                        cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+                        else if (num == 1)
+                        {
+                            cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+
+                        }
 
                         Console.WriteLine(eventName + "  " + venueName + "  " + eventDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
@@ -483,8 +488,7 @@ namespace COMPX323EventManagementApp
             // Queries for deleting relations from 'has_a' and 'organises' tables
             string[] queries = new string[]
             {
-                @"DELETE FROM has_a WHERE ename = :eventName",///////here
-                @"DELETE FROM organises WHERE ename = :eventName"
+                @"DELETE FROM event_category WHERE ename = :eventName",///////here
             };
 
             // Execute both queries in a single connection
