@@ -161,7 +161,6 @@ namespace COMPX323EventManagementApp
                                 ListViewItem item = new ListViewItem(reader.GetString(reader.GetOrdinal("ename")));
                                 
                                 DateTime eventDate = reader.GetDateTime(reader.GetOrdinal("event_date"));
-                                Console.WriteLine("PLEASEEEE" + eventDate);
                                 DateTime eventTime = reader.GetDateTime(reader.GetOrdinal("time"));
 
                                 item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("dd-MM-yyyy"));
@@ -215,9 +214,7 @@ namespace COMPX323EventManagementApp
                     string eventName = selectedItem.Text; // The first column: Event Name
                     DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); // Second column: Event Date
                     string venueName = selectedItem.SubItems[3].Text; // Fourth column: Venue Name
-                    Console.WriteLine("pls?"+ eventDate);
                     // Call the method to display RSVPs for this specific event instance
-                    Console.WriteLine(eventName+ eventDate+ venueName+ "fffffffffffffffffffffffffffffff");
                     DisplayRSVPs(eventName, eventDate, venueName);
                 }
             }
@@ -252,7 +249,7 @@ namespace COMPX323EventManagementApp
                         cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
                         cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
 
-                        Console.WriteLine("EV:"+eventDate);
+
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -266,7 +263,7 @@ namespace COMPX323EventManagementApp
 
                                 string fullName = $"{reader.GetString(reader.GetOrdinal("fname"))} {reader.GetString(reader.GetOrdinal("lname"))}";
                                 string email = reader.GetString(reader.GetOrdinal("email"));
-                                Console.WriteLine("cmon slay pls"+fullName + email);
+
                                 string status = reader.GetString(reader.GetOrdinal("status"));
 
                                 ListViewItem item = new ListViewItem(fullName);
@@ -456,7 +453,6 @@ namespace COMPX323EventManagementApp
 
                             }
 
-                            Console.WriteLine(eventName + "  " + venueName + "  " + eventDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
                             // Execute the delete command
                             int rowsAffected = cmd.ExecuteNonQuery();

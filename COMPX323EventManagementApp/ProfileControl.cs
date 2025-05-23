@@ -33,6 +33,7 @@ namespace COMPX323EventManagementApp
         //displays users rsvps / upcoming events
         private void buttonRsvps_Click(object sender, EventArgs e)
         {
+            listViewDisplay.Enabled = true;
             currentlySelected = "RSVP";
             try
             {
@@ -81,6 +82,7 @@ namespace COMPX323EventManagementApp
                             {
                                 ListViewItem noDataItem = new ListViewItem("No upcoming events found");
                                 listViewDisplay.Items.Add(noDataItem);
+                                listViewDisplay.Enabled = false;
                             }
                         }
                     }
@@ -96,6 +98,7 @@ namespace COMPX323EventManagementApp
         //displays users reviews
         private void buttonReviews_Click(object sender, EventArgs e)
         {
+            listViewDisplay.Enabled = true;
             currentlySelected = "Reviews";
             try
             {
@@ -146,6 +149,7 @@ namespace COMPX323EventManagementApp
                             {
                                 ListViewItem noDataItem = new ListViewItem("No reviews submitted yet");
                                 listViewDisplay.Items.Add(noDataItem);
+                                listViewDisplay.Enabled = false;
                             }
                         }
                     }
@@ -161,6 +165,7 @@ namespace COMPX323EventManagementApp
         //displays users organised events
         private void buttonEvents_Click(object sender, EventArgs e)
         {
+            listViewDisplay.Enabled = true;
             currentlySelected = "Events";
             try
             {
@@ -213,6 +218,7 @@ namespace COMPX323EventManagementApp
                             {
                                 ListViewItem noDataItem = new ListViewItem("No events organised yet");
                                 listViewDisplay.Items.Add(noDataItem);
+                                listViewDisplay.Enabled = false;
                             }
                         }
                     }
@@ -228,7 +234,7 @@ namespace COMPX323EventManagementApp
         private void listViewDisplay_DoubleClick(object sender, EventArgs e)
         {
 
-            
+
             if (listViewDisplay.SelectedItems.Count == 0 || currentlySelected != "RSVP")
                 return;
 
