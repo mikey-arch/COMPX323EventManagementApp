@@ -164,11 +164,12 @@ namespace COMPX323EventManagementApp
                     }
 
                     
-
                     //add date filtering
                     DateTime selectedDate = dateTimePickerMonth.Value;
                     query += " and extract(month from ei.event_date) = :month and extract(year from ei.event_date) = :year";
+
                     query += " GROUP BY e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price, e.restriction";
+
                     //add sorting filter
                     if (priceFilter == "Asc")
                     {

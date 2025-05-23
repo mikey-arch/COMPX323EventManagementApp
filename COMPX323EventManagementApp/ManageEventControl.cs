@@ -257,8 +257,9 @@ namespace COMPX323EventManagementApp
                         using (var reader = cmd.ExecuteReader())
                         {
                             listViewRSVP.Items.Clear(); // Clear previous data in ListBox
-
+                            listViewRSVP.Enabled = true;
                             bool foundRSVPs = false;
+
                             while (reader.Read())
                             {
                                 foundRSVPs = true;
@@ -283,7 +284,7 @@ namespace COMPX323EventManagementApp
                             if (!foundRSVPs)
                             {
                                 listViewRSVP.Items.Add("No RSVPs for this event instance.");
-
+                                listViewRSVP.Enabled = false;
                             }
                         }
                     }
@@ -362,114 +363,120 @@ namespace COMPX323EventManagementApp
             string query = "";
             string venueName = "";
             DateTime eventDate = DateTime.MinValue;
-            string eventName = comboBoxEventList.SelectedItem.ToString();
 
-            if (num == 2 || num == 3)
-            {
-                var selectedItem = listViewEvents.SelectedItems[0];
-                //eventName = selectedItem.Text;
+            try {
+                string eventName = comboBoxEventList.SelectedItem.ToString();
 
-                var tag = (dynamic)selectedItem.Tag;
-                
-                eventDate = DateTime.Parse(selectedItem.SubItems[1].Text);
+                if (num == 2 || num == 3)
+                {
+                    var selectedItem = listViewEvents.SelectedItems[0];
+                    //eventName = selectedItem.Text;
 
-                venueName = tag.VenueName;
+                    var tag = (dynamic)selectedItem.Tag;
 
-            }
+                    eventDate = DateTime.Parse(selectedItem.SubItems[1].Text);
+
+                    venueName = tag.VenueName;
+
+                }
 
 
-            // Determine the item to delete based on the parameter (1 for event, 2 for instance, 3 for RSVP)
-            switch (num)
-            {
-                case 3: // RSVP
-                    if (listViewRSVP.SelectedItems.Count > 0)
-                    {
+                // Determine the item to delete based on the parameter (1 for event, 2 for instance, 3 for RSVP)
+                switch (num)
+                {
+                    case 3: // RSVP
+                        if (listViewRSVP.SelectedItems.Count > 0)
+                        {
 
-                        query = @"
+                            query = @"
                             DELETE FROM RSVP
                             WHERE acc_num = :attendeeId
                             AND ename = :eventName
                             AND vname = :venueName
                             AND event_date = :eventDate";
-                    }
-                    break;
+                        }
+                        break;
 
-                case 2: // Instance
-                    if (listViewEvents.SelectedItems.Count > 0)
-                    {
+                    case 2: // Instance
+                        if (listViewEvents.SelectedItems.Count > 0)
+                        {
 
-                        // Delete all RSVPs for this event instance before deleting the instance
-                        DeleteRSVPs(eventName, eventDate, venueName);
+                            // Delete all RSVPs for this event instance before deleting the instance
+                            DeleteRSVPs(eventName, eventDate, venueName);
 
-                        query = @"
+                            query = @"
                             DELETE FROM event_instance
                             WHERE ename = :eventName
                             AND vname = :venueName
                             AND event_date = :eventDate";
-                    }
-                    break;
+                        }
+                        break;
 
-                case 1: // Event
-                    if (comboBoxEventList.SelectedItem != null)
-                    {
-                        // Delete all event instances and their RSVPs before deleting the event
-                        DeleteAllEventInstances(eventName);
-                        DeleteRelations(eventName);
+                    case 1: // Event
+                        if (comboBoxEventList.SelectedItem != null)
+                        {
+                            // Delete all event instances and their RSVPs before deleting the event
+                            DeleteAllEventInstances(eventName);
+                            DeleteRelations(eventName);
 
-                        query = @"
+                            query = @"
                             DELETE FROM event
                             WHERE ename = :eventName";
-                    }
-                    break;
-            }
+                        }
+                        break;
+                }
 
-            // Execute the delete query only if query is not empty
-            if (!string.IsNullOrEmpty(query))
-            {
-                using (var conn = DbConfig.GetConnection())
+                // Execute the delete query only if query is not empty
+                if (!string.IsNullOrEmpty(query))
                 {
-                    conn.Open();
-                    using (var cmd = conn.CreateCommand())
+                    using (var conn = DbConfig.GetConnection())
                     {
-                        cmd.CommandText = query;
-                        // Add parameters for deletion
-                        if(num == 3)
+                        conn.Open();
+                        using (var cmd = conn.CreateCommand())
                         {
-                            cmd.Parameters.Add("attendeeId", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = attendeeId;
-                            cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
-                            cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
-                            cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
+                            cmd.CommandText = query;
+                            // Add parameters for deletion
+                            if (num == 3)
+                            {
+                                cmd.Parameters.Add("attendeeId", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = attendeeId;
+                                cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+                                cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
+                                cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
 
-                        }
-                        else if (num == 2)
-                        {
-                            cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
-                            cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
-                            cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
-                        }
-                        else if (num == 1)
-                        {
-                            cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+                            }
+                            else if (num == 2)
+                            {
+                                cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+                                cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
+                                cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
+                            }
+                            else if (num == 1)
+                            {
+                                cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
 
-                        }
+                            }
 
-                        Console.WriteLine(eventName + "  " + venueName + "  " + eventDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                            Console.WriteLine(eventName + "  " + venueName + "  " + eventDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
-                        // Execute the delete command
-                        int rowsAffected = cmd.ExecuteNonQuery();
+                            // Execute the delete command
+                            int rowsAffected = cmd.ExecuteNonQuery();
 
-                        if (rowsAffected > 0)
-                        {
-                            MessageBox.Show("Delete successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            RefreshUI();  // You can implement a method to refresh your UI after deletion.
-                        }
-                        else
-                        {
-                            MessageBox.Show("No matching record found to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            if (rowsAffected > 0)
+                            {
+                                MessageBox.Show("Delete successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                RefreshUI();  // You can implement a method to refresh your UI after deletion.
+                            }
+                            else
+                            {
+                                MessageBox.Show("No matching record found to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
                         }
                     }
                 }
+            } catch (Exception ex){
+                MessageBox.Show("Please select an event instance to delete/delete from. Error: " + ex.Message);
             }
+            
         }
 
 
