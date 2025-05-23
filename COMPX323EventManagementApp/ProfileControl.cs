@@ -54,8 +54,8 @@ namespace COMPX323EventManagementApp
                     {
                         cmd.CommandText = @"select e.ename, r.event_date, r.vname, r.status from RSVP r
                         join Event e ON r.ename = e.ename
-                        where r.acc_num = :userId
-                        order by r.event_date";
+                        where r.acc_num = :userId and r.event_date > SYSDATE
+                        order by r.event_date DESC";
                 
                         cmd.Parameters.Add("userId", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = Session.CurrentUser.Id;
                         
@@ -227,41 +227,34 @@ namespace COMPX323EventManagementApp
 
         private void listViewDisplay_DoubleClick(object sender, EventArgs e)
         {
+
             
-            if (currentlySelected == "RSVP" && listViewDisplay.SelectedItems.Count > 0)
+            if (listViewDisplay.SelectedItems.Count == 0 || currentlySelected != "RSVP")
+                return;
+
+            var selectedEvent = listViewDisplay.SelectedItems[0];
+            string eventName = selectedEvent.Text;
+            DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text);
+            string venueName = selectedEvent.SubItems[2].Text;
+
+
+            // Show custom message box
+            CustomMessageBox customMsgBox = new CustomMessageBox();
+            customMsgBox.ShowDialog();
+
+            if (customMsgBox.SelectedOption == "Delete RSVP")
             {
-                // Create and show the custom message box
-                CustomMessageBox customMsgBox = new CustomMessageBox();
-                customMsgBox.ShowDialog();
-
-                // Get the selected item. Assuming it contains event data (event name, date, and venue)
-                var selectedEvent = listViewDisplay.SelectedItems[0];
-
-                // Extract event name, event date, and venue name from the ListView columns
-                string eventName = selectedEvent.Text;
-                DateTime eventDate = DateTime.Parse(selectedEvent.SubItems[1].Text);
-                string venueName = selectedEvent.SubItems[2].Text;
-
-
-                // Handle the result of the custom message box
-                if (customMsgBox.SelectedOption == "Delete RSVP")
-                {
-                    // Handle Delete RSVP 
-                    DeleteRsvp(eventName, eventDate, venueName);
-                    buttonRsvps_Click(sender, e);
-
-                }
-                else if (customMsgBox.SelectedOption == "View Event Details")
-                {
-                    // Open the EventDetails form and pass the event name, event date, and venue name
-                    EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
-
-                    // After the EventDetails form is closed, refresh the RSVP data
-                    eventDetailsForm.FormClosed += (s, args) => buttonRsvps_Click(s, args);  
-
-                    eventDetailsForm.Show();
-                }
+                DeleteRsvp(eventName, eventDate, venueName);
+                buttonRsvps_Click(sender, e);
             }
+            else if (customMsgBox.SelectedOption == "View Event Details")
+            {
+                EventDetails eventDetailsForm = new EventDetails(eventName, eventDate, venueName);
+                eventDetailsForm.FormClosed += (s, args) => buttonRsvps_Click(s, args);
+                eventDetailsForm.Show();
+            }
+
+           
         }
 
         private void DeleteRsvp(string eventName, DateTime eventDate, string venueName)
