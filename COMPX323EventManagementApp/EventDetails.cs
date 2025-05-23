@@ -32,8 +32,6 @@ namespace COMPX323EventManagementApp
 
             Member user = Session.CurrentUser;
             attendeeId = user.Id;
-            //labelAccNum.Text = attendeeId.ToString();
-            //labelName.Text = user.Fname + " " + user.Lname; 
             LoadEventDetails();
         }
 
@@ -47,7 +45,7 @@ namespace COMPX323EventManagementApp
                     conn.Open();
                     
                     // Query to get basic event details (description, time, price)
-                    string query = @"select description, time, price, restriction, cname from event e 
+                    string query = @"select description, time, price, restriction, cname, vname from event e 
                                 join event_category ec on ec.ename = e.ename
                                 join event_instance ei on ei.ename = e.ename
                                 WHERE 
@@ -70,11 +68,13 @@ namespace COMPX323EventManagementApp
                             if (reader.Read())
                             {
                                 textBoxDesc.Text = reader.GetString(0);
-                                textBoxTime.Text = reader.GetDateTime(1).ToString("HH:mm");
+                                DateTime dateTime = reader.GetDateTime(1); 
+                                textBoxTime.Text = dateTime.ToString("HH:mm");
+                                textBoxDate.Text = dateTime.ToString("dd/MM/yy");
                                 textBoxPrice.Text = reader.GetDecimal(2).ToString("C");
                                 textBoxRestrictions.Text = reader.GetString(3);
                                 textBoxTags.Text = reader.GetString(4);
-
+                                textBoxVenue.Text = reader.GetString(5);
 
                             }
                         }
@@ -113,7 +113,6 @@ namespace COMPX323EventManagementApp
                                     radioButtonInterested.Checked = true;
                                 }
                                 labelStatus.Text = status;
-
 
                             }
                         }

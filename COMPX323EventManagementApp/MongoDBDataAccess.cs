@@ -17,7 +17,7 @@ namespace COMPX323EventManagementApp
         {
             try
             {
-                var eventsCollection = MongoDbConfig.GetCollection<Event>("events");
+                var eventsCollection = MongoDbConfig.GetCollection<BsonDocument>("events");
 
                 var pipeline = new BsonDocument[]
                 {
@@ -25,6 +25,8 @@ namespace COMPX323EventManagementApp
                     new BsonDocument("$group", new BsonDocument("_id", "$instances.venue.vname")),
                     new BsonDocument("$sort", new BsonDocument("_id", 1))
                 };
+
+
 
                 var result = eventsCollection.Aggregate<BsonDocument>(pipeline).ToList();
                 return result.Select(doc => doc["_id"].AsString).ToList();

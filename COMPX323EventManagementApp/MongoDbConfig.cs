@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace COMPX323EventManagementApp
 {

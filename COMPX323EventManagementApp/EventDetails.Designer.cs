@@ -31,7 +31,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelExitButton = new System.Windows.Forms.Label();
-            this.labelEventName = new System.Windows.Forms.Label();
+            this.labelEventDetails = new System.Windows.Forms.Label();
             this.labelExit = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -56,6 +56,7 @@
             this.labelPrice = new System.Windows.Forms.Label();
             this.textBoxTime = new System.Windows.Forms.TextBox();
             this.labelTime = new System.Windows.Forms.Label();
+            this.labelEName = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -78,7 +79,7 @@
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
             this.panel3.Controls.Add(this.labelExitButton);
-            this.panel3.Controls.Add(this.labelEventName);
+            this.panel3.Controls.Add(this.labelEventDetails);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
@@ -97,16 +98,16 @@
             this.labelExitButton.Text = "X";
             this.labelExitButton.Click += new System.EventHandler(this.labelExitButton_Click);
             // 
-            // labelEventName
+            // labelEventDetails
             // 
-            this.labelEventName.AutoSize = true;
-            this.labelEventName.Font = new System.Drawing.Font("Nirmala UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEventName.ForeColor = System.Drawing.Color.Black;
-            this.labelEventName.Location = new System.Drawing.Point(25, 21);
-            this.labelEventName.Name = "labelEventName";
-            this.labelEventName.Size = new System.Drawing.Size(212, 37);
-            this.labelEventName.TabIndex = 0;
-            this.labelEventName.Text = "EVENT DETAILS";
+            this.labelEventDetails.AutoSize = true;
+            this.labelEventDetails.Font = new System.Drawing.Font("Nirmala UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEventDetails.ForeColor = System.Drawing.Color.Black;
+            this.labelEventDetails.Location = new System.Drawing.Point(25, 21);
+            this.labelEventDetails.Name = "labelEventDetails";
+            this.labelEventDetails.Size = new System.Drawing.Size(212, 37);
+            this.labelEventDetails.TabIndex = 0;
+            this.labelEventDetails.Text = "EVENT DETAILS";
             // 
             // labelExit
             // 
@@ -126,9 +127,9 @@
             this.panel1.Controls.Add(this.radioButtonAttending);
             this.panel1.Controls.Add(this.labelRSVP);
             this.panel1.Controls.Add(this.buttonSubmitRSVP);
-            this.panel1.Location = new System.Drawing.Point(541, 95);
+            this.panel1.Location = new System.Drawing.Point(541, 112);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(247, 343);
+            this.panel1.Size = new System.Drawing.Size(247, 326);
             this.panel1.TabIndex = 6;
             // 
             // labelStatus
@@ -155,7 +156,7 @@
             // 
             this.radioButtonInterested.AutoSize = true;
             this.radioButtonInterested.Font = new System.Drawing.Font("Nirmala UI", 10.75F, System.Drawing.FontStyle.Bold);
-            this.radioButtonInterested.Location = new System.Drawing.Point(58, 205);
+            this.radioButtonInterested.Location = new System.Drawing.Point(58, 188);
             this.radioButtonInterested.Name = "radioButtonInterested";
             this.radioButtonInterested.Size = new System.Drawing.Size(120, 29);
             this.radioButtonInterested.TabIndex = 3;
@@ -167,7 +168,7 @@
             // 
             this.radioButtonAttending.AutoSize = true;
             this.radioButtonAttending.Font = new System.Drawing.Font("Nirmala UI", 10.75F, System.Drawing.FontStyle.Bold);
-            this.radioButtonAttending.Location = new System.Drawing.Point(58, 170);
+            this.radioButtonAttending.Location = new System.Drawing.Point(58, 153);
             this.radioButtonAttending.Name = "radioButtonAttending";
             this.radioButtonAttending.Size = new System.Drawing.Size(119, 29);
             this.radioButtonAttending.TabIndex = 2;
@@ -190,7 +191,7 @@
             // buttonSubmitRSVP
             // 
             this.buttonSubmitRSVP.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F);
-            this.buttonSubmitRSVP.Location = new System.Drawing.Point(35, 275);
+            this.buttonSubmitRSVP.Location = new System.Drawing.Point(36, 245);
             this.buttonSubmitRSVP.Name = "buttonSubmitRSVP";
             this.buttonSubmitRSVP.Size = new System.Drawing.Size(182, 50);
             this.buttonSubmitRSVP.TabIndex = 0;
@@ -268,7 +269,7 @@
             this.textBoxDesc.Name = "textBoxDesc";
             this.textBoxDesc.ReadOnly = true;
             this.textBoxDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDesc.Size = new System.Drawing.Size(357, 67);
+            this.textBoxDesc.Size = new System.Drawing.Size(357, 64);
             this.textBoxDesc.TabIndex = 16;
             this.textBoxDesc.Text = "description...";
             // 
@@ -280,7 +281,7 @@
             this.panel4.Controls.Add(this.textBoxDesc);
             this.panel4.Controls.Add(this.labelTags);
             this.panel4.Controls.Add(this.labelDesc);
-            this.panel4.Location = new System.Drawing.Point(32, 95);
+            this.panel4.Location = new System.Drawing.Point(32, 112);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(487, 143);
             this.panel4.TabIndex = 17;
@@ -354,11 +355,22 @@
             this.labelTime.TabIndex = 14;
             this.labelTime.Text = "Time:";
             // 
+            // labelEName
+            // 
+            this.labelEName.AutoSize = true;
+            this.labelEName.Font = new System.Drawing.Font("Segoe UI Historic", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEName.Location = new System.Drawing.Point(27, 77);
+            this.labelEName.Name = "labelEName";
+            this.labelEName.Size = new System.Drawing.Size(63, 25);
+            this.labelEName.TabIndex = 19;
+            this.labelEName.Text = "Name";
+            // 
             // EventDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.labelEName);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel1);
@@ -378,6 +390,7 @@
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -386,7 +399,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label labelExit;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label labelEventName;
+        private System.Windows.Forms.Label labelEventDetails;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textBoxDate;
         private System.Windows.Forms.TextBox textBoxVenue;
@@ -411,5 +424,6 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelCurrStatus;
         private System.Windows.Forms.Label labelExitButton;
+        private System.Windows.Forms.Label labelEName;
     }
 }
