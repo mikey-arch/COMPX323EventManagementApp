@@ -239,6 +239,12 @@
     <Compile Include="ProfileControl.Designer.cs">
       <DependentUpon>ProfileControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProfileMongo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProfileMongo.Designer.cs">
+      <DependentUpon>ProfileMongo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterForm.cs">
@@ -279,6 +285,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProfileControl.resx">
       <DependentUpon>ProfileControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProfileMongo.resx">
+      <DependentUpon>ProfileMongo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

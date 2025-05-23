@@ -117,7 +117,7 @@ namespace COMPX323EventManagementApp
 
                     // Build the query with all the filters
                     string query = @"
-                    select distinct e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price, ct.cname, e.restriction
+                    select distinct e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price, LISTAGG(ct.cname, ', ') WITHIN GROUP (ORDER BY ct.cname) AS categories, e.restriction
                     from event e
                     join event_instance ei on e.ename = ei.ename
                     join venue v on ei.vname = v.vname
@@ -162,11 +162,13 @@ namespace COMPX323EventManagementApp
                     {
                         query += " and e.restriction = :restriction";
                     }
+
                     
+
                     //add date filtering
                     DateTime selectedDate = dateTimePickerMonth.Value;
                     query += " and extract(month from ei.event_date) = :month and extract(year from ei.event_date) = :year";
-                    
+                    query += " GROUP BY e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price, e.restriction";
                     //add sorting filter
                     if (priceFilter == "Asc")
                     {
