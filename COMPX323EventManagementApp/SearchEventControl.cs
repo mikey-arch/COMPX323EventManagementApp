@@ -123,7 +123,7 @@ namespace COMPX323EventManagementApp
                     join venue v on ei.vname = v.vname
                     left join event_category ec on e.ename = ec.ename
                     left join category ct on ec.cname = ct.cname
-                    where 1=1";
+                    where ei.event_date > SYSDATE";
 
                     //search filter
                     if (!string.IsNullOrEmpty(searchWord))
