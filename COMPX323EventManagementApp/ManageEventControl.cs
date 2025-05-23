@@ -133,11 +133,11 @@ namespace COMPX323EventManagementApp
             {
                 // SQL query to get all event instances for the selected event
                 string query = @"
-            SELECT DISTINCT e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price
-            FROM event_instance ei
-            JOIN event e ON ei.ename = e.ename
-            JOIN venue v ON ei.vname = v.vname
-            WHERE e.ename = :eventName";
+                    SELECT DISTINCT e.ename, ei.event_date, ei.time, v.vname, v.city, ei.price
+                    FROM event_instance ei
+                    JOIN event e ON ei.ename = e.ename
+                    JOIN venue v ON ei.vname = v.vname
+                    WHERE e.ename = :eventName";
 
                 using (var conn = DbConfig.GetConnection())
                 {
@@ -159,10 +159,34 @@ namespace COMPX323EventManagementApp
 
                                 // Create a new ListViewItem with the event name as the first column
                                 ListViewItem item = new ListViewItem(reader.GetString(reader.GetOrdinal("ename")));
-
+/*
                                 // Add subitems to the ListViewItem based on the data
-                                item.SubItems.Add(reader.GetDateTime(reader.GetOrdinal("event_date")).ToString("yyyy-MM-dd")); // Date
-                                item.SubItems.Add(reader.GetDateTime(reader.GetOrdinal("time")).ToString("HH:mm")); // Time
+                                DateTime eventDate = reader.GetDateTime(reader.GetOrdinal("event_date"));
+                                DateTime eventTime = reader.GetDateTime(reader.GetOrdinal("time"));
+
+                                DateTime dateTime = reader.GetDateTime(reader.GetOrdinal("time"));
+
+                                item.SubItems.Add(dateTime.ToString("yyyy-MM-dd")); // Display for user
+                                item.SubItems.Add(dateTime.ToString("HH:mm"));      // Display for user*/
+                                DateTime eventDate = reader.GetDateTime(reader.GetOrdinal("event_date"));
+                                Console.WriteLine("PLEASEEEE" + eventDate);
+                                DateTime eventTime = reader.GetDateTime(reader.GetOrdinal("time"));
+
+                                //item.SubItems.Add(eventDate.ToString("yyyy-MM-dd")); // Shows actual event date
+                                item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("dd-MM-yyyy"));
+
+                                item.SubItems.Add(eventTime.ToString("HH:mm"));      // Shows actual time
+
+
+                                // Store the original DateTime in the tag
+                                item.Tag = new
+                                {
+                                    EventName = selectedEventName,
+                                    EventDateTime = eventDate,
+                                    VenueName = reader.GetString(reader.GetOrdinal("vname"))
+                                };
+
+
                                 item.SubItems.Add(reader.GetString(reader.GetOrdinal("vname"))); // Venue Name
                                 item.SubItems.Add(reader.GetString(reader.GetOrdinal("city"))); // Venue City
                                 item.SubItems.Add(reader.GetDecimal(reader.GetOrdinal("price")).ToString("C")); // Price (Currency)
@@ -200,8 +224,9 @@ namespace COMPX323EventManagementApp
                     string eventName = selectedItem.Text; // The first column: Event Name
                     DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); // Second column: Event Date
                     string venueName = selectedItem.SubItems[3].Text; // Fourth column: Venue Name
-
+                    Console.WriteLine("pls?"+ eventDate);
                     // Call the method to display RSVPs for this specific event instance
+                    Console.WriteLine(eventName+ eventDate+ venueName+ "fffffffffffffffffffffffffffffff");
                     DisplayRSVPs(eventName, eventDate, venueName);
                 }
             }
@@ -221,7 +246,7 @@ namespace COMPX323EventManagementApp
                     select m.fname, m.lname, m.email, r.status
                     FROM RSVP r
                     join event e on r.ename = e.ename
-                    join member m on m.acc_num = e.creator_num
+                    join member m on m.acc_num = r.acc_num
                     WHERE e.ename = :eventName
                     AND r.event_date = :eventDate
                     AND r.vname = :venueName";
@@ -236,6 +261,8 @@ namespace COMPX323EventManagementApp
                         cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
                         cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
 
+                        Console.WriteLine("EV:"+eventDate);
+
                         using (var reader = cmd.ExecuteReader())
                         {
                             listViewRSVP.Items.Clear(); // Clear previous data in ListBox
@@ -247,6 +274,7 @@ namespace COMPX323EventManagementApp
 
                                 string fullName = $"{reader.GetString(reader.GetOrdinal("fname"))} {reader.GetString(reader.GetOrdinal("lname"))}";
                                 string email = reader.GetString(reader.GetOrdinal("email"));
+                                Console.WriteLine("cmon slay pls"+fullName + email);
                                 string status = reader.GetString(reader.GetOrdinal("status"));
 
                                 ListViewItem item = new ListViewItem(fullName);
@@ -336,20 +364,28 @@ namespace COMPX323EventManagementApp
 
         private void Delete(int num)
         {
+            // Get the attendee ID from the current user session
+            Member user = Session.CurrentUser;
+            int attendeeId = user.Id;
+
             string query = "";
             string venueName = "";
             DateTime eventDate = DateTime.MinValue;
             string eventName = comboBoxEventList.SelectedItem.ToString();
+            var selectedItem = listViewEvents.SelectedItems[0];//////////////
 
             if (num == 2 || num == 3)
             {
-                var selectedItem = listViewEvents.SelectedItems[0];//////////////
                 //eventName = selectedItem.Text;
 
+                var tag = (dynamic)selectedItem.Tag;
+                
                 eventDate = DateTime.Parse(selectedItem.SubItems[1].Text);
-                venueName = selectedItem.SubItems[3].Text;
+
+                venueName = tag.VenueName;
+
             }
-            
+
 
             // Determine the item to delete based on the parameter (1 for event, 2 for instance, 3 for RSVP)
             switch (num)
@@ -357,7 +393,6 @@ namespace COMPX323EventManagementApp
                 case 3: // RSVP
                     if (listViewRSVP.SelectedItems.Count > 0)
                     {
-                        
 
                         query = @"
                             DELETE FROM RSVP
@@ -371,10 +406,9 @@ namespace COMPX323EventManagementApp
                 case 2: // Instance
                     if (listViewEvents.SelectedItems.Count > 0)
                     {
-                        
 
                         // Delete all RSVPs for this event instance before deleting the instance
-                        DeleteRSVPs(eventName, eventDate, venueName);
+                        //DeleteRSVPs(eventName, eventDate, venueName);
 
                         query = @"
                             DELETE FROM event_instance
@@ -398,12 +432,6 @@ namespace COMPX323EventManagementApp
                     break;
             }
 
-            
-
-            // Get the attendee ID from the current user session
-            Member user = Session.CurrentUser;
-            int attendeeId = user.Id;
-
             // Execute the delete query only if query is not empty
             if (!string.IsNullOrEmpty(query))
             {
@@ -413,20 +441,24 @@ namespace COMPX323EventManagementApp
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = query;
-
+                        string formattedDate = "";
                         // Add parameters for deletion
                         if(num == 3)
                         {
-                            cmd.Parameters.Add("attendeeId", OracleDbType.Int32).Value = attendeeId;
+                            cmd.Parameters.Add("attendeeId", Oracle.ManagedDataAccess.Client.OracleDbType.Int32).Value = attendeeId;
+                            cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+                            cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
+                            cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
 
                         }
                         if(num == 2)
                         {
-                            cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
-                            cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
+                            cmd.Parameters.Add("venueName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = venueName;
+                            cmd.Parameters.Add("eventDate", Oracle.ManagedDataAccess.Client.OracleDbType.Date).Value = eventDate;
                         }
-                        cmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
-                       
+                        cmd.Parameters.Add("eventName", Oracle.ManagedDataAccess.Client.OracleDbType.Varchar2).Value = eventName;
+
+                        Console.WriteLine(eventName + "  " + venueName + "  " + eventDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
                         // Execute the delete command
                         int rowsAffected = cmd.ExecuteNonQuery();
@@ -451,7 +483,7 @@ namespace COMPX323EventManagementApp
             // Queries for deleting relations from 'has_a' and 'organises' tables
             string[] queries = new string[]
             {
-                @"DELETE FROM has_a WHERE ename = :eventName",
+                @"DELETE FROM has_a WHERE ename = :eventName",///////here
                 @"DELETE FROM organises WHERE ename = :eventName"
             };
 

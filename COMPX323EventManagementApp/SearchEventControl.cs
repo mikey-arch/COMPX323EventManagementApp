@@ -217,7 +217,6 @@ namespace COMPX323EventManagementApp
                             
                             while (reader.Read())
                             {
-                                Console.WriteLine("✅ Event found: " + reader.GetString(0)); // event name
                                 foundResults = true;
 
                                 // Create list view item with event name

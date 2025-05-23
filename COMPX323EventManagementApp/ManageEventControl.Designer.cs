@@ -51,7 +51,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(58, 299);
+            this.label2.Location = new System.Drawing.Point(58, 339);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 16);
@@ -75,14 +75,14 @@
             this.listViewEvents.HideSelection = false;
             this.listViewEvents.Location = new System.Drawing.Point(62, 127);
             this.listViewEvents.Name = "listViewEvents";
-            this.listViewEvents.Size = new System.Drawing.Size(715, 97);
+            this.listViewEvents.Size = new System.Drawing.Size(715, 137);
             this.listViewEvents.TabIndex = 7;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
             this.listViewEvents.SelectedIndexChanged += new System.EventHandler(this.listViewEvents_SelectedIndexChanged);
             // 
             // buttonDelInstance
             // 
-            this.buttonDelInstance.Location = new System.Drawing.Point(62, 231);
+            this.buttonDelInstance.Location = new System.Drawing.Point(62, 271);
             this.buttonDelInstance.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDelInstance.Name = "buttonDelInstance";
             this.buttonDelInstance.Size = new System.Drawing.Size(140, 46);
@@ -104,9 +104,9 @@
             // listViewRSVP
             // 
             this.listViewRSVP.HideSelection = false;
-            this.listViewRSVP.Location = new System.Drawing.Point(62, 329);
+            this.listViewRSVP.Location = new System.Drawing.Point(61, 372);
             this.listViewRSVP.Name = "listViewRSVP";
-            this.listViewRSVP.Size = new System.Drawing.Size(620, 97);
+            this.listViewRSVP.Size = new System.Drawing.Size(620, 156);
             this.listViewRSVP.TabIndex = 10;
             this.listViewRSVP.UseCompatibleStateImageBehavior = false;
             this.listViewRSVP.Click += new System.EventHandler(this.listViewRSVP_Click);
