@@ -159,20 +159,11 @@ namespace COMPX323EventManagementApp
 
                                 // Create a new ListViewItem with the event name as the first column
                                 ListViewItem item = new ListViewItem(reader.GetString(reader.GetOrdinal("ename")));
-/*
-                                // Add subitems to the ListViewItem based on the data
-                                DateTime eventDate = reader.GetDateTime(reader.GetOrdinal("event_date"));
-                                DateTime eventTime = reader.GetDateTime(reader.GetOrdinal("time"));
-
-                                DateTime dateTime = reader.GetDateTime(reader.GetOrdinal("time"));
-
-                                item.SubItems.Add(dateTime.ToString("yyyy-MM-dd")); // Display for user
-                                item.SubItems.Add(dateTime.ToString("HH:mm"));      // Display for user*/
+                                
                                 DateTime eventDate = reader.GetDateTime(reader.GetOrdinal("event_date"));
                                 Console.WriteLine("PLEASEEEE" + eventDate);
                                 DateTime eventTime = reader.GetDateTime(reader.GetOrdinal("time"));
 
-                                //item.SubItems.Add(eventDate.ToString("yyyy-MM-dd")); // Shows actual event date
                                 item.SubItems.Add(Convert.ToDateTime(reader["event_date"]).ToString("dd-MM-yyyy"));
 
                                 item.SubItems.Add(eventTime.ToString("HH:mm"));      // Shows actual time
@@ -372,7 +363,6 @@ namespace COMPX323EventManagementApp
             string venueName = "";
             DateTime eventDate = DateTime.MinValue;
             string eventName = comboBoxEventList.SelectedItem.ToString();
-            //var selectedItem = listViewEvents.SelectedItems[0];//////////////
 
             if (num == 2 || num == 3)
             {
@@ -488,7 +478,7 @@ namespace COMPX323EventManagementApp
             // Queries for deleting relations from 'has_a' and 'organises' tables
             string[] queries = new string[]
             {
-                @"DELETE FROM event_category WHERE ename = :eventName",///////here
+                @"DELETE FROM event_category WHERE ename = :eventName",
             };
 
             // Execute both queries in a single connection
@@ -583,7 +573,7 @@ namespace COMPX323EventManagementApp
             listViewEvents.Items.Clear();
             listViewRSVP.Items.Clear();
             comboBoxEventList.SelectedIndex = -1;  // Clear ComboBox selection
-                                                   // Refresh event data, e.g., call DisplayEvents(comboBoxEventList.SelectedItem?.ToString());
+                                                   
         }
 
         private void buttonDeleteEvent_Click(object sender, EventArgs e)
