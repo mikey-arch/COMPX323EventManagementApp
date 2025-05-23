@@ -46,13 +46,19 @@ namespace COMPX323EventManagementApp
                     labelEName.Text = eventName;
 
                     // Query to get basic event details (description, time, price)
-                    string query = @"select description, time, price, restriction, cname, vname from event e 
+                    string query = @"select description, time, price, restriction, vname from event e 
                                 join event_category ec on ec.ename = e.ename
                                 join event_instance ei on ei.ename = e.ename
                                 WHERE 
                                 e.ename = :eventName
                                 AND TRUNC(ei.time) = :eventDate 
                                 AND ei.vname = :venueName";
+
+                    string tagQuery = @"
+                                SELECT cname
+                                FROM event_category
+                                WHERE ename = :eventName";
+
 
                     using (var cmd = conn.CreateCommand())
                     {
@@ -74,14 +80,31 @@ namespace COMPX323EventManagementApp
                                 textBoxDate.Text = dateTime.ToString("dd/MM/yy");
                                 textBoxPrice.Text = reader.GetDecimal(2).ToString("C");
                                 textBoxRestrictions.Text = reader.GetString(3);
-                                textBoxTags.Text = reader.GetString(4);
-                                textBoxVenue.Text = reader.GetString(5);
+                                textBoxVenue.Text = reader.GetString(4);
 
                             }
+                            
+                            
+                        }
+                    }
+                    using (var tagCmd = conn.CreateCommand())
+                    {
+                        tagCmd.CommandText = tagQuery;
+                        tagCmd.Parameters.Add("eventName", OracleDbType.Varchar2).Value = eventName;
+
+                        using (var tagReader = tagCmd.ExecuteReader())
+                        {
+                            List<string> tags = new List<string>();
+                            while (tagReader.Read())
+                            {
+                                tags.Add(tagReader.GetString(0));
+                            }
+
+                            // Join the tags into a CSV format
+                            textBoxTags.Text = string.Join(", ", tags);
                         }
                     }
 
-                    
 
                     // Query to get the current RSVP status for the attendee
                     string rsvpQuery = @"

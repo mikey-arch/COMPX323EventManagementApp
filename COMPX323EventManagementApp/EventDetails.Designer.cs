@@ -247,9 +247,11 @@
             // textBoxTags
             // 
             this.textBoxTags.Location = new System.Drawing.Point(111, 17);
+            this.textBoxTags.Multiline = true;
             this.textBoxTags.Name = "textBoxTags";
             this.textBoxTags.ReadOnly = true;
-            this.textBoxTags.Size = new System.Drawing.Size(208, 22);
+            this.textBoxTags.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxTags.Size = new System.Drawing.Size(357, 28);
             this.textBoxTags.TabIndex = 14;
             this.textBoxTags.Text = "tags...";
             // 
