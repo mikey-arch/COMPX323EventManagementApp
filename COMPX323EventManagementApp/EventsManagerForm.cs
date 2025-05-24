@@ -26,7 +26,7 @@ namespace COMPX323EventManagementApp
         private ProfileMongo mongoProfileControl;
         private MongoSearchEvent mongoSearchEventControl;
         private MongoCreateReview mongoCreateReviewControl;
-
+        private MongoManageEvent mongoManageEventControl;
         public EventsManagerForm()
         {
             InitializeComponent();
@@ -40,6 +40,7 @@ namespace COMPX323EventManagementApp
             mongoProfileControl = new ProfileMongo();
             mongoSearchEventControl = new MongoSearchEvent();
             mongoCreateReviewControl = new MongoCreateReview();
+            mongoManageEventControl = new MongoManageEvent();
 
             Member user = Session.CurrentUser;
             labelProfilePicName.Text = user.Fname + " " + user.Lname;
@@ -153,6 +154,14 @@ namespace COMPX323EventManagementApp
             panelContent.Controls.Clear();
             mongoProfileControl.Dock = DockStyle.Fill;
             panelContent.Controls.Add(mongoCreateReviewControl);
+        }
+
+        private void buttonMongoManageEvent_Click(object sender, EventArgs e)
+        {
+            labelTitle.Text = "MANAGE EVENT MongoDB";
+            panelContent.Controls.Clear();
+            mongoProfileControl.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(mongoManageEventControl);
         }
     }
 }
