@@ -53,18 +53,20 @@ namespace COMPX323EventManagementApp
                 listViewDisplay.Columns.Add("Status", 80);
 
                 user = Session.CurrentUser;
-                var rsvps = MongoDBDataAccess.GetUserRsvps(user.Id);
+                var rsvps = MongoDBDataAccess.GetUpcomingRsvps(user.Id);
 
-                foreach (var (ename, eventDateStr, venue, status) in rsvps)
+                foreach (var (ename, eventDate, venue, status) in rsvps)
                 {
                     
-                    DateTime fullDateTime = DateTime.Parse(eventDateStr).ToLocalTime();
+                    //DateTime fullDateTime = DateTime.Parse(eventDateStr).ToLocalTime();
+                    DateTime fullDateTime = eventDate.ToLocalTime(); // You already have the correct value
+
 
                     var item = new ListViewItem(ename);
-                    item.SubItems.Add(fullDateTime.ToString("yyyy-MM-dd")); // only show the date
+                    item.SubItems.Add(eventDate.ToString("yyyy-MM-dd"));
                     item.SubItems.Add(venue);
                     item.SubItems.Add(status);
-                    item.Tag = fullDateTime; // store full datetime in Tag
+                    item.Tag = eventDate; // preserve original DateTime
                     listViewDisplay.Items.Add(item);
                 }
             }

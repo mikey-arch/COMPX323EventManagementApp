@@ -120,7 +120,7 @@ namespace COMPX323EventManagementApp
         /// </summary>
         /// <param name="userId">The user's account number</param>
         /// <returns>List of tuples containing RSVP details</returns>
-        public static List<(string ename, string eventDate, string venue, string status)> GetUserRsvps(int userId)
+        public static List<(string ename, DateTime eventDate, string venue, string status)> GetUserRsvps(int userId)
         {
             try
             {
@@ -131,17 +131,46 @@ namespace COMPX323EventManagementApp
                 var rsvpDocs = rsvpCollection.Find(filter).Sort(sort).ToList();
 
                 return rsvpDocs.Select(doc => (
-                    doc.GetValue("ename", "").AsString,
-                    doc.GetValue("eventDate", BsonNull.Value).ToLocalTime().ToString("dd-MM-yyyy"),
-                    doc.GetValue("vname", "").AsString,
-                    doc.GetValue("status", "n/a").AsString
-                )).ToList();
+                doc.GetValue("ename", "").AsString,
+                doc.GetValue("eventDate", DateTime.MinValue).ToUniversalTime(), // ← actual DateTime object
+                doc.GetValue("vname", "").AsString,
+                doc.GetValue("status", "n/a").AsString
+            )).ToList();
+
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error retrieving RSVPs for user {userId}: {ex.Message}", ex);
             }
         }
+
+        public static List<(string ename, DateTime eventDate, string venue, string status)> GetUpcomingRsvps(int userId)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+
+                var filter = Builders<BsonDocument>.Filter.And(
+                    Builders<BsonDocument>.Filter.Eq("accNum", userId),
+                    Builders<BsonDocument>.Filter.Gte("eventDate", DateTime.UtcNow)
+                );
+
+                var sort = Builders<BsonDocument>.Sort.Ascending("eventDate");
+                var rsvpDocs = rsvpCollection.Find(filter).Sort(sort).ToList();
+
+                return rsvpDocs.Select(doc => (
+                    doc.GetValue("ename", "").AsString,
+                    doc.GetValue("eventDate").ToUniversalTime(),
+                    doc.GetValue("vname", "").AsString,
+                    doc.GetValue("status", "n/a").AsString
+                )).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving upcoming RSVPs for user {userId}: {ex.Message}", ex);
+            }
+        }
+
 
         /// <summary>
         /// Get events created by a specific user
@@ -540,13 +569,17 @@ namespace COMPX323EventManagementApp
             {
                 var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
 
-                var filter = new BsonDocument
-                {
-                    { "accNum", userId },
-                    { "ename", eventName },
-                    { "vname", venueName },
-                    { "eventDate", eventDate }
-                };
+                // Define date range to match just the date part (00:00 to 23:59)
+                var startOfDay = eventDate.Date.ToUniversalTime();
+                var endOfDay = startOfDay.AddDays(1);
+
+                var filter = Builders<BsonDocument>.Filter.And(
+                    Builders<BsonDocument>.Filter.Eq("accNum", userId),
+                    Builders<BsonDocument>.Filter.Eq("ename", eventName),
+                    Builders<BsonDocument>.Filter.Eq("vname", venueName),
+                    Builders<BsonDocument>.Filter.Eq("eventDate", eventDate) 
+                );
+
 
                 var result = rsvpCollection.DeleteOne(filter);
                 return result.DeletedCount > 0;
@@ -556,6 +589,7 @@ namespace COMPX323EventManagementApp
                 throw new Exception($"Error deleting RSVP: {ex.Message}", ex);
             }
         }
+
 
     }
 }
