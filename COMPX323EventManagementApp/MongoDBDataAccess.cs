@@ -469,5 +469,28 @@ namespace COMPX323EventManagementApp
                 throw new Exception($"Error updating RSVP: {ex.Message}", ex);
             }
         }
+        public static bool DeleteRSVP(int userId, string eventName, string venueName, DateTime eventDate)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+
+                var filter = new BsonDocument
+                {
+                    { "accNum", userId },
+                    { "ename", eventName },
+                    { "vname", venueName },
+                    { "eventDate", eventDate }
+                };
+
+                var result = rsvpCollection.DeleteOne(filter);
+                return result.DeletedCount > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error deleting RSVP: {ex.Message}", ex);
+            }
+        }
+
     }
 }

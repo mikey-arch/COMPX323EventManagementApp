@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,12 +55,16 @@ namespace COMPX323EventManagementApp
                 user = Session.CurrentUser;
                 var rsvps = MongoDBDataAccess.GetUserRsvps(user.Id);
 
-                foreach (var (ename, eventDate, venue, status) in rsvps)
+                foreach (var (ename, eventDateStr, venue, status) in rsvps)
                 {
+                    
+                    DateTime fullDateTime = DateTime.Parse(eventDateStr).ToLocalTime();
+
                     var item = new ListViewItem(ename);
-                    item.SubItems.Add(eventDate);
+                    item.SubItems.Add(fullDateTime.ToString("yyyy-MM-dd")); // only show the date
                     item.SubItems.Add(venue);
                     item.SubItems.Add(status);
+                    item.Tag = fullDateTime; // store full datetime in Tag
                     listViewDisplay.Items.Add(item);
                 }
             }
@@ -157,6 +162,64 @@ namespace COMPX323EventManagementApp
                 {
                     buttonEvents_Click(null, null);
                 }
+            }
+        }
+
+        private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //
+        }
+
+        private void listViewDisplay_DoubleClick(object sender, EventArgs e)
+        {
+            if (listViewDisplay.SelectedItems.Count > 0 && currentlySelected == "RSVP")
+            {
+                // Get the selected item. Assuming it contains event data (event name, date, and venue)
+                var selectedEvent = listViewDisplay.SelectedItems[0];
+
+                // Extract event name, event date, and venue name from the ListView columns
+                string eventName = selectedEvent.Text;
+
+                DateTime eventDate = ((DateTime)selectedEvent.Tag).ToUniversalTime();
+
+                string venueName = selectedEvent.SubItems[2].Text;
+                string status = selectedEvent.SubItems[3].Text;
+
+                DialogResult result = MessageBox.Show(
+                $"Event Details:\n" +
+                $"Name: {eventName}\n" +
+                $"Date: {eventDate:dd-MM-yyyy}\n" +
+                $"Venue: {venueName}\n" +
+                $"RSVP Status: {status}\n\n" +
+                $"Do you want delete your RSVP to this event?",
+                "Event Options",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        //bool success = MongoDBDataAccess.DeleteRSVP(user.Id, eventName, venueName, eventDate);
+                        bool success = MongoDBDataAccess.DeleteRSVP(user.Id, eventName, venueName, eventDate.ToUniversalTime());
+
+                        if (success)
+                        {
+                            MessageBox.Show("RSVP successfully deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            buttonRsvps_Click(null, null); // refresh view
+                        }
+                        else
+                        {
+                            MessageBox.Show("No RSVP found to delete.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error deleting RSVP: {ex.Message}",
+                            "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
             }
         }
     }
