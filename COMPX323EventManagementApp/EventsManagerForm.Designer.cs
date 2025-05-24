@@ -39,16 +39,17 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonMongoViewProfile = new System.Windows.Forms.Button();
             this.buttonMongoCreateEvent = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelProfilePicName = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
             this.panelContent = new System.Windows.Forms.Panel();
             this.buttonMongoSearchEvent = new System.Windows.Forms.Button();
+            this.buttonMongoReview = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonLogout
@@ -158,6 +159,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.panel1.Controls.Add(this.buttonMongoReview);
             this.panel1.Controls.Add(this.buttonMongoSearchEvent);
             this.panel1.Controls.Add(this.buttonMongoViewProfile);
             this.panel1.Controls.Add(this.buttonMongoCreateEvent);
@@ -204,16 +206,6 @@
             this.buttonMongoCreateEvent.Text = "CREATE EVENT";
             this.buttonMongoCreateEvent.UseVisualStyleBackColor = false;
             this.buttonMongoCreateEvent.Click += new System.EventHandler(this.buttonMongoCreateEvent_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::COMPX323EventManagementApp.Properties.Resources.blank_profile_picture;
-            this.pictureBox1.Location = new System.Drawing.Point(35, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(136, 111);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
             // 
             // labelProfilePicName
             // 
@@ -269,6 +261,31 @@
             this.buttonMongoSearchEvent.UseVisualStyleBackColor = false;
             this.buttonMongoSearchEvent.Click += new System.EventHandler(this.buttonMongoSearchEvent_Click);
             // 
+            // buttonMongoReview
+            // 
+            this.buttonMongoReview.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(38)))), ((int)(((byte)(87)))));
+            this.buttonMongoReview.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonMongoReview.FlatAppearance.BorderSize = 0;
+            this.buttonMongoReview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMongoReview.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(237)))), ((int)(((byte)(100)))));
+            this.buttonMongoReview.Location = new System.Drawing.Point(-4, 621);
+            this.buttonMongoReview.Name = "buttonMongoReview";
+            this.buttonMongoReview.Size = new System.Drawing.Size(204, 45);
+            this.buttonMongoReview.TabIndex = 13;
+            this.buttonMongoReview.Text = "CREATE REVIEW";
+            this.buttonMongoReview.UseVisualStyleBackColor = false;
+            this.buttonMongoReview.Click += new System.EventHandler(this.buttonMongoReview_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::COMPX323EventManagementApp.Properties.Resources.blank_profile_picture;
+            this.pictureBox1.Location = new System.Drawing.Point(35, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(136, 111);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            // 
             // EventsManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -291,9 +308,9 @@
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -316,5 +333,6 @@
         private System.Windows.Forms.Button buttonMongoCreateEvent;
         private System.Windows.Forms.Button buttonMongoViewProfile;
         private System.Windows.Forms.Button buttonMongoSearchEvent;
+        private System.Windows.Forms.Button buttonMongoReview;
     }
 }

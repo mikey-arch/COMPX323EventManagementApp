@@ -90,31 +90,23 @@ namespace COMPX323EventManagementApp
         {
             try
             {
-                var reviewsCollection = MongoDbConfig.GetCollection<BsonDocument>("reviews");
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
 
-                var pipeline = new BsonDocument[]
+                var filter = new BsonDocument
                 {
-            new BsonDocument("$match", new BsonDocument("accNum", userId)),
-            new BsonDocument("$project", new BsonDocument
-            {
-                { "_id", 0 },
-                { "ename", 1 },
-                { "vname", 1 },
-                { "eventDate", 1 },
-                { "rating", 1 },
-                { "textReview", 1 }
-            }),
-            new BsonDocument("$sort", new BsonDocument("eventDate", 1))
+                    {"accNum", userId},
+                    {"review", new BsonDocument("$exists", true)} // Only RSVPs with reviews
                 };
 
-                var result = reviewsCollection.Aggregate<BsonDocument>(pipeline).ToList();
+                var sort = new BsonDocument("eventDate", 1);
+                var rsvpDocs = rsvpCollection.Find(filter).Sort(sort).ToList();
 
-                return result.Select(doc => (
+                return rsvpDocs.Select(doc => (
                     doc.GetValue("ename", "").AsString,
                     doc.GetValue("vname", "").AsString,
-                    doc.GetValue("eventDate", BsonNull.Value).ToLocalTime().ToString("yyyy-MM-dd"),
-                    doc.GetValue("rating", new BsonInt32(0)).AsInt32,
-                    doc.GetValue("textReview", "").AsString
+                    doc.GetValue("eventDate", BsonNull.Value).ToLocalTime().ToString("dd-MM-yyyy"),
+                    doc.GetValue("review", new BsonDocument()).AsBsonDocument.GetValue("rating", new BsonInt32(0)).AsInt32,
+                    doc.GetValue("review", new BsonDocument()).AsBsonDocument.GetValue("textReview", "").AsString
                 )).ToList();
             }
             catch (Exception ex)
@@ -132,27 +124,15 @@ namespace COMPX323EventManagementApp
         {
             try
             {
-                var rsvpsCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+                var filter = new BsonDocument("accNum", userId);
+                var sort = new BsonDocument("eventDate", 1);
+                
+                var rsvpDocs = rsvpCollection.Find(filter).Sort(sort).ToList();
 
-                var pipeline = new BsonDocument[]
-                {
-            new BsonDocument("$match", new BsonDocument("accNum", userId)),
-            new BsonDocument("$project", new BsonDocument
-            {
-                { "_id", 0 },
-                { "ename", 1 },
-                { "eventDate", 1 },
-                { "vname", 1 },
-                { "status", 1 }
-            }),
-            new BsonDocument("$sort", new BsonDocument("eventDate", 1))
-                };
-
-                var result = rsvpsCollection.Aggregate<BsonDocument>(pipeline).ToList();
-
-                return result.Select(doc => (
+                return rsvpDocs.Select(doc => (
                     doc.GetValue("ename", "").AsString,
-                    doc.GetValue("eventDate", BsonNull.Value).ToLocalTime().ToString("yyyy-MM-dd"),
+                    doc.GetValue("eventDate", BsonNull.Value).ToLocalTime().ToString("dd-MM-yyyy"),
                     doc.GetValue("vname", "").AsString,
                     doc.GetValue("status", "n/a").AsString
                 )).ToList();
@@ -467,6 +447,91 @@ namespace COMPX323EventManagementApp
             catch (Exception ex)
             {
                 throw new Exception($"Error updating RSVP: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Gets RSVPs that have been attended but not yet reviewed
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <returns>List of RSVP objects for events that can be reviewed</returns>
+        public static List<RSVP> GetAttendedRSVPsForReview(int userId)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+
+                // Get all attended RSVPs for past events that dont have reviews yet
+                var rsvpFilter = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"status", "attending"},
+                    {"eventDate", new BsonDocument("$lt", DateTime.Now)},
+                    {"review", new BsonDocument("$exists", false)}
+                };
+
+                var sort = new BsonDocument("eventDate", -1); 
+                var rsvpDocs = rsvpCollection.Find(rsvpFilter).Sort(sort).ToList();
+                var reviewableRsvps = new List<RSVP>();
+
+                foreach (var rsvpDoc in rsvpDocs)
+                {
+                    reviewableRsvps.Add(new RSVP
+                    {
+                        EName = rsvpDoc.GetValue("ename").AsString,
+                        VName = rsvpDoc.GetValue("vname").AsString,
+                        EventDate = rsvpDoc.GetValue("eventDate").ToLocalTime()
+                    });
+                }
+
+                return reviewableRsvps;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving RSVPs for review: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new review in MongoDB
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <param name="eventName">Name of the event</param>
+        /// <param name="venueName">Name of the venue</param>
+        /// <param name="eventDate">Date of the event</param>
+        /// <param name="rating">Rating (1-5)</param>
+        /// <param name="reviewText">Review text</param>
+        /// <returns>True if successful, false if review already exists</returns>
+        public static bool CreateReview(int userId, string eventName, string venueName, DateTime eventDate, int rating, string reviewText)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+
+                // Check if review already exists
+                var filter = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"ename", eventName},
+                    {"vname", venueName},
+                    {"eventDate", eventDate},
+                    {"status", "attending"},
+                    {"review", new BsonDocument("$exists", false)} 
+                };
+
+                var update = Builders<BsonDocument>.Update.Set("review", new BsonDocument
+                {
+                    {"rating", rating},
+                    {"textReview", reviewText},
+                    {"reviewTimestamp", DateTime.Now}
+                });
+
+                var result = rsvpCollection.UpdateOne(filter, update);
+                return result.ModifiedCount > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating review: {ex.Message}", ex);
             }
         }
         public static bool DeleteRSVP(int userId, string eventName, string venueName, DateTime eventDate)
