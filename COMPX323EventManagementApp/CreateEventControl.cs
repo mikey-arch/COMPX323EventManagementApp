@@ -152,6 +152,12 @@ namespace COMPX323EventManagementApp
         //error checking for if an input is left empty , then notify user 
         private bool ValidateInputs()
         {
+            if (comboBoxRestrictions.SelectedItem == null || comboBoxRestrictions.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a restriction.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(comboBoxEventName.Text))
             {
                 MessageBox.Show("Please enter an event name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -191,7 +197,7 @@ namespace COMPX323EventManagementApp
             
             if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxPostCode.Text, "^[0-9]{4,5}$"))
             {
-                MessageBox.Show("Postcode must be 4-5 digits.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Postcode must be 4 digits.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
             

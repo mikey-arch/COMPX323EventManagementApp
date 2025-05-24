@@ -353,15 +353,34 @@ namespace COMPX323EventManagementApp
 
         private void Delete(int num)
         {
-            // Get the attendee ID from the current user session
-            Member user = Session.CurrentUser;
-            int attendeeId = user.Id;
-
-            string query = "";
-            string venueName = "";
-            DateTime eventDate = DateTime.MinValue;
-
             try {
+
+                if (comboBoxEventList.SelectedItem == null || comboBoxEventList.SelectedIndex <= 0)
+                {
+                    MessageBox.Show("Please select an event first.");
+                    return;
+                }
+
+                if ((num == 2 || num == 3) && listViewEvents.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("Please select an event instance first.");
+                    return;
+                }
+
+                if (num == 3 && listViewRSVP.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show("Please select an RSVP to delete.");
+                    return;
+                }
+
+                // Get the attendee ID from the current user session
+                Member user = Session.CurrentUser;
+                int attendeeId = user.Id;
+
+                string query = "";
+                string venueName = "";
+                DateTime eventDate = DateTime.MinValue;
+
                 string eventName = comboBoxEventList.SelectedItem.ToString();
 
                 if (num == 2 || num == 3)
