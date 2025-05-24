@@ -375,5 +375,99 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Creates a new RSVP in MongoDB
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <param name="eventName">Name of the event</param>
+        /// <param name="venueName">Name of the venue</param>
+        /// <param name="eventDate">Date of the event</param>
+        /// <param name="status">RSVP status (attending)</param>
+        /// <returns>True if successful, false if RSVP already exists</returns>
+        public static bool CreateRSVP(int userId, string eventName, string venueName, DateTime eventDate, string status)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+                
+                // Check if RSVP already exists for this user and event instance
+                var existingRsvpFilter = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"ename", eventName},
+                    {"vname", venueName},
+                    {"eventDate", eventDate}
+                };
+                
+                var existingRsvp = rsvpCollection.Find(existingRsvpFilter).FirstOrDefault();
+                
+                if (existingRsvp != null)
+                {
+                    // RSVP already exists - update the status instead
+                    var update = Builders<BsonDocument>.Update
+                        .Set("status", status)
+                        .Set("rsvpTimestamp", DateTime.Now);
+                    
+                    var result = rsvpCollection.UpdateOne(existingRsvpFilter, update);
+                    return result.ModifiedCount > 0;
+                }
+                else
+                {
+                    // Create new RSVP
+                    var rsvpDocument = new BsonDocument
+                    {
+                        {"accNum", userId},
+                        {"ename", eventName},
+                        {"vname", venueName},
+                        {"eventDate", eventDate},
+                        {"status", status},
+                        {"rsvpTimestamp", DateTime.Now}
+                    };
+                    
+                    rsvpCollection.InsertOne(rsvpDocument);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating RSVP: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing RSVP status
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <param name="eventName">Name of the event</param>
+        /// <param name="venueName">Name of the venue</param>
+        /// <param name="eventDate">Date of the event</param>
+        /// <param name="newStatus">New RSVP status</param>
+        /// <returns>True if successful, false if RSVP doesn't exist</returns>
+        public static bool UpdateRSVP(int userId, string eventName, string venueName, DateTime eventDate, string newStatus)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+                
+                var filter = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"ename", eventName},
+                    {"vname", venueName},
+                    {"eventDate", eventDate}
+                };
+                
+                var update = Builders<BsonDocument>.Update
+                    .Set("status", newStatus)
+                    .Set("rsvpTimestamp", DateTime.Now);
+                
+                var result = rsvpCollection.UpdateOne(filter, update);
+                return result.ModifiedCount > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error updating RSVP: {ex.Message}", ex);
+            }
+        }
     }
 }

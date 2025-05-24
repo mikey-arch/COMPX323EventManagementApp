@@ -37,13 +37,14 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelExit = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonMongoViewProfile = new System.Windows.Forms.Button();
             this.buttonMongoCreateEvent = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelProfilePicName = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
             this.panelContent = new System.Windows.Forms.Panel();
-            this.buttonMongoViewProfile = new System.Windows.Forms.Button();
+            this.buttonMongoSearchEvent = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -149,7 +150,7 @@
             this.labelExit.AutoSize = true;
             this.labelExit.Location = new System.Drawing.Point(1199, 9);
             this.labelExit.Name = "labelExit";
-            this.labelExit.Size = new System.Drawing.Size(21, 23);
+            this.labelExit.Size = new System.Drawing.Size(17, 17);
             this.labelExit.TabIndex = 10;
             this.labelExit.Text = "X";
             this.labelExit.Click += new System.EventHandler(this.labelExit_Click);
@@ -157,6 +158,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.panel1.Controls.Add(this.buttonMongoSearchEvent);
             this.panel1.Controls.Add(this.buttonMongoViewProfile);
             this.panel1.Controls.Add(this.buttonMongoCreateEvent);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -173,6 +175,21 @@
             this.panel1.Size = new System.Drawing.Size(197, 709);
             this.panel1.TabIndex = 8;
             // 
+            // buttonMongoViewProfile
+            // 
+            this.buttonMongoViewProfile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(38)))), ((int)(((byte)(87)))));
+            this.buttonMongoViewProfile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonMongoViewProfile.FlatAppearance.BorderSize = 0;
+            this.buttonMongoViewProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMongoViewProfile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(237)))), ((int)(((byte)(100)))));
+            this.buttonMongoViewProfile.Location = new System.Drawing.Point(-4, 450);
+            this.buttonMongoViewProfile.Name = "buttonMongoViewProfile";
+            this.buttonMongoViewProfile.Size = new System.Drawing.Size(204, 61);
+            this.buttonMongoViewProfile.TabIndex = 11;
+            this.buttonMongoViewProfile.Text = "VIEW PROFILE";
+            this.buttonMongoViewProfile.UseVisualStyleBackColor = false;
+            this.buttonMongoViewProfile.Click += new System.EventHandler(this.buttonMongoViewProfile_Click);
+            // 
             // buttonMongoCreateEvent
             // 
             this.buttonMongoCreateEvent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(38)))), ((int)(((byte)(87)))));
@@ -180,7 +197,7 @@
             this.buttonMongoCreateEvent.FlatAppearance.BorderSize = 0;
             this.buttonMongoCreateEvent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMongoCreateEvent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(237)))), ((int)(((byte)(100)))));
-            this.buttonMongoCreateEvent.Location = new System.Drawing.Point(-2, 450);
+            this.buttonMongoCreateEvent.Location = new System.Drawing.Point(-4, 564);
             this.buttonMongoCreateEvent.Name = "buttonMongoCreateEvent";
             this.buttonMongoCreateEvent.Size = new System.Drawing.Size(204, 61);
             this.buttonMongoCreateEvent.TabIndex = 10;
@@ -203,7 +220,7 @@
             this.labelProfilePicName.AutoSize = true;
             this.labelProfilePicName.Location = new System.Drawing.Point(60, 114);
             this.labelProfilePicName.Name = "labelProfilePicName";
-            this.labelProfilePicName.Size = new System.Drawing.Size(97, 23);
+            this.labelProfilePicName.Size = new System.Drawing.Size(75, 17);
             this.labelProfilePicName.TabIndex = 8;
             this.labelProfilePicName.Text = "User Name";
             this.labelProfilePicName.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -225,7 +242,7 @@
             this.labelTitle.ForeColor = System.Drawing.Color.Black;
             this.labelTitle.Location = new System.Drawing.Point(3, 12);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(270, 37);
+            this.labelTitle.Size = new System.Drawing.Size(212, 30);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "SEARCH FOR EVENT";
             // 
@@ -237,24 +254,24 @@
             this.panelContent.Size = new System.Drawing.Size(1035, 667);
             this.panelContent.TabIndex = 10;
             // 
-            // buttonMongoViewProfile
+            // buttonMongoSearchEvent
             // 
-            this.buttonMongoViewProfile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(38)))), ((int)(((byte)(87)))));
-            this.buttonMongoViewProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonMongoViewProfile.FlatAppearance.BorderSize = 0;
-            this.buttonMongoViewProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonMongoViewProfile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(237)))), ((int)(((byte)(100)))));
-            this.buttonMongoViewProfile.Location = new System.Drawing.Point(-4, 508);
-            this.buttonMongoViewProfile.Name = "buttonMongoViewProfile";
-            this.buttonMongoViewProfile.Size = new System.Drawing.Size(204, 61);
-            this.buttonMongoViewProfile.TabIndex = 11;
-            this.buttonMongoViewProfile.Text = "VIEW PROFILE";
-            this.buttonMongoViewProfile.UseVisualStyleBackColor = false;
-            this.buttonMongoViewProfile.Click += new System.EventHandler(this.buttonMongoViewProfile_Click);
+            this.buttonMongoSearchEvent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(38)))), ((int)(((byte)(87)))));
+            this.buttonMongoSearchEvent.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonMongoSearchEvent.FlatAppearance.BorderSize = 0;
+            this.buttonMongoSearchEvent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMongoSearchEvent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(237)))), ((int)(((byte)(100)))));
+            this.buttonMongoSearchEvent.Location = new System.Drawing.Point(-4, 508);
+            this.buttonMongoSearchEvent.Name = "buttonMongoSearchEvent";
+            this.buttonMongoSearchEvent.Size = new System.Drawing.Size(204, 61);
+            this.buttonMongoSearchEvent.TabIndex = 12;
+            this.buttonMongoSearchEvent.Text = "SEARCH FOR EVENT";
+            this.buttonMongoSearchEvent.UseVisualStyleBackColor = false;
+            this.buttonMongoSearchEvent.Click += new System.EventHandler(this.buttonMongoSearchEvent_Click);
             // 
             // EventsManagerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1232, 756);
@@ -298,5 +315,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button buttonMongoCreateEvent;
         private System.Windows.Forms.Button buttonMongoViewProfile;
+        private System.Windows.Forms.Button buttonMongoSearchEvent;
     }
 }

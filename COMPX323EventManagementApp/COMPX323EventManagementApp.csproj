@@ -233,6 +233,12 @@
     </Compile>
     <Compile Include="MongoDbConfig.cs" />
     <Compile Include="MongoDBDataAccess.cs" />
+    <Compile Include="MongoSearchEvent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MongoSearchEvent.Designer.cs">
+      <DependentUpon>MongoSearchEvent.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProfileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -282,6 +288,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MongoCreateEventControl.resx">
       <DependentUpon>MongoCreateEventControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MongoSearchEvent.resx">
+      <DependentUpon>MongoSearchEvent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProfileControl.resx">
       <DependentUpon>ProfileControl.cs</DependentUpon>
