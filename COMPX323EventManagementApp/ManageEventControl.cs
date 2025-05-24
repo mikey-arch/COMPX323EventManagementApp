@@ -210,6 +210,11 @@ namespace COMPX323EventManagementApp
                 {
                     var selectedItem = listViewEvents.SelectedItems[0];
 
+                    if (listViewEvents.SelectedItems[0].Text == "No event instances found.")
+                    {
+                        return;
+                    }
+
                     // Get event details from the selected ListView item
                     string eventName = selectedItem.Text; // The first column: Event Name
                     DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); // Second column: Event Date
@@ -479,7 +484,7 @@ namespace COMPX323EventManagementApp
                             if (rowsAffected > 0)
                             {
                                 MessageBox.Show("Delete successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                RefreshUI();  // You can implement a method to refresh your UI after deletion.
+                                RefreshUI();
                             }
                             else
                             {

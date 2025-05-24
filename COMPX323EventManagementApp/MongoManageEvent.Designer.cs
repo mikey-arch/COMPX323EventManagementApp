@@ -86,6 +86,7 @@
             this.listViewEvents.Size = new System.Drawing.Size(537, 112);
             this.listViewEvents.TabIndex = 15;
             this.listViewEvents.UseCompatibleStateImageBehavior = false;
+            this.listViewEvents.SelectedIndexChanged += new System.EventHandler(this.listViewEvents_SelectedIndexChanged);
             // 
             // comboBoxEventList
             // 
