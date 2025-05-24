@@ -130,18 +130,19 @@ namespace COMPX323EventManagementApp
                 // Match conditions
                 var matchConditions = new BsonDocument();
 
-                // Combine date filtering: future events within selected month/year
+               
                 DateTime selectedDate = dateTimePickerMonth.Value;
-                var startOfMonth = new DateTime(selectedDate.Year, selectedDate.Month, 1);
+                var startOfMonth = new DateTime(selectedDate.Year, selectedDate.Month, 1, 0, 0, 0, DateTimeKind.Utc);
                 var endOfMonth = startOfMonth.AddMonths(1);
-                
-                // Use the later of "now" or "start of month" as the start date
-                DateTime effectiveStartDate = DateTime.Now > startOfMonth ? DateTime.Now : startOfMonth;
-                
+
+                DateTime nowUtc = DateTime.UtcNow;
+
+                var lowerBound = nowUtc > startOfMonth ? nowUtc : startOfMonth;
+
                 matchConditions.Add("instances.eventDate", new BsonDocument
                 {
-                    {"$gte", effectiveStartDate},
-                    {"$lt", endOfMonth}
+                    { "$gte", lowerBound },
+                    { "$lt", endOfMonth }
                 });
 
                 // Search filter
