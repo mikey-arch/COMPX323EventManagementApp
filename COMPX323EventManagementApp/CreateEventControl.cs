@@ -188,7 +188,25 @@ namespace COMPX323EventManagementApp
                 MessageBox.Show("Please enter a street name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-            
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxStreetName.Text, "^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Please enter a valid street name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxSuburb.Text, "^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Please enter a valid suburb name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(comboBoxVenue.Text, "^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Please enter a valid venue name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
             if (string.IsNullOrWhiteSpace(textBoxPostCode.Text))
             {
                 MessageBox.Show("Please enter a postcode.", "Validation Error", 
@@ -221,7 +239,14 @@ namespace COMPX323EventManagementApp
                 numericUpDownStreetNum.Focus();
                 return false;
             }
-            
+
+            if (numericUpDownPrice.Value < 0)
+            {
+                MessageBox.Show("Event price cannot be negative. Please enter a valid price.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                numericUpDownPrice.Focus();
+                return false;
+            }
+
             return true;
         }
 
