@@ -13,8 +13,15 @@ using System.Windows.Forms;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// Control for managing events and RSVPs stored in MongoDB.
+    /// </summary>
     public partial class MongoManageEvent : UserControl
     {
+
+        /// <summary>
+        /// Constructor. Initializes UI elements and sets up visibility event.
+        /// </summary>
         public MongoManageEvent()
         {
             InitializeComponent();
@@ -26,6 +33,9 @@ namespace COMPX323EventManagementApp
             this.VisibleChanged += MongoManageEvent_VisibleChanged;
         }
 
+        /// <summary>
+        /// Initializes the combo box for event selection.
+        /// </summary>
         private void InitialiseComboBox()
         {
             comboBoxEventList.Items.Clear();
@@ -33,7 +43,9 @@ namespace COMPX323EventManagementApp
 
         }
 
-
+        /// <summary>
+        /// Initializes the RSVP list view.
+        /// </summary>
         private void InitialiseRSVPListView()
         {
             if (listViewRSVP.Columns.Count == 0)
@@ -45,12 +57,12 @@ namespace COMPX323EventManagementApp
                 listViewRSVP.Columns.Add("Name", 200);
                 listViewRSVP.Columns.Add("Email", 220);
                 listViewRSVP.Columns.Add("Status", 100);
-
-                // Refresh the data when control is brought up
-                this.VisibleChanged += MongoManageEvent_VisibleChanged;
             }
         }
 
+        /// <summary>
+        /// Initializes the event instance list view.
+        /// </summary>
         private void InitialiseListView()
         {
             // Check if ListView is already initialized
@@ -70,6 +82,12 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Handles the DropDown event of the comboBoxEventList.
+        /// Loads the event names associated with the current user into the ComboBox.
+        /// </summary>
+        /// <param name="sender">The ComboBox object.</param>
+        /// <param name="e">Event arguments.</param>
         private void comboBoxEventList_DropDown(object sender, EventArgs e)
         {
             try
@@ -103,7 +121,9 @@ namespace COMPX323EventManagementApp
         }
 
 
-        // Called every time the visibility of the control changes (e.g., when brought back to view)
+        /// <summary>
+        /// Called when the control becomes visible. Resets the ComboBox and clears the ListViews.
+        /// </summary>
         private void MongoManageEvent_VisibleChanged(object sender, EventArgs e)
         {
             if (this.Visible)
@@ -130,6 +150,10 @@ namespace COMPX323EventManagementApp
             Delete(2);
         }
 
+        /// <summary>
+        /// Called when a new event is selected in the ComboBox. 
+        /// Clears the ListViews and displays event instances.
+        /// </summary>
         private void comboBoxEventList_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -147,6 +171,11 @@ namespace COMPX323EventManagementApp
                 MessageBox.Show($"Error loading event instances: {ex.Message}", "MongoDB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Displays all instances of the selected event in the event ListView.
+        /// </summary>
+        /// <param name="selectedEventName">The name of the event selected by the user.</param>
         private void DisplayEvents(string selectedEventName)
         {
             try
@@ -209,6 +238,13 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Retrieves RSVP documents from the database for a specific event instance.
+        /// </summary>
+        /// <param name="eventName">Name of the event.</param>
+        /// <param name="eventDate">Date of the event (UTC).</param>
+        /// <param name="venueName">Venue of the event.</param>
+        /// <returns>List of BSON RSVP documents.</returns>
         public static List<BsonDocument> GetRsvpsForEventInstance(string eventName, DateTime eventDate, string venueName)
         {
             var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
@@ -224,7 +260,12 @@ namespace COMPX323EventManagementApp
             return rsvpCollection.Find(filter).ToList();
         }
 
-
+        /// <summary>
+        /// Displays RSVP entries for the selected event instance in the RSVP ListView.
+        /// </summary>
+        /// <param name="eventName">The name of the event.</param>
+        /// <param name="eventDate">The date of the event.</param>
+        /// <param name="venueName">The venue name for the event instance.</param>
         private void DisplayRSVPs(string eventName, DateTime eventDate, string venueName)
         {
             try
@@ -295,6 +336,14 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Handles deletion of an RSVP, a specific event instance, or an entire event.
+        /// </summary>
+        /// <param name="num">
+        /// 1 = delete entire event and all RSVPs, 
+        /// 2 = delete selected instance and its RSVPs, 
+        /// 3 = delete only one RSVP (current user).
+        /// </param>
         private void Delete(int num)
         {
             try
@@ -355,8 +404,8 @@ namespace COMPX323EventManagementApp
                         var rsvpFilter = Builders<BsonDocument>.Filter.And(
                             Builders<BsonDocument>.Filter.Eq("ename", eventName),
                             Builders<BsonDocument>.Filter.Eq("venue.vname", venueName),
-                            Builders<BsonDocument>.Filter.Eq("event_date", eventDate),
-                            Builders<BsonDocument>.Filter.Eq("acc_num", attendeeId)
+                            Builders<BsonDocument>.Filter.Eq("eventDate", eventDate),
+                            Builders<BsonDocument>.Filter.Eq("accNum", attendeeId)
                         );
                         rsvpsCol.DeleteOne(rsvpFilter);
                         MessageBox.Show("RSVP deleted.");
@@ -406,6 +455,10 @@ namespace COMPX323EventManagementApp
             
         }
 
+        /// <summary>
+        /// Called when an event instance is selected in the ListView.
+        /// Loads related RSVP entries into the RSVP ListView.
+        /// </summary>
         private void listViewEvents_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -434,6 +487,10 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Refreshes the UI components: clears lists and resets combo box.
+        /// Re-fetches event data from MongoDB for the current user.
+        /// </summary>
         private void RefreshUI()
         {
             // Refresh your UI elements (ListView, ComboBox, etc.)
