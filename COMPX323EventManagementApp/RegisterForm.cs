@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MongoDB.Bson;
 using Oracle.ManagedDataAccess.Client;
 using static COMPX323EventManagementApp.LoginForm;
 
@@ -34,56 +35,7 @@ namespace COMPX323EventManagementApp
             string password = textBoxPassword.Text;
             string confirmPassword = textBoxConfirmPassword.Text;
 
-            //validation checks and error messages
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                MessageBox.Show("Please fill in all fields.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (int.TryParse(firstName, out _))
-            {
-                MessageBox.Show("First name cannot be a number.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (int.TryParse(lastName, out _))
-            {
-                MessageBox.Show("Last name cannot be a number.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (password != confirmPassword)
-            {
-                MessageBox.Show("Passwords don’t match.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!email.Contains("@"))
-            {
-                MessageBox.Show("Please enter a valid email address e.g customer@email.com", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!System.Text.RegularExpressions.Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
-            {
-                MessageBox.Show("Please enter a valid email address (e.g., user@example.com). Email must contain '@' symbol and a valid domain.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxEmail.Focus();
-                return;
-            }
-
-            if (!phoneNum.StartsWith("02") || phoneNum.Length < 9)
-            {
-                MessageBox.Show("Please enter a valid NZ phone number starting with 02 and at least 9 digits", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            DateTime minDate = DateTime.Today.AddYears(-13);
-            if (dob > minDate)
-            {
-                MessageBox.Show("You must be at least 13 years old to register.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            if (!ValidateUserInputs(firstName, lastName, email, phoneNum, dob, password, confirmPassword)) return;
 
             try
             {
@@ -131,6 +83,27 @@ namespace COMPX323EventManagementApp
                         }
                     }
 
+                    // Get the newly created user's ID from Oracle and add the same user to MongoDB
+                    int newUserId = 0;
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = "select acc_num from Member where email = :email";
+                        cmd.Parameters.Add("email", OracleDbType.Varchar2).Value = email;
+                        
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                newUserId = reader.GetInt32(0);
+                            }
+                        }
+                    }
+
+                    if (newUserId > 0)
+                    {
+                        RegisterUserToMongoDB(newUserId, firstName, lastName, email, phoneNum, dob, password);
+                    }
+
                     MessageBox.Show("Registration successful! You can now login with your email and password.", "Registration Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                     // Return to login form
@@ -145,6 +118,98 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Synchronizes newly created user to MongoDB
+        /// </summary>
+        private void RegisterUserToMongoDB(int userId, string firstName, string lastName, string email, string phoneNum, DateTime dob, string password)
+        {
+            try
+            {
+                var membersCollection = MongoDbConfig.GetCollection<BsonDocument>("members");
+                
+                var mongoMember = new BsonDocument
+                {
+                    {"_id", userId},
+                    {"password", password},
+                    {"mobNum", phoneNum},
+                    {"fname", firstName},
+                    {"lname", lastName},
+                    {"email", email},
+                    {"dob", dob}
+                };
+
+                membersCollection.InsertOne(mongoMember);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Mongo Database Error: {ex.Message}", "Mongo Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        
+        /// <summary>
+        /// Validates all user input fields
+        /// </summary>
+        /// <returns>True if all validation passes, false otherwise</returns>
+        private bool ValidateUserInputs(string firstName, string lastName, string email, string phoneNum, DateTime dob, string password, string confirmPassword)
+        {
+            // Basic empty field validation
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Please fill in all fields.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            // First name validation - only letters
+            if (!System.Text.RegularExpressions.Regex.IsMatch(firstName, "^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("First name can only contain letters.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxFirstName.Focus();
+                return false;
+            }
+
+            // Last name validation - only letters
+            if (!System.Text.RegularExpressions.Regex.IsMatch(lastName, "^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Last name can only contain letters.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxLastName.Focus();
+                return false;
+            }
+
+            //  email validation using the same regex pattern as database
+            if (!System.Text.RegularExpressions.Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+            {
+                MessageBox.Show("Please enter a valid email address (e.g., user@example.com). Email must contain '@' symbol and a valid domain.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxEmail.Focus();
+                return false;
+            }
+
+            // Password confirmation validation
+            if (password != confirmPassword)
+            {
+                MessageBox.Show("Passwords don't match.", "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxConfirmPassword.Focus();
+                return false;
+            }
+
+            // Phone number validation
+            if (!phoneNum.StartsWith("02") || phoneNum.Length < 9)
+            {
+                MessageBox.Show("Please enter a valid NZ phone number starting with 02 and at least 9 digits", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                maskedTextBoxPhoneNumber.Focus();
+                return false;
+            }
+
+            // Age validation
+            DateTime minDate = DateTime.Today.AddYears(-13);
+            if (dob > minDate)
+            {
+                MessageBox.Show("You must be at least 13 years old to register.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dateTimePickerBirthday.Focus();
+                return false;
+            }
+
+            return true;
+        }
 
         // Clears all the text boxes when the Clear button is clicked then focuses on the username text box.
         private void buttonClear_Click(object sender, EventArgs e)
