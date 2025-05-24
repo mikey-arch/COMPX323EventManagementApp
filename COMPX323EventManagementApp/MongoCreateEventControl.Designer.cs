@@ -159,7 +159,7 @@
             // 
             this.numericUpDownStreetNum.Location = new System.Drawing.Point(605, 117);
             this.numericUpDownStreetNum.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});
@@ -171,7 +171,7 @@
             // 
             this.numericUpDownCapacity.Location = new System.Drawing.Point(605, 81);
             this.numericUpDownCapacity.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});
@@ -203,6 +203,8 @@
             this.comboBoxVenue.Name = "comboBoxVenue";
             this.comboBoxVenue.Size = new System.Drawing.Size(242, 21);
             this.comboBoxVenue.TabIndex = 85;
+            this.comboBoxVenue.SelectedIndexChanged += new System.EventHandler(this.comboBoxVenue_SelectedIndexChanged);
+            this.comboBoxVenue.TextChanged += new System.EventHandler(this.comboBoxVenue_TextChanged);
             // 
             // comboBoxEventName
             // 
@@ -211,6 +213,8 @@
             this.comboBoxEventName.Name = "comboBoxEventName";
             this.comboBoxEventName.Size = new System.Drawing.Size(242, 21);
             this.comboBoxEventName.TabIndex = 78;
+            this.comboBoxEventName.SelectedIndexChanged += new System.EventHandler(this.comboBoxEventName_SelectedIndexChanged);
+            this.comboBoxEventName.TextChanged += new System.EventHandler(this.comboBoxEventName_TextChanged);
             // 
             // numericUpDownPrice
             // 

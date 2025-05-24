@@ -33,6 +33,7 @@ namespace COMPX323EventManagementApp
             LoadCategories();
             LoadRestrictions();
             LoadCities();
+            comboBoxCountry.Text = "New Zealand"; 
 
             dateTimePickerDate.Value = DateTime.Today;
             dateTimePickerTime.Value = DateTime.Today.AddHours(17); 
@@ -431,6 +432,7 @@ namespace COMPX323EventManagementApp
             textBoxStreetName.Text = "";
             textBoxSuburb.Text = "";
             textBoxPostCode.Text = "";
+            comboBoxCountry.Text = "New Zealand"; 
 
             dateTimePickerDate.Value = DateTime.Today;
             dateTimePickerTime.Value = DateTime.Now;
@@ -457,6 +459,7 @@ namespace COMPX323EventManagementApp
             textBoxPostCode.ReadOnly = false;
             checkedListBoxCategories.Enabled = true;
             comboBoxRestrictions.Enabled = true;
+            comboBoxCountry.Enabled = true; 
             textBoxDescription.BackColor = SystemColors.Window;
             textBoxStreetName.BackColor = SystemColors.Window;
             textBoxSuburb.BackColor = SystemColors.Window;

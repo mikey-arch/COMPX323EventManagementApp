@@ -257,7 +257,7 @@
             // 
             this.numericUpDownCapacity.Location = new System.Drawing.Point(599, 77);
             this.numericUpDownCapacity.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});
@@ -269,7 +269,7 @@
             // 
             this.numericUpDownStreetNum.Location = new System.Drawing.Point(599, 113);
             this.numericUpDownStreetNum.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});

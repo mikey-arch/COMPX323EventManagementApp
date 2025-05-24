@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using COMPX323EventManagementApp.Models;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace COMPX323EventManagementApp
 {
@@ -43,6 +45,7 @@ namespace COMPX323EventManagementApp
             LoadCities();
             LoadEventName();
             LoadVenues();
+            comboBoxCountry.Text = "New Zealand"; 
 
             dateTimePickerDate.Value = DateTime.Today;
             dateTimePickerTime.Value = DateTime.Today.AddHours(17); 
@@ -50,6 +53,7 @@ namespace COMPX323EventManagementApp
             this.VisibleChanged += MongoCreateEventControl_VisibleChanged;
         }
 
+        //populate checklistedboxes with category choices
         private void LoadCategories()
         {
             checkedListBoxCategories.Items.Clear();
@@ -59,6 +63,7 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        //populate restriction combobox with restriction 
         private void LoadRestrictions()
         {
             comboBoxRestrictions.Items.Clear();
@@ -68,6 +73,7 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        //populate cities with valid nz cities
         private void LoadCities()
         {
             comboBoxCity.Items.Clear();
@@ -77,17 +83,28 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        //load events created by the current member
         private void LoadEventName()
         {
             try
             {
                 comboBoxEventName.Items.Clear();
+                if (Session.CurrentUser != null)
+                {
+                    List<string> events = MongoDBDataAccess.GetEventsByCreator(Session.CurrentUser.Id);
+                    foreach (string eventName in events)
+                    {
+                        comboBoxEventName.Items.Add(eventName);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading event names: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        //populate venue dropdown with venues from mongodb 
         private void LoadVenues()
         {
             try
@@ -106,8 +123,109 @@ namespace COMPX323EventManagementApp
         }
 
 
+        //create event button click event that creates the event in mongodb 
         private void buttonCreateEvent_Click(object sender, EventArgs e)
         {
+            if (!ValidateInputs()) return;
+
+            try
+            {
+
+                string eventName = comboBoxEventName.Text.Trim();
+                bool eventExists = MongoDBDataAccess.EventNameExists(eventName);
+
+                // Create MongoDB event document
+                var mongoEvent = new BsonDocument
+                {
+                    {"ename", comboBoxEventName.Text.Trim()},
+                    {"description", textBoxDescription.Text.Trim()},
+                    {"creationDate", DateTime.Now},
+                    {"creatorNum", Session.CurrentUser.Id},
+                    {"creator", new BsonDocument
+                        {
+                            {"fname", Session.CurrentUser.Fname},
+                            {"lname", Session.CurrentUser.Lname},
+                            {"email", Session.CurrentUser.Email}
+                        }
+                    },
+                    {"restriction", new BsonDocument
+                        {
+                            {"name", comboBoxRestrictions.SelectedItem?.ToString() ?? "All Ages"},
+                            {"description", "Event restriction"}
+                        }
+                    }
+                };
+
+                // Add selected categories
+                var categoriesArray = new BsonArray();
+                foreach (object item in checkedListBoxCategories.CheckedItems)
+                {
+                    categoriesArray.Add(new BsonDocument
+                    {
+                        {"name", item.ToString()},
+                        {"description", $"{item} category"}
+                    });
+                }
+                mongoEvent["categories"] = categoriesArray;
+
+                // Create event instance with venue
+                DateTime eventDate = dateTimePickerDate.Value.Date;
+                DateTime eventTime = dateTimePickerTime.Value;
+                DateTime combinedDateTime = eventDate.Add(eventTime.TimeOfDay);
+
+                var eventInstance = new BsonDocument
+                {
+                    {"eventDate", eventDate},
+                    {"time", combinedDateTime},
+                    {"price", numericUpDownPrice.Value},
+                    {"venue", new BsonDocument
+                        {
+                            {"vname", comboBoxVenue.Text.Trim()},
+                            {"city", comboBoxCity.Text},
+                            {"capacity", (int)numericUpDownCapacity.Value},
+                            {"streetNum", (int)numericUpDownStreetNum.Value},
+                            {"streetName", textBoxStreetName.Text.Trim()},
+                            {"suburb", textBoxSuburb.Text.Trim()},
+                            {"postcode", textBoxPostCode.Text.Trim()},
+                            {"country", "New Zealand"}
+                        }
+                    }
+                };
+
+                var instancesArray = new BsonArray { eventInstance };
+                mongoEvent["instances"] = instancesArray;
+
+                // Create event or add instance in MongoDB
+                bool success = MongoDBDataAccess.CreateEvent(mongoEvent);
+
+                if (success)
+                {
+                    if (eventExists)
+                    {
+                        MessageBox.Show("New event instance added successfully to existing event!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("New event created successfully in MongoDB!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    ClearForm();
+                }
+                else
+                {
+                    if (eventExists)
+                    {
+                        MessageBox.Show("Could not add event instance. An instance for this date and venue may already exist.", "Creation Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Could not create event. Please try again.", "Creation Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error creating event: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 
@@ -117,7 +235,7 @@ namespace COMPX323EventManagementApp
             ClearForm();
         }
 
-                //helper method that clears all inputs, unchecks categoreis, resets dropdowns and refreshes event names list
+        //helper method that clears all inputs, unchecks categoreis, resets dropdowns and refreshes event names list
         private void ClearForm()
         {
             comboBoxEventName.Text = "";
@@ -126,6 +244,7 @@ namespace COMPX323EventManagementApp
             textBoxStreetName.Text = "";
             textBoxSuburb.Text = "";
             textBoxPostCode.Text = "";
+            comboBoxCountry.Text = "New Zealand"; 
 
             dateTimePickerDate.Value = DateTime.Today;
             dateTimePickerTime.Value = DateTime.Now;
@@ -152,6 +271,7 @@ namespace COMPX323EventManagementApp
             textBoxPostCode.ReadOnly = false;
             checkedListBoxCategories.Enabled = true;
             comboBoxRestrictions.Enabled = true;
+            comboBoxCountry.Enabled = true;
             textBoxDescription.BackColor = SystemColors.Window;
             textBoxStreetName.BackColor = SystemColors.Window;
             textBoxSuburb.BackColor = SystemColors.Window;
@@ -161,9 +281,14 @@ namespace COMPX323EventManagementApp
             LoadEventName();
         }
 
-                //error checking for if an input is left empty , then notify user 
+        //error checking for if an input is left empty , then notify user 
         private bool ValidateInputs()
         {
+            if (comboBoxRestrictions.SelectedItem == null || comboBoxRestrictions.SelectedIndex == -1)
+            {
+                MessageBox.Show("Please select a restriction.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(comboBoxEventName.Text))
             {
                 MessageBox.Show("Please enter an event name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -240,5 +365,281 @@ namespace COMPX323EventManagementApp
 
         }
 
+        private void comboBoxEventName_TextChanged(object sender, EventArgs e)
+        {
+            string eventName = comboBoxEventName.Text.Trim();
+
+            // Check if the event name exists in MongoDB
+            bool eventExists = !string.IsNullOrEmpty(eventName) && MongoDBDataAccess.EventNameExists(eventName);
+            
+            if (eventExists)
+            {
+                try
+                {
+                    // Get event details from MongoDB
+                    var eventDetails = MongoDBDataAccess.GetEventDetails(eventName);
+                    
+                    if(eventDetails.HasValue)
+                    {
+                        var eventData = eventDetails.Value;
+                        // Populate fields with event data
+                        textBoxDescription.Text = eventData.description;
+                        
+                        // Make these fields read-only and change appearance
+                        textBoxDescription.ReadOnly = true;
+                        textBoxDescription.BackColor = SystemColors.Control;
+                        
+                        // Load and set categories
+                        var categories = eventData.categories;
+                        
+                        // Reset categories first
+                        for (int i = 0; i < checkedListBoxCategories.Items.Count; i++)
+                        {
+                            checkedListBoxCategories.SetItemChecked(i, false);
+                        }
+                        
+                        // Check appropriate categories
+                        foreach (var category in categories)
+                        {
+                            int index = checkedListBoxCategories.Items.IndexOf(category);
+                            if (index >= 0)
+                            {
+                                checkedListBoxCategories.SetItemChecked(index, true);
+                            }
+                        }
+                        
+                        // Disable categories control
+                        checkedListBoxCategories.Enabled = false;
+                        
+                        // Set restriction
+                        if (!string.IsNullOrEmpty(eventData.restriction))
+                        {
+                            comboBoxRestrictions.SelectedItem = eventData.restriction;
+                        }
+                        comboBoxRestrictions.Enabled = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading event details: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Reset and enable fields for a new event
+                textBoxDescription.ReadOnly = false;
+                textBoxDescription.BackColor = SystemColors.Window;
+                checkedListBoxCategories.Enabled = true;
+                comboBoxRestrictions.Enabled = true;
+                
+                // Only clear if the field had content before
+                if (!string.IsNullOrEmpty(textBoxDescription.Text))
+                {
+                    textBoxDescription.Text = "";
+                    
+                    // Clear category selections
+                    for (int i = 0; i < checkedListBoxCategories.Items.Count; i++)
+                    {
+                        checkedListBoxCategories.SetItemChecked(i, false);
+                    }
+                    
+                    comboBoxRestrictions.SelectedIndex = -1;
+                }
+            }
+
+        }
+
+        private void comboBoxVenue_TextChanged(object sender, EventArgs e)
+        {
+            string venueName = comboBoxVenue.Text.Trim();
+
+            // Check if the venue exists in MongoDB
+            bool venueExists = !string.IsNullOrEmpty(venueName) && MongoDBDataAccess.VenueExists(venueName);
+            
+            if (venueExists)
+            {
+                try
+                {
+                    var venueDetails = MongoDBDataAccess.GetVenueDetails(venueName);
+                    if (venueDetails.HasValue)
+                    {
+                        var venueData = venueDetails.Value;
+                        // Populate venue fields
+                        numericUpDownCapacity.Value = venueData.capacity;
+                        numericUpDownStreetNum.Value = venueData.streetNum;
+                        textBoxStreetName.Text = venueData.streetName;
+                        textBoxSuburb.Text = venueData.suburb;
+                        comboBoxCity.Text = venueData.city;
+                        textBoxPostCode.Text = venueData.postcode;
+                        comboBoxCountry.Text = venueData.country;
+                        
+                        // Disable or grey out venue fields
+                        numericUpDownCapacity.Enabled = false;
+                        numericUpDownStreetNum.Enabled = false;
+                        textBoxStreetName.ReadOnly = true;
+                        textBoxSuburb.ReadOnly = true;
+                        comboBoxCity.Enabled = false;
+                        textBoxPostCode.ReadOnly = true;
+                        comboBoxCountry.Enabled = false;
+                        
+                        // Change background color to indicate fields are locked
+                        textBoxStreetName.BackColor = SystemColors.Control;
+                        textBoxSuburb.BackColor = SystemColors.Control;
+                        textBoxPostCode.BackColor = SystemColors.Control;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading venue details: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Reset if fields were previously populated
+                if (!string.IsNullOrEmpty(textBoxStreetName.Text))
+                {
+                    // Reset venue fields
+                    numericUpDownCapacity.Value = numericUpDownCapacity.Minimum;
+                    numericUpDownStreetNum.Value = numericUpDownStreetNum.Minimum;
+                    textBoxStreetName.Text = "";
+                    textBoxSuburb.Text = "";
+                    comboBoxCity.SelectedIndex = -1;
+                    textBoxPostCode.Text = "";
+                    comboBoxCountry.Text = "New Zealand";
+                }
+                
+                // Enable venue fields for new venue and reset background colors
+                numericUpDownCapacity.Enabled = true;
+                numericUpDownStreetNum.Enabled = true;
+                textBoxStreetName.ReadOnly = false;
+                textBoxSuburb.ReadOnly = false;
+                comboBoxCity.Enabled = true;
+                textBoxPostCode.ReadOnly = false;
+                textBoxStreetName.BackColor = SystemColors.Window;
+                textBoxSuburb.BackColor = SystemColors.Window;
+                textBoxPostCode.BackColor = SystemColors.Window;
+            }
+
+        }
+
+        private void comboBoxEventName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedEvent = comboBoxEventName.SelectedItem?.ToString();
+            bool isExistingEvent = !string.IsNullOrEmpty(selectedEvent);
+            
+            if (isExistingEvent)
+            {
+                try
+                {
+                    // Get event details from MongoDB
+                    var eventDetails = MongoDBDataAccess.GetEventDetails(selectedEvent);
+
+                    if(eventDetails.HasValue)
+                    {
+                        var eventData = eventDetails.Value;
+
+                        textBoxDescription.Text = eventData.description;
+
+                        // Disable event fields
+                        textBoxDescription.ReadOnly = true;
+                        textBoxDescription.BackColor = SystemColors.Control;
+
+                        // Set categories
+                        for (int i = 0; i < checkedListBoxCategories.Items.Count; i++)
+                        {
+                            checkedListBoxCategories.SetItemChecked(i, false);
+                        }
+
+                        foreach (var category in eventData.categories)
+                        {
+                            int index = checkedListBoxCategories.Items.IndexOf(category);
+                            if (index >= 0)
+                            {
+                                checkedListBoxCategories.SetItemChecked(index, true);
+                            }
+                        }
+
+                        // Set restriction
+                        if (!string.IsNullOrEmpty(eventData.restriction))
+                        {
+                            comboBoxRestrictions.SelectedItem = eventData.restriction;
+                        }
+                        
+                        checkedListBoxCategories.Enabled = false;
+                        comboBoxRestrictions.Enabled = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading event details: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Enable fields
+                textBoxDescription.ReadOnly = false;
+                textBoxDescription.BackColor = SystemColors.Window;
+                checkedListBoxCategories.Enabled = true;
+                comboBoxRestrictions.Enabled = true;
+            }
+
+        }
+
+        private void comboBoxVenue_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedVenue = comboBoxVenue.SelectedItem?.ToString();
+    
+            if (!string.IsNullOrEmpty(selectedVenue))
+            {
+                try
+                {
+                    // Get venue details from MongoDB
+                    var venueDetails = MongoDBDataAccess.GetVenueDetails(selectedVenue);
+                    if (venueDetails.HasValue)
+                    {
+                        var venueData = venueDetails.Value;
+                        numericUpDownCapacity.Value = venueData.capacity;
+                        numericUpDownStreetNum.Value = venueData.streetNum;
+                        textBoxStreetName.Text = venueData.streetName;
+                        textBoxSuburb.Text = venueData.suburb;
+                        comboBoxCity.Text = venueData.city;
+                        textBoxPostCode.Text = venueData.postcode;
+
+                        // Disable venue fields
+                        numericUpDownCapacity.Enabled = false;
+                        numericUpDownStreetNum.Enabled = false;
+                        textBoxStreetName.ReadOnly = true;
+                        textBoxSuburb.ReadOnly = true;
+                        comboBoxCity.Enabled = false;
+                        textBoxPostCode.ReadOnly = true;
+                        
+                        // Change background color to indicate fields are locked
+                        textBoxStreetName.BackColor = SystemColors.Control;
+                        textBoxSuburb.BackColor = SystemColors.Control;
+                        textBoxPostCode.BackColor = SystemColors.Control;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading venue details: {ex.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Enable venue fields for new venue
+                numericUpDownCapacity.Enabled = true;
+                numericUpDownStreetNum.Enabled = true;
+                textBoxStreetName.ReadOnly = false;
+                textBoxSuburb.ReadOnly = false;
+                comboBoxCity.Enabled = true;
+                textBoxPostCode.ReadOnly = false;
+                
+                // Reset background colors
+                textBoxStreetName.BackColor = SystemColors.Window;
+                textBoxSuburb.BackColor = SystemColors.Window;
+                textBoxPostCode.BackColor = SystemColors.Window;
+            }
+
+        }
     }
 }
