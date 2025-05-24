@@ -469,5 +469,118 @@ namespace COMPX323EventManagementApp
                 throw new Exception($"Error updating RSVP: {ex.Message}", ex);
             }
         }
+
+        /// <summary>
+        /// Gets RSVPs that have been attended but not yet reviewed
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <returns>List of RSVP objects for events that can be reviewed</returns>
+        public static List<RSVP> GetAttendedRSVPsForReview(int userId)
+        {
+            try
+            {
+                var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
+                var reviewCollection = MongoDbConfig.GetCollection<BsonDocument>("reviews");
+
+                // Get all attended RSVPs for past events
+                var rsvpFilter = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"status", "attending"},
+                    {"eventDate", new BsonDocument("$lt", DateTime.Now)}
+                };
+
+                var attendedRsvps = rsvpCollection.Find(rsvpFilter).ToList();
+                var reviewableRsvps = new List<RSVP>();
+
+                foreach (var rsvpDoc in attendedRsvps)
+                {
+                    // Check if this RSVP has already been reviewed
+                    var reviewFilter = new BsonDocument
+                    {
+                        {"accNum", userId},
+                        {"ename", rsvpDoc.GetValue("ename").AsString},
+                        {"vname", rsvpDoc.GetValue("vname").AsString},
+                        {"eventDate", rsvpDoc.GetValue("eventDate").ToUniversalTime()}
+                    };
+
+                    var existingReview = reviewCollection.Find(reviewFilter).FirstOrDefault();
+
+                    if (existingReview == null)
+                    {
+                        // No review exists, add to reviewable list
+                        reviewableRsvps.Add(new RSVP
+                        {
+                            EName = rsvpDoc.GetValue("ename").AsString,
+                            VName = rsvpDoc.GetValue("vname").AsString,
+                            EventDate = rsvpDoc.GetValue("eventDate").ToLocalTime()
+                        });
+                    }
+                }
+
+                // Sort by event date descending (most recent first)
+                reviewableRsvps.Sort((r1, r2) => r2.EventDate.CompareTo(r1.EventDate));
+
+                return reviewableRsvps;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving RSVPs for review: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new review in MongoDB
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <param name="eventName">Name of the event</param>
+        /// <param name="venueName">Name of the venue</param>
+        /// <param name="eventDate">Date of the event</param>
+        /// <param name="rating">Rating (1-5)</param>
+        /// <param name="reviewText">Review text</param>
+        /// <returns>True if successful, false if review already exists</returns>
+        public static bool CreateReview(int userId, string eventName, string venueName, DateTime eventDate, int rating, string reviewText)
+        {
+            try
+            {
+                var reviewCollection = MongoDbConfig.GetCollection<BsonDocument>("reviews");
+
+                // Check if review already exists
+                var existingReviewFilter = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"ename", eventName},
+                    {"vname", venueName},
+                    {"eventDate", eventDate}
+                };
+
+                var existingReview = reviewCollection.Find(existingReviewFilter).FirstOrDefault();
+
+                if (existingReview != null)
+                {
+                    // Review already exists
+                    return false;
+                }
+
+                // Create new review document
+                var reviewDocument = new BsonDocument
+                {
+                    {"accNum", userId},
+                    {"ename", eventName},
+                    {"vname", venueName},
+                    {"eventDate", eventDate},
+                    {"rating", rating},
+                    {"textReview", reviewText},
+                    {"reviewTimestamp", DateTime.Now}
+                };
+
+                reviewCollection.InsertOne(reviewDocument);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating review: {ex.Message}", ex);
+            }
+        }
     }
 }
