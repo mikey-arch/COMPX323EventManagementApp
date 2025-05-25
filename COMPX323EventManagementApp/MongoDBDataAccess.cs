@@ -12,7 +12,8 @@ using MongoDB.Driver;
 namespace COMPX323EventManagementApp
 {
     /// <summary>
-    /// Handles all database interactions with MongoDB collections (events, reviews, rsvps, members)
+    /// Handles all database interactions with MongoDB collections (events, reviews, rsvps, members).
+    /// Provides utility methods to read, create, update, and delete records used throughout the application.
     /// </summary>
     public static class MongoDBDataAccess
     {
@@ -144,6 +145,11 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Retrieves upcoming RSVPs (future events) for a specific user.
+        /// </summary>
+        /// <param name="userId">The user's account number</param>
+        /// <returns>List of RSVP records with event info and status</returns>
         public static List<(string ename, DateTime eventDate, string venue, string status)> GetUpcomingRsvps(int userId)
         {
             try
@@ -563,6 +569,15 @@ namespace COMPX323EventManagementApp
                 throw new Exception($"Error creating review: {ex.Message}", ex);
             }
         }
+
+        /// <summary>
+        /// Deletes an RSVP for a specific event instance for a given user.
+        /// </summary>
+        /// <param name="userId">User's account number</param>
+        /// <param name="eventName">Event name</param>
+        /// <param name="venueName">Venue name</param>
+        /// <param name="eventDate">Date of the event</param>
+        /// <returns>True if deleted successfully, false otherwise</returns>
         public static bool DeleteRSVP(int userId, string eventName, string venueName, DateTime eventDate)
         {
             try

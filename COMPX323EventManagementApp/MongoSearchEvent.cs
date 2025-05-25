@@ -14,6 +14,11 @@ using MongoDB.Driver;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// User control for searching, filtering, displaying, and RSVPing to upcoming events.
+    /// Integrates filter criteria such as location, category, restriction, and price,
+    /// and displays data retrieved from the MongoDB 'events' collection.
+    /// </summary>
     public partial class MongoSearchEvent : UserControl
     {
         public MongoSearchEvent()
@@ -24,7 +29,10 @@ namespace COMPX323EventManagementApp
             this.VisibleChanged += MongoSearchEvent_VisibleChanged;
         }
 
-        //loads all comboboxes with appropriate filters names
+        /// <summary>
+        /// Loads available filter options (locations, categories, restrictions, price) into the respective combo boxes.
+        /// Data is sourced from the MongoDB 'events' collection.
+        /// </summary>
         private void LoadComboBoxes()
         {
             try
@@ -95,7 +103,12 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //displays updated filtered events in the listview
+        /// <summary>
+        /// Displays events in the ListView based on the current search term and selected filters.
+        /// Applies MongoDB aggregation pipeline to filter by month, location, category, restriction, and price.
+        /// </summary>
+        /// <param name="searchWord">Optional search string for event name or description</param>
+
         private void DisplayEvents(string searchWord = "")
         {
             try
@@ -336,7 +349,11 @@ namespace COMPX323EventManagementApp
             DisplayEvents(textBoxSearch.Text.Trim());
         }
 
-        //handles double clicking an event youre interested in where you can rsvp
+        /// <summary>
+        /// Displays events in the ListView based on the current search term and selected filters.
+        /// Applies MongoDB aggregation pipeline to filter by month, location, category, restriction, and price.
+        /// </summary>
+        /// <param name="searchWord">Optional search string for event name or description</param>
         private void listViewEvents_DoubleClick(object sender, EventArgs e)
         {
             if (listViewEvents.SelectedItems.Count > 0)

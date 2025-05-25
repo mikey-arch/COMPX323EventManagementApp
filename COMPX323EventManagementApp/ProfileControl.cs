@@ -12,9 +12,16 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// User control for displaying the current user's profile details, including RSVP history,
+    /// submitted reviews, and events they've organized. Allows RSVP deletion and viewing event details.
+    /// </summary>
     public partial class ProfileControl : UserControl
     {
         String currentlySelected;
+        /// <summary>
+        /// Initializes the profile view, displays the current user's info, and subscribes to visibility changes.
+        /// </summary>
         public ProfileControl()
         {
             InitializeComponent();
@@ -30,7 +37,10 @@ namespace COMPX323EventManagementApp
 
         }
 
-        //displays users rsvps / upcoming events
+        /// <summary>
+        /// Retrieves and displays the user's upcoming RSVPs in the list view.
+        /// Allows deletion or inspection of an RSVP via double-click.
+        /// </summary>
         private void buttonRsvps_Click(object sender, EventArgs e)
         {
             listViewDisplay.Enabled = true;
@@ -95,7 +105,9 @@ namespace COMPX323EventManagementApp
 
         }
 
-        //displays users reviews
+        //// <summary>
+        /// Retrieves and displays events organized by the user.
+        /// </summary>
         private void buttonReviews_Click(object sender, EventArgs e)
         {
             listViewDisplay.Enabled = true;
@@ -162,7 +174,9 @@ namespace COMPX323EventManagementApp
 
         }
 
-        //displays users organised events
+        /// <summary>
+        /// Retrieves and displays events organized by the user.
+        /// </summary>
         private void buttonEvents_Click(object sender, EventArgs e)
         {
             listViewDisplay.Enabled = true;
@@ -231,6 +245,9 @@ namespace COMPX323EventManagementApp
 
         }
 
+        /// <summary>
+        /// Retrieves and displays events organized by the user.
+        /// </summary>
         private void listViewDisplay_DoubleClick(object sender, EventArgs e)
         {
 
@@ -263,6 +280,12 @@ namespace COMPX323EventManagementApp
            
         }
 
+        /// <summary>
+        /// Deletes the selected RSVP from the database for the current user.
+        /// </summary>
+        /// <param name="eventName">Event name</param>
+        /// <param name="eventDate">Event date</param>
+        /// <param name="venueName">Venue name</param>
         private void DeleteRsvp(string eventName, DateTime eventDate, string venueName)
         {
             try

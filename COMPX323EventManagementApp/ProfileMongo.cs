@@ -14,10 +14,18 @@ using System.Windows.Forms;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// User control for displaying a MongoDB-based profile view for the logged-in user.
+    /// Shows their upcoming RSVPs, submitted reviews, and created events. 
+    /// Allows RSVP deletion from the list view.
+    /// </summary>
     public partial class ProfileMongo : UserControl
     {
         String currentlySelected;
         Member user;
+        /// <summary>
+        /// Initializes the profile view with user information and sets up visibility event listener.
+        /// </summary>
         public ProfileMongo()
         {
             InitializeComponent();
@@ -30,6 +38,7 @@ namespace COMPX323EventManagementApp
             this.VisibleChanged += ProfileMongoControl_VisibleChanged; 
         }
 
+        //Clears and prepares the list view control for displaying new content.
         private void ResetListViews()
         {
             //clear and set up list view columns for RSVPS
@@ -39,6 +48,10 @@ namespace COMPX323EventManagementApp
             listViewDisplay.FullRowSelect = true;
         }
 
+        /// <summary>
+        /// Displays the user's upcoming RSVPs in the list view. 
+        /// Allows RSVP deletion on double-click.
+        /// </summary>
         private void buttonRsvps_Click(object sender, EventArgs e)
         {
             listViewDisplay.Enabled = true;
@@ -77,6 +90,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Displays all reviews submitted by the user.
+        /// </summary>
         private void buttonReviews_Click(object sender, EventArgs e)
         {
             listViewDisplay.Enabled = true;
@@ -114,6 +130,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// Displays all events created by the user in the list view.
+        /// </summary>
         private void buttonEvents_Click(object sender, EventArgs e)
         {
             listViewDisplay.Enabled = true;
@@ -147,7 +166,10 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // refreshes when specific view is currently selected
+        /// <summary>
+        /// Refreshes the current list view data when the control becomes visible,
+        /// depending on which button was previously selected.
+        /// </summary>
         private void ProfileMongoControl_VisibleChanged(object sender, EventArgs e)
         {
             if (this.Visible)
@@ -169,9 +191,12 @@ namespace COMPX323EventManagementApp
 
         private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //
+            
         }
-
+        /// <summary>
+        /// Handles double-clicks on RSVP list items.
+        /// Prompts the user to confirm RSVP deletion and performs it if confirmed.
+        /// </summary>
         private void listViewDisplay_DoubleClick(object sender, EventArgs e)
         {
             if (listViewDisplay.SelectedItems.Count > 0 && currentlySelected == "RSVP")

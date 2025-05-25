@@ -12,6 +12,11 @@ using COMPX323EventManagementApp.Properties;
 
 namespace COMPX323EventManagementApp
 {
+    /// <summary>
+    /// A user control that allows users to submit reviews for events they have attended.
+    /// Users can select an event from their past RSVPs, rate it using a star system, and submit textual feedback.
+    /// The review is stored in the MongoDB database.
+    /// </summary>
     public partial class MongoCreateReview : UserControl
     {
         private int rating = 1; //holds star rating defaulted at 1 star
@@ -25,7 +30,10 @@ namespace COMPX323EventManagementApp
 
         }
 
-        //populates combobox with rsvps to be reviewed
+        /// <summary>
+        /// Loads the current user's RSVPs that are eligible for review (attended but not reviewed).
+        /// Populates the event combo box with these RSVPs.
+        /// </summary>
         private void LoadUsersRSVPS()
         {
             try
@@ -132,7 +140,11 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //handles submiting review and updating the database with new review and rating
+        /// <summary>
+        /// Handles the submission of a review for an event.
+        /// Validates input, then creates a review entry in MongoDB. 
+        /// If successful, resets the form and shows confirmation. Otherwise, displays an error.
+        /// </summary>
         private void buttonSubmitReview_Click_1(object sender, EventArgs e)
         {
             if(comboBoxEvents.SelectedItem == null)
