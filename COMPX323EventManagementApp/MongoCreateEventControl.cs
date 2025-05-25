@@ -15,6 +15,9 @@ namespace COMPX323EventManagementApp
 {
     public partial class MongoCreateEventControl : UserControl
     {
+        /// <summary>
+        /// User control for creating events in MongoDB.
+        /// </summary>
         private List<string> validCities = new List<string> 
         { 
             "Auckland", "Wellington", "Christchurch", "Hamilton", "Tauranga", 
@@ -23,7 +26,10 @@ namespace COMPX323EventManagementApp
             "Gisborne", "Timaru", "Blenheim", "Queenstown", "Taupo" 
         };
 
-         private List<string> validCategories = new List<string> 
+        /// <summary>
+        /// List of valid cities in New Zealand.
+        /// </summary>
+        private List<string> validCategories = new List<string> 
          { 
             "Art", "Music", "Theatre", "Talk", "Science", "Culture", 
             "Food", "Sports", "Education", "Tech", "Health", "Travel", 
@@ -31,29 +37,40 @@ namespace COMPX323EventManagementApp
             "Law", "Politics", "Dating", "Family", "Animals", "Gaming", "Environment" 
          };
 
+        /// <summary>
+        /// List of valid event restrictions.
+        /// </summary>
         private List<string> validRestrictions = new List<string> 
         { 
             "Adults(R18+)", "All Ages", "Teens(R13+)", "Seniors(65+)" 
         };
 
+        /// <summary>
+        /// Initializes the user control and loads dropdown data.
+        /// </summary>
         public MongoCreateEventControl()
         {
             InitializeComponent();
 
+            // Load predefined dropdown values and comboBox
             LoadCategories();
             LoadRestrictions();
             LoadCities();
             LoadEventName();
             LoadVenues();
-            comboBoxCountry.Text = "New Zealand"; 
+            comboBoxCountry.Text = "New Zealand";
 
+            // Set default date/time for event (today @ 5PM)
             dateTimePickerDate.Value = DateTime.Today;
-            dateTimePickerTime.Value = DateTime.Today.AddHours(17); 
+            dateTimePickerTime.Value = DateTime.Today.AddHours(17);
 
+            // Reload values when control becomes visible again
             this.VisibleChanged += MongoCreateEventControl_VisibleChanged;
         }
 
-        //populate checklistedboxes with category choices
+        /// <summary>
+        /// Populates the category checklist with valid event categories.
+        /// </summary>
         private void LoadCategories()
         {
             checkedListBoxCategories.Items.Clear();
@@ -63,7 +80,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //populate restriction combobox with restriction 
+        /// <summary>
+        /// Populates the restriction combo box with valid restrictions.
+        /// </summary>
         private void LoadRestrictions()
         {
             comboBoxRestrictions.Items.Clear();
@@ -73,7 +92,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //populate cities with valid nz cities
+        /// <summary>
+        /// Loads a list of valid NZ cities into the city combo box.
+        /// </summary>
         private void LoadCities()
         {
             comboBoxCity.Items.Clear();
@@ -83,7 +104,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //load events created by the current member
+        /// <summary>
+        /// Loads event names created by the currently logged-in user.
+        /// </summary>
         private void LoadEventName()
         {
             try
@@ -104,7 +127,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //populate venue dropdown with venues from mongodb 
+        /// <summary>
+        /// Loads available venues from MongoDB.
+        /// </summary>
         private void LoadVenues()
         {
             try
@@ -123,7 +148,9 @@ namespace COMPX323EventManagementApp
         }
 
 
-        //create event button click event that creates the event in mongodb 
+        /// <summary>
+        /// Creates a new event or adds an instance to an existing one in MongoDB.
+        /// </summary>
         private void buttonCreateEvent_Click(object sender, EventArgs e)
         {
             if (!ValidateInputs()) return;
@@ -168,11 +195,12 @@ namespace COMPX323EventManagementApp
                 }
                 mongoEvent["categories"] = categoriesArray;
 
-                // Create event instance with venue
+                // Prepare event date and time
                 DateTime eventDate = dateTimePickerDate.Value.Date;
                 DateTime eventTime = dateTimePickerTime.Value;
                 DateTime combinedDateTime = eventDate.Add(eventTime.TimeOfDay);
 
+                // Create event instance with venue
                 var eventInstance = new BsonDocument
                 {
                     {"eventDate", eventDate},
@@ -195,7 +223,7 @@ namespace COMPX323EventManagementApp
                 var instancesArray = new BsonArray { eventInstance };
                 mongoEvent["instances"] = instancesArray;
 
-                // Create event or add instance in MongoDB
+                // Push to DB
                 bool success = MongoDBDataAccess.CreateEvent(mongoEvent);
 
                 if (success)
@@ -229,39 +257,48 @@ namespace COMPX323EventManagementApp
 
         }
 
-        //clears all inputs, unchecks categoreis, resets dropdowns and refreshes event names list
+        /// <summary>
+        /// Clears all inputs on the form and resets the UI.
+        /// </summary>
         private void buttonClear_Click(object sender, EventArgs e)
         {
             ClearForm();
         }
 
-        //helper method that clears all inputs, unchecks categoreis, resets dropdowns and refreshes event names list
+        /// <summary>
+        /// Helper to reset all form fields to default state.
+        /// </summary>
         private void ClearForm()
         {
+            // Clear text fields
             comboBoxEventName.Text = "";
             textBoxDescription.Text = "";
             comboBoxVenue.Text = "";
             textBoxStreetName.Text = "";
             textBoxSuburb.Text = "";
             textBoxPostCode.Text = "";
-            comboBoxCountry.Text = "New Zealand"; 
+            comboBoxCountry.Text = "New Zealand";
 
+            // Reset dropdowns and pickers
             dateTimePickerDate.Value = DateTime.Today;
             dateTimePickerTime.Value = DateTime.Now;
 
+            // Reset numeric values
             numericUpDownCapacity.Value = numericUpDownCapacity.Minimum;
             numericUpDownStreetNum.Value = numericUpDownStreetNum.Minimum;
             numericUpDownPrice.Value = 0;
 
+            // Uncheck all categories
             comboBoxCity.SelectedIndex = -1;
             comboBoxRestrictions.SelectedIndex = -1;
-            
+
+            // Re-enable UI fields
             for (int i = 0; i < checkedListBoxCategories.Items.Count; i++)
             {
                 checkedListBoxCategories.SetItemChecked(i, false);
             }
 
-             // Enable all disabled controls if submitted with already before event and venue
+            // Re-enable UI fields
             textBoxDescription.ReadOnly = false;
             numericUpDownCapacity.Enabled = true;
             numericUpDownStreetNum.Enabled = true;
@@ -276,12 +313,16 @@ namespace COMPX323EventManagementApp
             textBoxStreetName.BackColor = SystemColors.Window;
             textBoxSuburb.BackColor = SystemColors.Window;
             textBoxPostCode.BackColor = SystemColors.Window;
-            
 
+            // Reload user events
             LoadEventName();
         }
 
-        //error checking for if an input is left empty , then notify user 
+        /// <summary>
+        /// Validates all input fields on the form before allowing event creation.
+        /// Displays specific messages for any invalid input.
+        /// </summary>
+        /// <returns>True if all inputs are valid; false otherwise.</returns>
         private bool ValidateInputs()
         {
             if (comboBoxRestrictions.SelectedItem == null || comboBoxRestrictions.SelectedIndex == -1)
@@ -355,6 +396,7 @@ namespace COMPX323EventManagementApp
             return true;
         }
 
+        // Refreshes dropdowns when control becomes visible
         private void MongoCreateEventControl_VisibleChanged(object sender, EventArgs e)
         {
             if(this.Visible)
@@ -365,6 +407,11 @@ namespace COMPX323EventManagementApp
 
         }
 
+        /// <summary>
+        /// Triggered when the event name text box changes.
+        /// If the event name exists in MongoDB, populates form fields with its data and disables editing.
+        /// If it doesn't exist, resets the fields for new input.
+        /// </summary>
         private void comboBoxEventName_TextChanged(object sender, EventArgs e)
         {
             string eventName = comboBoxEventName.Text.Trim();
@@ -449,6 +496,11 @@ namespace COMPX323EventManagementApp
 
         }
 
+        /// <summary>
+        /// Triggered when the text of the venue combo box changes.
+        /// Loads existing venue data if the venue exists in MongoDB and disables editing.
+        /// Otherwise, resets the input fields and enables user input for a new venue.
+        /// </summary>
         private void comboBoxVenue_TextChanged(object sender, EventArgs e)
         {
             string venueName = comboBoxVenue.Text.Trim();
@@ -522,6 +574,10 @@ namespace COMPX323EventManagementApp
 
         }
 
+        /// <summary>
+        /// Triggered when the selected event name changes.
+        /// Loads existing event details if the event exists and locks certain fields accordingly.
+        /// </summary>
         private void comboBoxEventName_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedEvent = comboBoxEventName.SelectedItem?.ToString();
@@ -585,6 +641,10 @@ namespace COMPX323EventManagementApp
 
         }
 
+        /// <summary>
+        /// Triggered when the selected venue changes.
+        /// Loads existing venue details if the venue exists and disables editing of those fields.
+        /// </summary>
         private void comboBoxVenue_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedVenue = comboBoxVenue.SelectedItem?.ToString();
