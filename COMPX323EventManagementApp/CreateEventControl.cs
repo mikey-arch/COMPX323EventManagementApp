@@ -189,19 +189,20 @@ namespace COMPX323EventManagementApp
                 return false;
             }
 
-            if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxStreetName.Text, "^[a-zA-Z]+$"))
+            string namePattern = @"^[A-Za-z]+(?: [A-Za-z]+)*$";
+            if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxStreetName.Text, namePattern))
             {
                 MessageBox.Show("Please enter a valid street name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxSuburb.Text, "^[a-zA-Z]+$"))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxSuburb.Text, namePattern))
             {
                 MessageBox.Show("Please enter a valid suburb name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            if (!System.Text.RegularExpressions.Regex.IsMatch(comboBoxVenue.Text, "^[a-zA-Z]+$"))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(comboBoxVenue.Text, namePattern))
             {
                 MessageBox.Show("Please enter a valid venue name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
