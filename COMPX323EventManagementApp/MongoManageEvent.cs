@@ -282,10 +282,6 @@ namespace COMPX323EventManagementApp
             DateTime endUtc = startUtc.AddDays(2);  // covers 2 days total
 
 
-            Console.WriteLine("EventDate parameter (Local): " + eventDate.ToString("o"));
-            Console.WriteLine("Start UTC: " + startUtc.ToString("o"));
-            Console.WriteLine("End UTC: " + endUtc.ToString("o"));
-
             var filter = Builders<BsonDocument>.Filter.And(
                 Builders<BsonDocument>.Filter.Eq("ename", eventName),
                 Builders<BsonDocument>.Filter.Eq("vname", venueName),
@@ -422,7 +418,7 @@ namespace COMPX323EventManagementApp
 
                     var tag = (dynamic)listViewEvents.SelectedItems[0].Tag;
                     venueName = tag.VenueName;
-                    eventDate = DateTime.SpecifyKind(tag.EventDateTime, DateTimeKind.Utc);
+                    eventDate = eventDate.ToUniversalTime();
 
                 }
 
@@ -449,22 +445,50 @@ namespace COMPX323EventManagementApp
                         MessageBox.Show("RSVP deleted.");
                         break;
                     case 2: // Delete instance + Related RSVPs
+
+                        var selectedItem = listViewEvents.SelectedItems[0];
+
+                        // Get correct date
+                        string eventDateText = selectedItem.SubItems[1].Text;
+                        string eventTimeText = selectedItem.SubItems[2].Text;
+
+                        // Parse date and time separately
+                        DateTime datePart = DateTime.ParseExact(eventDateText, "dd-MM-yyyy", null);
+                        TimeSpan timePart = TimeSpan.Parse(eventTimeText);
+
+                        // Combine them
+                        DateTime eventDateTime = datePart.Date + timePart;
+
+                        Console.WriteLine("EventDate parameter (Local): " + eventDateTime.ToString("o"));
+
+                        // Convert eventDate to UTC midnight start and end of that day
+                        DateTime startUtc = new DateTime(eventDateTime.Year, eventDateTime.Month, eventDateTime.Day, 0, 0, 0, DateTimeKind.Utc).AddDays(-1);
+                        DateTime endUtc = startUtc.AddDays(2);  // covers 2 days total
+
+                        Console.WriteLine("Start UTC: " + startUtc.ToString("o"));
+                        Console.WriteLine("End UTC: " + endUtc.ToString("o"));
+
                         var eventFilter = Builders<BsonDocument>.Filter.Eq("ename", eventName);
 
                         var updatePull = Builders<BsonDocument>.Update.PullFilter("instances",
                             Builders<BsonDocument>.Filter.And(
-                                Builders<BsonDocument>.Filter.Eq("eventDate", eventDate),
+                                Builders<BsonDocument>.Filter.Gte("eventDate", startUtc),
+                                Builders<BsonDocument>.Filter.Lt("eventDate", endUtc),
                                 Builders<BsonDocument>.Filter.Eq("venue.vname", venueName)
                             )
                         );
 
                         var updateResult = eventsCol.UpdateOne(eventFilter, updatePull);
 
+
                         var instanceRsvpFilter = Builders<BsonDocument>.Filter.And(
                             Builders<BsonDocument>.Filter.Eq("ename", eventName),
-                            Builders<BsonDocument>.Filter.Eq("venue.vname", venueName),
-                            Builders<BsonDocument>.Filter.Eq("event_date", eventDate)
+                            Builders<BsonDocument>.Filter.Eq("vname", venueName),
+                            Builders<BsonDocument>.Filter.Gte("eventDate", startUtc),
+                            Builders<BsonDocument>.Filter.Lt("eventDate", endUtc)
                         );
+
+
                         rsvpsCol.DeleteMany(instanceRsvpFilter);
                         
 
@@ -517,8 +541,8 @@ namespace COMPX323EventManagementApp
 
 
                     // Get correct date
-                    string eventDateText = selectedItem.SubItems[1].Text; // date, e.g. "08-06-2025"
-                    string eventTimeText = selectedItem.SubItems[2].Text; // time, e.g. "02:00"
+                    string eventDateText = selectedItem.SubItems[1].Text; 
+                    string eventTimeText = selectedItem.SubItems[2].Text; 
 
                     // Parse date and time separately
                     DateTime datePart = DateTime.ParseExact(eventDateText, "dd-MM-yyyy", null);
