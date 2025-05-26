@@ -219,11 +219,17 @@ namespace COMPX323EventManagementApp
                     var instDoc = inst.AsBsonDocument;
                     ListViewItem item = new ListViewItem(selectedEventName);
 
-                    DateTime eventDate = instDoc.GetValue("eventDate", BsonNull.Value).ToUniversalTime();
-                    DateTime eventTime = instDoc.GetValue("time", BsonNull.Value).ToUniversalTime();
+                    // Parse as UTC
+                    DateTime eventDateUtc = instDoc.GetValue("eventDate", BsonNull.Value).ToUniversalTime();
+                    DateTime eventTimeUtc = instDoc.GetValue("time", BsonNull.Value).ToUniversalTime();
 
-                    item.SubItems.Add(eventDate.ToString("dd-MM-yyyy"));
-                    item.SubItems.Add(eventTime.ToString("HH:mm"));
+                    // Convert UTC to local time (your local timezone)
+                    DateTime eventDateLocal = eventDateUtc.ToLocalTime();
+                    DateTime eventTimeLocal = eventTimeUtc.ToLocalTime();
+
+
+                    item.SubItems.Add(eventDateLocal.ToString("dd-MM-yyyy"));
+                    item.SubItems.Add(eventTimeLocal.ToString("HH:mm"));
 
                     var venueDoc = instDoc.GetValue("venue", new BsonDocument()).AsBsonDocument;
                     string venueName = venueDoc.GetValue("vname", "").AsString;
@@ -243,12 +249,16 @@ namespace COMPX323EventManagementApp
                     item.Tag = new
                     {
                         EventName = selectedEventName,
-                        EventDateTime = eventDate,
+                        EventDateTime = eventDateLocal,
                         VenueName = venueName
                     };
 
                     listViewEvents.Items.Add(item);
+
+
                 }
+        
+
             }
             catch (Exception ex)
             {
@@ -267,12 +277,16 @@ namespace COMPX323EventManagementApp
         {
             var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
 
-            var utcEventDate = DateTime.SpecifyKind(eventDate, DateTimeKind.Utc);
+            // Convert eventDate to UTC midnight start and end of that day
+            DateTime startUtc = new DateTime(eventDate.Year, eventDate.Month, eventDate.Day, 0, 0, 0, DateTimeKind.Utc).AddDays(-1);
+            DateTime endUtc = startUtc.AddDays(2);  // covers 2 days total
+
 
             var filter = Builders<BsonDocument>.Filter.And(
                 Builders<BsonDocument>.Filter.Eq("ename", eventName),
-                Builders<BsonDocument>.Filter.Eq("eventDate", utcEventDate),
-                Builders<BsonDocument>.Filter.Eq("vname", venueName)
+                Builders<BsonDocument>.Filter.Eq("vname", venueName),
+                Builders<BsonDocument>.Filter.Gte("eventDate", startUtc),
+                Builders<BsonDocument>.Filter.Lt("eventDate", endUtc)
             );
 
             return rsvpCollection.Find(filter).ToList();
@@ -290,6 +304,8 @@ namespace COMPX323EventManagementApp
             {
                 var memberCollection = MongoDbConfig.GetCollection<BsonDocument>("members");
 
+
+                Console.WriteLine("Event Date before method: " + eventDate.ToString("o"));
                 // get RSVPs
                 var rsvps = GetRsvpsForEventInstance(eventName, eventDate, venueName);
 
@@ -402,7 +418,7 @@ namespace COMPX323EventManagementApp
 
                     var tag = (dynamic)listViewEvents.SelectedItems[0].Tag;
                     venueName = tag.VenueName;
-                    eventDate = DateTime.SpecifyKind(tag.EventDateTime, DateTimeKind.Utc);
+                    eventDate = eventDate.ToUniversalTime();
 
                 }
 
@@ -429,22 +445,50 @@ namespace COMPX323EventManagementApp
                         MessageBox.Show("RSVP deleted.");
                         break;
                     case 2: // Delete instance + Related RSVPs
+
+                        var selectedItem = listViewEvents.SelectedItems[0];
+
+                        // Get correct date
+                        string eventDateText = selectedItem.SubItems[1].Text;
+                        string eventTimeText = selectedItem.SubItems[2].Text;
+
+                        // Parse date and time separately
+                        DateTime datePart = DateTime.ParseExact(eventDateText, "dd-MM-yyyy", null);
+                        TimeSpan timePart = TimeSpan.Parse(eventTimeText);
+
+                        // Combine them
+                        DateTime eventDateTime = datePart.Date + timePart;
+
+                        Console.WriteLine("EventDate parameter (Local): " + eventDateTime.ToString("o"));
+
+                        // Convert eventDate to UTC midnight start and end of that day
+                        DateTime startUtc = new DateTime(eventDateTime.Year, eventDateTime.Month, eventDateTime.Day, 0, 0, 0, DateTimeKind.Utc).AddDays(-1);
+                        DateTime endUtc = startUtc.AddDays(2);  // covers 2 days total
+
+                        Console.WriteLine("Start UTC: " + startUtc.ToString("o"));
+                        Console.WriteLine("End UTC: " + endUtc.ToString("o"));
+
                         var eventFilter = Builders<BsonDocument>.Filter.Eq("ename", eventName);
 
                         var updatePull = Builders<BsonDocument>.Update.PullFilter("instances",
                             Builders<BsonDocument>.Filter.And(
-                                Builders<BsonDocument>.Filter.Eq("eventDate", eventDate),
+                                Builders<BsonDocument>.Filter.Gte("eventDate", startUtc),
+                                Builders<BsonDocument>.Filter.Lt("eventDate", endUtc),
                                 Builders<BsonDocument>.Filter.Eq("venue.vname", venueName)
                             )
                         );
 
                         var updateResult = eventsCol.UpdateOne(eventFilter, updatePull);
 
+
                         var instanceRsvpFilter = Builders<BsonDocument>.Filter.And(
                             Builders<BsonDocument>.Filter.Eq("ename", eventName),
-                            Builders<BsonDocument>.Filter.Eq("venue.vname", venueName),
-                            Builders<BsonDocument>.Filter.Eq("event_date", eventDate)
+                            Builders<BsonDocument>.Filter.Eq("vname", venueName),
+                            Builders<BsonDocument>.Filter.Gte("eventDate", startUtc),
+                            Builders<BsonDocument>.Filter.Lt("eventDate", endUtc)
                         );
+
+
                         rsvpsCol.DeleteMany(instanceRsvpFilter);
                         
 
@@ -493,10 +537,22 @@ namespace COMPX323EventManagementApp
 
                     // Get event details from the selected ListView item
                     string eventName = selectedItem.Text; // The first column: Event Name
-                    DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); // Second column: Event Date
                     string venueName = selectedItem.SubItems[3].Text; // Fourth column: Venue Name
+
+
+                    // Get correct date
+                    string eventDateText = selectedItem.SubItems[1].Text; 
+                    string eventTimeText = selectedItem.SubItems[2].Text; 
+
+                    // Parse date and time separately
+                    DateTime datePart = DateTime.ParseExact(eventDateText, "dd-MM-yyyy", null);
+                    TimeSpan timePart = TimeSpan.Parse(eventTimeText);
+
+                    // Combine them
+                    DateTime eventDateTime = datePart.Date + timePart;
+
                     // Call the method to display RSVPs for this specific event instance
-                    DisplayRSVPs(eventName, eventDate, venueName);
+                    DisplayRSVPs(eventName, eventDateTime, venueName);
                 }
             }
             catch (Exception ex)
