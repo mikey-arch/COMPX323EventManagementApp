@@ -21,15 +21,16 @@ namespace COMPX323EventManagementApp
         private string venueName;
         private int attendeeId; 
 
-        // Constructor accepting event details (composite primary key)
+        // Constructor accepting event details 
         public EventDetails(string eventName, DateTime eventDate, string venueName)
         {
             InitializeComponent();
+
             this.eventName = eventName;
             this.eventDate = eventDate;
             this.venueName = venueName;
-            Console.WriteLine($"eventDate1: {eventDate:dd-MM-YYYY}");
 
+            //get the current user and load the event details 
             Member user = Session.CurrentUser;
             attendeeId = user.Id;
             LoadEventDetails();

@@ -133,7 +133,7 @@ namespace COMPX323EventManagementApp
 
                 return rsvpDocs.Select(doc => (
                 doc.GetValue("ename", "").AsString,
-                doc.GetValue("eventDate", DateTime.MinValue).ToUniversalTime(), // ← actual DateTime object
+                doc.GetValue("eventDate", DateTime.MinValue).ToUniversalTime(), // actual DateTime object
                 doc.GetValue("vname", "").AsString,
                 doc.GetValue("status", "n/a").AsString
             )).ToList();
@@ -156,12 +156,14 @@ namespace COMPX323EventManagementApp
             {
                 var rsvpCollection = MongoDbConfig.GetCollection<BsonDocument>("rsvps");
 
-                var filter = Builders<BsonDocument>.Filter.And(
-                    Builders<BsonDocument>.Filter.Eq("accNum", userId),
-                    Builders<BsonDocument>.Filter.Gte("eventDate", DateTime.UtcNow)
-                );
+                var filter = new BsonDocument
+                {
+                    { "accNum", userId },
+                    { "eventDate", new BsonDocument("$gte", DateTime.UtcNow) }
+                };
 
-                var sort = Builders<BsonDocument>.Sort.Ascending("eventDate");
+                var sort = new BsonDocument("eventDate", 1);
+
                 var rsvpDocs = rsvpCollection.Find(filter).Sort(sort).ToList();
 
                 return rsvpDocs.Select(doc => (

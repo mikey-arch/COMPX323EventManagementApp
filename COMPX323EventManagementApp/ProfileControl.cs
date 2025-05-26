@@ -63,6 +63,7 @@ namespace COMPX323EventManagementApp
 
                     using (var cmd = conn.CreateCommand())
                     {
+                        //query to get the rsvp and event information for the rsvp
                         cmd.CommandText = @"select e.ename, r.event_date, r.vname, r.status from RSVP r
                         join Event e ON r.ename = e.ename
                         where r.acc_num = :userId and r.event_date > SYSDATE
@@ -332,7 +333,11 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // refreshes when specific view is currently selected
+        /// <summary>
+        /// refreshes when specific view is currently selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ProfileControl_VisibleChanged(object sender, EventArgs e)
         {
             if (this.Visible)

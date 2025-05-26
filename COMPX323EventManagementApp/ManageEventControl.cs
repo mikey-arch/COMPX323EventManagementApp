@@ -25,14 +25,18 @@ namespace COMPX323EventManagementApp
             this.VisibleChanged += ManageEventControl_VisibleChanged;
         }
 
-        // Initialize ComboBox to show placeholder text initially
+        /// <summary>
+        /// Initialize ComboBox to show placeholder text initially
+        /// </summary>
         private void InitialiseComboBox()
         {
             comboBoxEventList.Items.Clear();
             comboBoxEventList.SelectedIndex = -1;  // Ensuring ComboBox is empty initially
         }
 
+        /// <summary>
         /// Initialize the RSVP ListView with columns
+        /// </summary>
         private void InitialiseRSVPListView()
         {
             if (listViewRSVP.Columns.Count == 0)
@@ -47,7 +51,9 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        //Initializes the event instances ListView with appropriate columns and settings.
+        /// <summary>
+        /// Initializes the event instances ListView with appropriate columns and settings.
+        /// </summary>
         private void InitialiseListView()
         {
             // Check if ListView is already initialized
@@ -110,6 +116,11 @@ namespace COMPX323EventManagementApp
             }
         }
 
+        /// <summary>
+        /// when the user clicks on an event display the related event instances
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void comboBoxEventList_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -135,7 +146,10 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // Method to display all event instances for the selected event in the ListView
+        /// <summary>
+        /// Method to display all event instances for the selected event in the ListView
+        /// </summary>
+        /// <param name="selectedEventName"></param>
         private void DisplayEvents(string selectedEventName)
         {
             try
@@ -186,9 +200,9 @@ namespace COMPX323EventManagementApp
                                 };
 
 
-                                item.SubItems.Add(reader.GetString(reader.GetOrdinal("vname"))); // Venue Name
-                                item.SubItems.Add(reader.GetString(reader.GetOrdinal("city"))); // Venue City
-                                item.SubItems.Add(reader.GetDecimal(reader.GetOrdinal("price")).ToString("C")); // Price (Currency)
+                                item.SubItems.Add(reader.GetString(reader.GetOrdinal("vname")));
+                                item.SubItems.Add(reader.GetString(reader.GetOrdinal("city"))); 
+                                item.SubItems.Add(reader.GetDecimal(reader.GetOrdinal("price")).ToString("C")); 
 
                                 // Add the item to the ListView
                                 listViewEvents.Items.Add(item);
@@ -210,7 +224,12 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // Event handler for when an item in the ListView is selected
+        /// <summary>
+        /// Event handler for when an item in the Event ListView is selected
+        /// when the user selects an event instance display all the rsvps
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listViewEvents_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -226,9 +245,9 @@ namespace COMPX323EventManagementApp
                     }
 
                     // Get event details from the selected ListView item
-                    string eventName = selectedItem.Text; // The first column: Event Name
-                    DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); // Second column: Event Date
-                    string venueName = selectedItem.SubItems[3].Text; // Fourth column: Venue Name
+                    string eventName = selectedItem.Text; 
+                    DateTime eventDate = DateTime.Parse(selectedItem.SubItems[1].Text); 
+                    string venueName = selectedItem.SubItems[3].Text; 
                     // Call the method to display RSVPs for this specific event instance
                     DisplayRSVPs(eventName, eventDate, venueName);
                 }
@@ -239,7 +258,12 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // Method to display RSVPs for the selected event instance
+        /// <summary>
+        /// Method to display RSVPs for the selected event instance
+        /// </summary>
+        /// <param name="eventName"></param>
+        /// <param name="eventDate"></param>
+        /// <param name="venueName"></param>
         private void DisplayRSVPs(string eventName, DateTime eventDate, string venueName)
         {
             try
@@ -264,8 +288,6 @@ namespace COMPX323EventManagementApp
                         cmd.Parameters.Add("eventDate", OracleDbType.Date).Value = eventDate;
                         cmd.Parameters.Add("venueName", OracleDbType.Varchar2).Value = venueName;
 
-
-
                         using (var reader = cmd.ExecuteReader())
                         {
                             listViewRSVP.Items.Clear(); // Clear previous data in ListBox
@@ -285,7 +307,7 @@ namespace COMPX323EventManagementApp
                                 item.SubItems.Add(email);
                                 item.SubItems.Add(status);
 
-                                // Store event info as an object (anonymous or custom class)
+                                // Store event info as an object 
                                 item.Tag = new { EventName = eventName, EventDate = eventDate, VenueName = venueName };
 
                                 listViewRSVP.Items.Add(item);
@@ -308,10 +330,13 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // Called every time the visibility of the control changes (e.g., when brought back to view)
+        /// <summary>
+        /// Called every time the visibility of the control changes (e.g., when brought back to view)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ManageEventControl_VisibleChanged(object sender, EventArgs e)
         {
-            // Check if the control is being shown
             if (this.Visible)
             {
                 // Refresh data
@@ -319,9 +344,9 @@ namespace COMPX323EventManagementApp
                 listViewRSVP.Items.Clear();
 
                 // Refresh the ComboBox events list
-                comboBoxEventList.SelectedIndex = -1; // Clear the selection
+                comboBoxEventList.SelectedIndex = -1; 
 
-                // Refresh event data and RSVPs if needed
+                //refresh event data and RSVPs if needed
                 if (comboBoxEventList.SelectedIndex > 0)
                 {
                     DisplayEvents(comboBoxEventList.SelectedItem.ToString());
@@ -330,7 +355,11 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // Event handler for the Delete Event Instance button click
+        /// <summary>
+        /// Event handler for the Delete Event Instance button click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonDelInstance_Click(object sender, EventArgs e)
         {
             try
@@ -343,7 +372,11 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        // Event handler for the ListViewRSVP click event to handle RSVP deletion
+        /// <summary>
+        /// Event handler for the ListViewRSVP click event to handle RSVP deletion
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listViewRSVP_Click(object sender, EventArgs e)
         {
             if (listViewRSVP.SelectedItems.Count > 0)
@@ -395,6 +428,7 @@ namespace COMPX323EventManagementApp
                 DateTime eventDate = DateTime.MinValue;
                 string eventName = comboBoxEventList.SelectedItem.ToString();
 
+                //event instance or single rsvp
                 if (num == 2 || num == 3)
                 {
                     var selectedItem = listViewEvents.SelectedItems[0];
@@ -403,6 +437,7 @@ namespace COMPX323EventManagementApp
                     venueName = tag.VenueName;
                 }
 
+                //single rsvp
                 if (num == 3)
                 {
                     var selectedRSVP = listViewRSVP.SelectedItems[0];
