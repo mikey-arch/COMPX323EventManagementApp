@@ -38,9 +38,26 @@ namespace COMPX323EventManagementApp
         /// </summary>
         private void InitialiseComboBox()
         {
-            comboBoxEventList.Items.Clear();
-            comboBoxEventList.SelectedIndex = -1;  // Ensuring ComboBox is empty initially
+            try
+            {
+                // Clear everything to ensure fresh loading
+                comboBoxEventList.DataSource = null;
+                comboBoxEventList.Items.Clear();
 
+                Member user = Session.CurrentUser;
+                int memberId = user.Id;
+
+                var events = MongoDBDataAccess.GetEventsByCreator(memberId);
+                var eventsList = new List<string> { "-- Select an event --" };
+                eventsList.AddRange(events);
+
+                comboBoxEventList.DataSource = eventsList;
+                comboBoxEventList.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading events: " + ex.Message, "MongoDB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -90,11 +107,11 @@ namespace COMPX323EventManagementApp
         /// <param name="e">Event arguments.</param>
         private void comboBoxEventList_DropDown(object sender, EventArgs e)
         {
-            try
+            /*try
             {
 
                 // Prevent from loading multiple times
-                if (comboBoxEventList.Items.Count > 0) return;
+                //if (comboBoxEventList.Items.Count > 0) return;
 
 
                 // Get the current user's ID
@@ -117,7 +134,7 @@ namespace COMPX323EventManagementApp
             {
                 MessageBox.Show("Error loading events: " + ex.Message, "MongoDB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            }
+            }*/
         }
 
 
@@ -128,7 +145,8 @@ namespace COMPX323EventManagementApp
         {
             if (this.Visible)
             {
-                listViewEvents.Items.Clear();
+                RefreshUI();  
+                /*listViewEvents.Items.Clear();
                 listViewRSVP.Items.Clear();
                 comboBoxEventList.SelectedIndex = -1;
 
@@ -136,7 +154,7 @@ namespace COMPX323EventManagementApp
                 if (comboBoxEventList.Items.Count > 1)
                 {
                     comboBoxEventList.SelectedIndex = 0;
-                }
+                }*/
             }
         }
 
