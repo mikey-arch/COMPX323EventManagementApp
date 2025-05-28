@@ -189,10 +189,6 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        private void listViewDisplay_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-        }
         /// <summary>
         /// Handles double-clicks on RSVP list items.
         /// Prompts the user to confirm RSVP deletion and performs it if confirmed.

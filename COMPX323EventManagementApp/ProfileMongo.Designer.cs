@@ -51,7 +51,6 @@
             this.listViewDisplay.Size = new System.Drawing.Size(701, 169);
             this.listViewDisplay.TabIndex = 10;
             this.listViewDisplay.UseCompatibleStateImageBehavior = false;
-            this.listViewDisplay.SelectedIndexChanged += new System.EventHandler(this.listViewDisplay_SelectedIndexChanged);
             this.listViewDisplay.DoubleClick += new System.EventHandler(this.listViewDisplay_DoubleClick);
             // 
             // buttonReviews

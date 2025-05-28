@@ -99,44 +99,6 @@ namespace COMPX323EventManagementApp
             }
         }
 
-        /// <summary>
-        /// Handles the DropDown event of the comboBoxEventList.
-        /// Loads the event names associated with the current user into the ComboBox.
-        /// </summary>
-        /// <param name="sender">The ComboBox object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void comboBoxEventList_DropDown(object sender, EventArgs e)
-        {
-            /*try
-            {
-
-                // Prevent from loading multiple times
-                //if (comboBoxEventList.Items.Count > 0) return;
-
-
-                // Get the current user's ID
-                Member user = Session.CurrentUser;
-                int memberId = user.Id;
-
-                // Get all events for that user
-                var events = MongoDBDataAccess.GetEventsByCreator(memberId);
-                List<string> eventsList = new List<string> { "-- Select an event --" }; // Placeholder
-                foreach (var name in events)
-                {
-                    eventsList.Add(name);
-                    comboBoxEventList.Items.Add(name);
-                }
-                comboBoxEventList.DataSource = eventsList;
-                comboBoxEventList.SelectedIndex = 0; // Set to placeholder
-                    
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error loading events: " + ex.Message, "MongoDB Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }*/
-        }
-
 
         /// <summary>
         /// Called when the control becomes visible. Resets the ComboBox and clears the ListViews.
@@ -146,15 +108,7 @@ namespace COMPX323EventManagementApp
             if (this.Visible)
             {
                 RefreshUI();  
-                /*listViewEvents.Items.Clear();
-                listViewRSVP.Items.Clear();
-                comboBoxEventList.SelectedIndex = -1;
-
-                // Trigger selection if valid
-                if (comboBoxEventList.Items.Count > 1)
-                {
-                    comboBoxEventList.SelectedIndex = 0;
-                }*/
+                
             }
         }
 
@@ -536,8 +490,8 @@ namespace COMPX323EventManagementApp
                     }
 
                     // Get event details from the selected ListView item
-                    string eventName = selectedItem.Text; // The first column: Event Name
-                    string venueName = selectedItem.SubItems[3].Text; // Fourth column: Venue Name
+                    string eventName = selectedItem.Text; 
+                    string venueName = selectedItem.SubItems[3].Text;
 
 
                     // Get correct date
@@ -567,12 +521,12 @@ namespace COMPX323EventManagementApp
         /// </summary>
         private void RefreshUI()
         {
-            // Refresh your UI elements (ListView, ComboBox, etc.)
+            // refresh  UI elements (ListView, ComboBox)
             listViewEvents.Items.Clear();
             listViewRSVP.Items.Clear();
 
-            // Reset the combo box correctly
-            comboBoxEventList.DataSource = null; // Unbind first
+            // reset the combo box correctly
+            comboBoxEventList.DataSource = null; 
 
             try
             {

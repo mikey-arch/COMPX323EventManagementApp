@@ -96,7 +96,6 @@
             this.comboBoxEventList.Name = "comboBoxEventList";
             this.comboBoxEventList.Size = new System.Drawing.Size(164, 21);
             this.comboBoxEventList.TabIndex = 14;
-            this.comboBoxEventList.DropDown += new System.EventHandler(this.comboBoxEventList_DropDown);
             this.comboBoxEventList.SelectedIndexChanged += new System.EventHandler(this.comboBoxEventList_SelectedIndexChanged);
             // 
             // label2
