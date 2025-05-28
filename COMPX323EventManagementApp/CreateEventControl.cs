@@ -189,7 +189,6 @@ namespace COMPX323EventManagementApp
                 return false;
             }
 
-            //string namePattern = @"^[A-Za-z]+(?: [A-Za-z]+)*$";
             string namePattern = @"^[\w\s\-\.,'&()]+$";
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(textBoxStreetName.Text, namePattern))
